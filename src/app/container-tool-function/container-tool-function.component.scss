@@ -1,0 +1,20 @@
+.fullBox{
+    margin: 10px;
+    display: flex;
+    border-radius: 5px;
+    border: 2px solid gray;
+    padding: 15px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fullBox h2{
+    align-self: center;
+    color: #0d47a1;
+    font-weight: bold;
+}
+
+.fullBox p{
+    color: lightslategray;
+}

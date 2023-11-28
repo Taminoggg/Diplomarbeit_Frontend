@@ -1,0 +1,15 @@
+export * from './checklists.service';
+import { ChecklistsService } from './checklists.service';
+export * from './conversations.service';
+import { ConversationsService } from './conversations.service';
+export * from './csinquiries.service';
+import { CsinquiriesService } from './csinquiries.service';
+export * from './orders.service';
+import { OrdersService } from './orders.service';
+export * from './stepChecklists.service';
+import { StepChecklistsService } from './stepChecklists.service';
+export * from './steps.service';
+import { StepsService } from './steps.service';
+export * from './tlinquiries.service';
+import { TlinquiriesService } from './tlinquiries.service';
+export const APIS = [ChecklistsService, ConversationsService, CsinquiriesService, OrdersService, StepChecklistsService, StepsService, TlinquiriesService];

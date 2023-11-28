@@ -1,0 +1,33 @@
+header {
+    padding: 15px;
+    background: #0d47a1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1{
+    color: white;
+}
+
+.bottomBox{
+    bottom: 0;
+    padding: 15px;
+    background: #0d47a1;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    align-items: center;
+    color: white;
+    width: 100%;
+    justify-content: center;
+}
+
+.bottomBox a{
+    color: white;
+}
+
+.contentBox{
+    display: flex;
+    
+}

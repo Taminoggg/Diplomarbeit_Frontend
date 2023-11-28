@@ -1,0 +1,27 @@
+<div class="overviewBox">
+  <h1>Übersicht aktive Containerabfragen</h1>
+
+  <button><h2>+ NEU</h2></button>
+</div>
+
+<div class="searchBox">
+  <input type="text" placeholder="Suche...">
+</div>
+
+<div class="orderBox">
+  <!-- <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+    </mat-form-field> -->
+    
+    <table>
+      <tr>
+        <th>TEST</th>
+      </tr>
+      <tr>
+        @for (currOrder of allOrders(); track currOrder.id) {
+          <td>{{currOrder.id}}</td>
+        }
+      </tr>
+    </table>
+</div>

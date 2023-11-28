@@ -1,0 +1,31 @@
+.overviewBox{
+    display: flex;
+    border: 2px solid gray;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 5px;
+    justify-content: space-between;
+}
+
+.overviewBox button{
+    background-color: #1368ed;
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+    width: 15%;
+}
+
+.searchBox{
+    display: flex;
+    margin: 10px 10px 0px 10px;
+    border: 2px solid gray;
+    padding: 10px;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.orderBox{
+    margin: 0px 10px 0px 10px;
+    border: 2px solid gray;
+    padding: 10px;
+    border-radius: 0px 0px 10px 10px;
+}
