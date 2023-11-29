@@ -28,8 +28,6 @@ export class EditOrderPageComponent implements OnInit {
     .subscribe(x => {
       this.currOrder.set(x);
       console.log(this.currOrder());
-      this.checklistId = signal(this.currOrder()?.checklistId);
-      this.customerName = signal(this.currOrder()?.customerName);
     });
   }
 
@@ -38,20 +36,26 @@ export class EditOrderPageComponent implements OnInit {
   csinquiriesService = inject(CsinquiriesService);
   tlinquiriesService = inject(TlinquiriesService);
 
-  currOrder = signal<OrderDto | undefined>(undefined);
+  currOrder = signal<OrderDto>({id:1, status:1, customerName:'Test', createdBy:'Test', approved:false, amount:0, lastUpdated:'Test', checklistId:1, csid:1, tlid:2});
   allCheckliststs = signal<ChecklistDto[]>([]);
   allCsInquiries = signal<CsinquiryDto[]>([]);
   allTlInquiries = signal<TlinquiryDto[]>([]);
 
-  csId = signal(this.currOrder()?.csid);
-  tlId = signal(this.currOrder()?.tlid);
-  customerName = signal(this.currOrder()?.customerName);
-  createdBy = signal(this.currOrder()?.createdBy);
-  status = signal(this.currOrder()?.status);
-  amount = signal(this.currOrder()?.amount);
-  checklistId = signal(this.currOrder()?.checklistId);
+  csId = signal(this.currOrder().csid);
+  tlId = signal(this.currOrder().tlid);
+  customerName = signal(this.currOrder().customerName);
+  createdBy = signal(this.currOrder().createdBy);
+  status = signal(this.currOrder().status);
+  amount = signal(this.currOrder().amount);
+  checklistId = signal(this.currOrder().checklistId);
+  //fix all select default values
 
   saveOrder():void{
-    console.log('test');
+    console.log('tlId: ' + this.tlId() + ' amount: ' + this.amount() + " customerName: " + this.customerName());
+  }
+
+  toNumber(id:string){
+    console.log(id);
+    return Number(id);
   }
 }
