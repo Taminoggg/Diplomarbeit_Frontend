@@ -14,7 +14,8 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(ApiModule),
     { provide: BASE_PATH, useValue: environment.apiRoot },
     provideAnimations(),
-  ]
+    provideAnimations()
+]
 };
 
 console.log('Based on Angular17 Template v17.0.4 [2023-11-22]');
