@@ -1,8 +1,8 @@
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 <div class="overviewBox">
   <h1>Übersicht aktive Containerabfragen</h1>
 
-  <button><h2>+ NEU</h2></button>
+  <button (click)="addOrderPage()"><h2>+ NEU</h2></button>
 </div>
 
 <div class="searchBox">
@@ -21,6 +21,7 @@
         <th>Freigegeben</th>
         <th>Menge</th>
         <th>Aktuallisierung</th>
+        <th>Checkliste</th>
         <th>Bearbeiten</th>
       </tr>
       <tr>
@@ -30,11 +31,12 @@
           <td>{{currOrder.createdBy}}</td>
           <td>{{currOrder.id}}</td>
           <td>{{currOrder.status}}</td>
-          <td>1234 TODO</td>
+          <td>{{getCsInqueryAbnumber(currOrder.csid)}}</td>
           <td>{{getApprovedString(currOrder.approved)}}</td>
           <td>{{currOrder.amount}}</td>
           <td>{{currOrder.lastUpdated | date: 'dd.MM.yyyy'}}</td>
-          <td><mat-icon>create</mat-icon></td>
+          <td>TODO</td>
+          <td (click)="editOrderPage(currOrder.id)"><mat-icon>create</mat-icon></td>
         }
       </tr>
     </table>

@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { OrderDto, OrdersService } from './swagger';
+import { CsinquiriesService, CsinquiryDto, OrderDto, OrdersService } from './swagger';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +7,7 @@ import { OrderDto, OrdersService } from './swagger';
 export class DataServiceService {
   orderService = inject(OrdersService);
   allOrders = signal<OrderDto[]>([]);
-
+  
   constructor(){
     console.log("GETTING ORDERS");
     this.orderService.ordersGetAllOrdersGet()

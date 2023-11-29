@@ -1,0 +1,34 @@
+<label>Status</label>
+<input [ngSignal]="status" type="number">
+<br>
+<label>Kunde</label>
+<input [ngSignal]="customerName" type="text">
+<br>
+<label>Erstellt von</label>
+<input [ngSignal]="createdBy" type="text">
+<br>
+<label>Menge</label>
+<input [ngSignal]="amount" type="number">
+<br>
+<label>Checkliste</label>
+<select #currChecklist (change)="checklistId.set(+currChecklist.value)">
+    @for (currChecklist of allCheckliststs(); track $index) {
+        <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+    } 
+</select>
+<br>
+<label>CSID </label>
+<select #currCsinquiry (change)="csId.set(+currCsinquiry.value)">
+    @for (currCsinquiry of allCsInquiries(); track $index) {
+        <option [value]="currCsinquiry.id">{{currCsinquiry.id}}</option>
+    } 
+</select>
+<br>
+<label>TLID </label>
+<select #currTlInquiry (change)="tlId.set(+currTlInquiry.value)">
+    @for (currTlinquiries of allTlInquiries(); track $index) {
+        <option>{{currTlinquiries.id}}</option>
+    } 
+</select>
+<br>
+<button (click)="saveOrder()">SAVE</button>
