@@ -14,6 +14,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(ApiModule),
     { provide: BASE_PATH, useValue: environment.apiRoot },
     provideAnimations(),
+    provideAnimations(),
     provideAnimations()
 ]
 };

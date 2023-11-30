@@ -1,0 +1,6 @@
+<p>checklist-pop-up works!</p>
+@for (currStep of steps(); track $index) {
+    {{currStep.stepName}}
+    <input type="checkbox">
+}
+<button>SAVE</button>

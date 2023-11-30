@@ -24,20 +24,20 @@
         <th>Checkliste</th>
         <th>Bearbeiten</th>
       </tr>
+      @for (currOrder of dataService.allOrders(); track $index) {
       <tr>
-        @for (currOrder of dataService.allOrders(); track currOrder.id) {
           <td>{{currOrder.id}}</td>
           <td>{{currOrder.customerName}}</td>
           <td>{{currOrder.createdBy}}</td>
-          <td>{{currOrder.id}}</td>
+          <td>{{dataService.allAbNumbers()[$index]}}</td>
           <td>{{currOrder.status}}</td>
-          <td>{{getCsInqueryAbnumber(currOrder.csid)}}</td>
+          <td>TODO</td>
           <td>{{getApprovedString(currOrder.approved)}}</td>
           <td>{{currOrder.amount}}</td>
           <td>{{currOrder.lastUpdated | date: 'dd.MM.yyyy'}}</td>
-          <td>TODO</td>
+          <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
           <td (click)="editOrderPage(currOrder.id)"><mat-icon>create</mat-icon></td>
-        }
       </tr>
+    }
     </table>
 </div>

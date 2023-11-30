@@ -50,7 +50,7 @@ export class NewOrderPageComponent implements OnInit {
       tlid:this.tlId()
     };
 
-    let test = this.orderService.ordersAddOrderAddNewOrderPost(order);
-    console.log(test);
+    let orderLog = this.orderService.ordersAddOrderAddNewOrderPost(order);
+    console.log(orderLog);
   }
 }
