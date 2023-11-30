@@ -10,6 +10,7 @@ export * from './conversation';
 export * from './conversationDto';
 export * from './csinquiry';
 export * from './csinquiryDto';
+export * from './editOrderDto';
 export * from './message';
 export * from './messageConversation';
 export * from './modelFile';

@@ -1,40 +1,37 @@
 <label>Status</label>
-<input #txtStatus type="number" value="{{currOrder().status}}" (change)="status.set(+txtStatus.value)">
-<label>{{status()}}</label>
-<br>
-<label>Kunde</label>
-<input #txtCustName type="text" value="{{currOrder().customerName}}" (change)="customerName.set(txtCustName.value)">
-<label>{{customerName()}}</label>
-<br>
-<label>Erstellt von</label>
-<input #txtCreatedBy type="text" value="{{currOrder().createdBy}}" (change)="createdBy.set(txtCreatedBy.value)">
-<br>
-<label>Genehmigt</label>
-<input #txtApproved type="checkbox" value="{{currOrder().approved}}" (change)="isApproved.set(txtApproved.value =='true')">
-<br>
-<label>Menge</label>
-<input #txtAmount type="number" value="{{currOrder().amount}}" (change)="createdBy.set(txtAmount.value)">
-<br>
-<label>Checkliste</label>
-<select #txtChecklistId (change)="checklistId.set(+txtChecklistId.value)" value="{{currOrder().checklistId}}">
+  <input #txtStatus type="number" value="{{currOrder().status}}" (change)="status.set(+txtStatus.value)">
+  <br>
+  <label>Kunde</label>
+  <input #txtCustName type="text" value="{{currOrder().customerName}}" (change)="customerName.set(txtCustName.value)">
+  <br>
+  <label>Erstellt von</label>
+  <input #txtCreatedBy type="text" value="{{currOrder().createdBy}}" (change)="createdBy.set(txtCreatedBy.value)">
+  <br>
+  <label>Genehmigt
+    <input #txtApproved type="checkbox" value="{{currOrder().approved}}" (change)="isApproved.set(txtApproved.checked)">
+  </label>
+  <label>Menge</label>
+  <input #txtAmount type="number" value="{{currOrder().amount}}" (change)="amount.set(+txtAmount.value)">
+  <br>
+  <label>Checkliste</label>
+  <select #txtChecklistId (change)="checklistId.set(+txtChecklistId.value)" value="{{currOrder().checklistId}}">
     @for (currChecklist of allCheckliststs(); track $index) {
-        <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+      <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
     } 
-</select>
-<br>
-<label>CSID </label>
-<select #txtCsId (change)="csId.set(+txtCsId.value)" value="{{currOrder().csid}}">
+  </select>
+  <br>
+  <label>CSID </label>
+  <select #txtCsId (change)="csId.set(+txtCsId.value)" value="{{currOrder().csid}}">
     @for (currCsinquiry of allCsInquiries(); track $index) {
-        <option [value]="currCsinquiry.id">{{currCsinquiry.id}}</option>
+      <option [value]="currCsinquiry.id">{{currCsinquiry.id}}</option>
     } 
-</select>
-<br>
-<label>TLID </label>
-<select #txtTlId (change)="tlId.set(+txtTlId.value)" value="{{currOrder().tlid}}">
+  </select>
+  <br>
+  <label>TLID </label>
+  <select #txtTlId (change)="tlId.set(+txtTlId.value)" value="{{currOrder().tlid}}">
     @for (currTlinquiries of allTlInquiries(); track $index) {
-        <option  [value]="currTlinquiries.id">{{currTlinquiries.id}}</option>
+      <option [value]="currTlinquiries.id">{{currTlinquiries.id}}</option>
     } 
-</select>
-<label>{{tlId()}}</label>
-<br>
-<button (click)="saveOrder()">SAVE</button>
+  </select>
+  <br>
+  <button (click)="saveOrder()">SAVE</button>

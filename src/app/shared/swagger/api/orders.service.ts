@@ -21,6 +21,8 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { AddOrderDto } from '../model/addOrderDto';
 // @ts-ignore
+import { EditOrderDto } from '../model/editOrderDto';
+// @ts-ignore
 import { OrderDto } from '../model/orderDto';
 
 // @ts-ignore
@@ -225,14 +227,14 @@ export class OrdersService {
     }
 
     /**
-     * @param orderDto 
+     * @param editOrderDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public ordersEditOrderEditOrderPut(orderDto?: OrderDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<OrderDto>;
-    public ordersEditOrderEditOrderPut(orderDto?: OrderDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<OrderDto>>;
-    public ordersEditOrderEditOrderPut(orderDto?: OrderDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<OrderDto>>;
-    public ordersEditOrderEditOrderPut(orderDto?: OrderDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public ordersEditOrderEditOrderPut(editOrderDto?: EditOrderDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<OrderDto>;
+    public ordersEditOrderEditOrderPut(editOrderDto?: EditOrderDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<OrderDto>>;
+    public ordersEditOrderEditOrderPut(editOrderDto?: EditOrderDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<OrderDto>>;
+    public ordersEditOrderEditOrderPut(editOrderDto?: EditOrderDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -282,7 +284,7 @@ export class OrdersService {
         return this.httpClient.request<OrderDto>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: orderDto,
+                body: editOrderDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

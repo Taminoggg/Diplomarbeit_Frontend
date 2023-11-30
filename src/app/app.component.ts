@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { Component, Inject, inject } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 
 
 @Component({
@@ -12,4 +12,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'DAFrontend';
+  router = inject(Router);
+  
+  
 }

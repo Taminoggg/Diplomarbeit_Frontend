@@ -19,4 +19,8 @@ export class ChecklistPopUpComponent {
     this.stepsService.stepsGetChecklistWithIdGetStepsForChecklistIdGet(data.id)
     .subscribe(x => this.steps.set(x));
   }
+
+  saveChanges(){
+    
+  }
 }

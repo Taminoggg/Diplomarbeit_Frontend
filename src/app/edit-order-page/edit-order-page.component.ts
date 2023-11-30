@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../shared/swagger';
+import { ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../shared/swagger';
 import { NgSignalDirective } from '../shared/ngSignal.directive';
 
 @Component({
@@ -24,12 +24,7 @@ export class EditOrderPageComponent implements OnChanges {
     this.tlinquiriesService.tlinquiriesGetAllCsinquiriesGet()
       .subscribe(x => this.allTlInquiries.set(x));
 
-    this.orderService.ordersGetOrderWithIdGetOrderWithIdIdGet(this.id)
-      .subscribe(x => {
-        this.currOrder.set(x);
-        console.log(this.currOrder());
-        this.setSignals();
-      });
+    this.loadData();
   }
 
   orderService = inject(OrdersService);
@@ -37,7 +32,7 @@ export class EditOrderPageComponent implements OnChanges {
   csinquiriesService = inject(CsinquiriesService);
   tlinquiriesService = inject(TlinquiriesService);
 
-  currOrder = signal<OrderDto>({ id: 1, status: 1, customerName: 'Test', createdBy: 'Test', approved: false, amount: 0, lastUpdated: 'Test', checklistId: 1, csid: 1, tlid: 2 });
+  currOrder = signal<OrderDto>({ id: 1, status: 1, customerName: 'Test', createdBy: 'Test', approved: false, amount: 0, lastUpdated: 'Test', checklistId: 1, csid: 1, tlid: 1 });
   allCheckliststs = signal<ChecklistDto[]>([]);
   allCsInquiries = signal<CsinquiryDto[]>([]);
   allTlInquiries = signal<TlinquiryDto[]>([]);
@@ -51,8 +46,17 @@ export class EditOrderPageComponent implements OnChanges {
   checklistId = signal(this.currOrder().checklistId);
   isApproved = signal(this.currOrder().approved);
 
-  saveOrder():void{
-    let order:OrderDto = {
+  loadData() {
+    this.orderService.ordersGetOrderWithIdGetOrderWithIdIdGet(this.id)
+      .subscribe(x => {
+        this.currOrder.set(x);
+        console.log(this.currOrder());
+        this.setSignals();
+      });
+  }
+
+  saveOrder(): void {
+    let order: EditOrderDto = {
       customerName: this.customerName(),
       status: this.status(),
       createdBy: this.createdBy(),
@@ -61,12 +65,16 @@ export class EditOrderPageComponent implements OnChanges {
       csid: this.csId(),
       tlid: this.tlId(),
       id: this.id,
-      approved: this.isApproved(),
-      lastUpdated: new Date().toDateString()
+      approved: this.isApproved()
     };
 
-    let orderLog = this.orderService.ordersEditOrderEditOrderPut(order);
-    console.log(orderLog);
+    console.log(order);
+
+    this.orderService.ordersEditOrderEditOrderPut(order)
+      .subscribe(x => {
+        console.log(x);
+        this.loadData();
+      });
   }
 
   setSignals() {
