@@ -21,18 +21,18 @@ export class DataServiceService {
 
   refreshPage(){
     console.log("GETTING ORDERS");
-    this.orderService.ordersGetAllOrdersGet()
+    this.orderService.ordersGet()
       .subscribe(x => {
         this.allOrders.set(x);
         this.allOrders().forEach(currOrder => {
           this.allAbNumbers().push(currOrder.id);
-          this.csinquiryService.csinquiriesGetCsinquiryWithIdGetCsinquiryWithIdIdGet(currOrder.csid)
+          this.csinquiryService.csinquiriesIdGet(currOrder.csid)
           .subscribe(x => this.articleNumbersForOrder.set(currOrder.id, x.articleNumber));
 
-          this.tlinquiryService.tlinquiriesGetTlinquiryWithIdGetTlinquiryWithIdIdGet(currOrder.tlid)
+          this.tlinquiryService.tlinquiriesIdGet(currOrder.tlid)
           .subscribe(x => this.countryForOrder.set(currOrder.id, x.country));
 
-          this.tlinquiryService.tlinquiriesGetTlinquiryWithIdGetTlinquiryWithIdIdGet(currOrder.tlid)
+          this.tlinquiryService.tlinquiriesIdGet(currOrder.tlid)
           .subscribe(x => this.recieveLocationForOrder.set(currOrder.id, x.retrieveLocation));
         });
         console.log(this.allAbNumbers());

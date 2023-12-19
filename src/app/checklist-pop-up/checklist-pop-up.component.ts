@@ -16,7 +16,7 @@ export class ChecklistPopUpComponent {
   steps = signal<StepDto[]>([]);
 
   constructor(@Inject(MAT_DIALOG_DATA) public data:any){
-    this.stepsService.stepsGetChecklistWithIdGetStepsForChecklistIdGet(data.id)
+    this.stepsService.stepsIdGet(data.id)
     .subscribe(x => this.steps.set(x));
   }
 

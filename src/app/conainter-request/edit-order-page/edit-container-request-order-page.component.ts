@@ -17,17 +17,17 @@ export class EditContainerOrderPageComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('id: ' + this.id);
-    this.checklistService.checklistsGetAllChecklistsGet()
+    this.checklistService.checklistsGet()
       .subscribe(x => {
         this.allCheckliststs.set(x);
 
       });
-    this.orderService.ordersGetOrderWithIdGetOrderWithIdIdGet(this.id)
+    this.orderService.ordersIdGet(this.id)
       .subscribe(x => {
         this.currOrder.set(x);
         console.log(this.currOrder());
         this.setOrderSignals();
-        this.csinquiriesService.csinquiriesGetCsinquiryWithIdGetCsinquiryWithIdIdGet(this.csId())
+        this.csinquiriesService.csinquiriesIdGet(this.csId())
           .subscribe(x => {
             this.currCsInquiry.set(x);
             this.setCsInquirySignals();
@@ -115,7 +115,7 @@ export class EditContainerOrderPageComponent implements OnChanges {
 
     console.log(order);
 
-    this.orderService.ordersEditOrderEditOrderPut(order)
+    this.orderService.ordersPut(order)
       .subscribe(x => {
         console.log(x);
       });
@@ -146,7 +146,7 @@ export class EditContainerOrderPageComponent implements OnChanges {
       loadingPlattform: this.loadingPlattform(),
     }
 
-    this.csinquiriesService.csinquiriesEditCsinquiryEditCsinquiryPut(editedCsInquery)
+    this.csinquiriesService.csinquiriesPut(editedCsInquery)
     .subscribe(x => console.log('RETURN VALUE OF CSINQUERY SAVE: ' + x.id + x.abnumber + x.freeDetention + x.readyToLoad));
   }
 

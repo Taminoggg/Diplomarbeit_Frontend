@@ -17,17 +17,17 @@ export class EditShippmentOrderPageComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('id: ' + this.id);
-    this.checklistService.checklistsGetAllChecklistsGet()
+    this.checklistService.checklistsGet()
       .subscribe(x => {
         this.allCheckliststs.set(x);
 
       });
-    this.orderService.ordersGetOrderWithIdGetOrderWithIdIdGet(this.id)
+    this.orderService.ordersIdGet(this.id)
       .subscribe(x => {
         this.currOrder.set(x);
         console.log(this.currOrder());
         this.setOrderSignals();
-        this.tlinquiriesService.tlinquiriesGetTlinquiryWithIdGetTlinquiryWithIdIdGet(this.tlId())
+        this.tlinquiriesService.tlinquiriesIdGet(this.tlId())
           .subscribe(x => {
             this.currTlInquiry.set(x);
             this.setTlInquirySignals();
@@ -119,7 +119,7 @@ export class EditShippmentOrderPageComponent implements OnChanges {
 
     console.log(order);
 
-    this.orderService.ordersEditOrderEditOrderPut(order)
+    this.orderService.ordersPut(order)
       .subscribe(x => {
         console.log(x);
       });
@@ -153,7 +153,7 @@ export class EditShippmentOrderPageComponent implements OnChanges {
       boat: this.boat()
     }
 
-    this.tlinquiriesService.tlinquiriesEditTlinquiryEditTlinquiryPut(editedTlInquiry)
+    this.tlinquiriesService.tlinquiriesPut(editedTlInquiry)
     .subscribe(x => console.log('Editing tlinquiry: '+ x.country + ' ' + x.retrieveLocation));
   }
 

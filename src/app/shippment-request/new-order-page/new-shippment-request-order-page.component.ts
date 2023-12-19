@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 export class NewShippmentOrderPageComponent implements OnInit {
   dataService: any;
   ngOnInit(): void {
-    this.checklistService.checklistsGetAllChecklistsGet()
+    this.checklistService.checklistsGet()
       .subscribe(x => this.allCheckliststs.set(x));
   }
 
@@ -97,9 +97,9 @@ export class NewShippmentOrderPageComponent implements OnInit {
 
     console.log(tlInquiry);
 
-    this.csInquiryService.csinquiriesAddNewCsinquiryAddNewCsinquiryPost(csInquiry)
+    this.csInquiryService.csinquiriesPost(csInquiry)
       .subscribe(csInquiryObj => {
-        this.tlInquiryService.tlinquiriesAddNewTlinquiryAddNewTlinquiryPost(tlInquiry)
+        this.tlInquiryService.tlinquiriesPost(tlInquiry)
           .subscribe(tlInquiryObj => {
             let order: AddOrderDto = {
               customerName: this.customerName(),
@@ -111,7 +111,7 @@ export class NewShippmentOrderPageComponent implements OnInit {
               tlid: tlInquiryObj.id
             };
 
-            this.orderService.ordersAddOrderAddNewOrderPost(order)
+            this.orderService.ordersPost(order)
               .subscribe(x => console.log(x));
           });
       });
