@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { CsinquiriesService, CsinquiryDto, OrderDto, OrdersService } from './swagger';
+import { CsinquiriesService, CsinquiryDto, OrderDto, OrdersService, TlinquiriesService } from './swagger';
 
 @Injectable({
   providedIn: 'root'
@@ -7,10 +7,12 @@ import { CsinquiriesService, CsinquiryDto, OrderDto, OrdersService } from './swa
 export class DataServiceService {
   orderService = inject(OrdersService);
   csinquiryService = inject(CsinquiriesService);
+  tlinquiryService = inject(TlinquiriesService);
   allOrders = signal<OrderDto[]>([]);
   allAbNumbers = signal<number[]>([]);
   allArticleIds = signal<number[]>([]);
   articleNumbersForOrder = new Map<number, string>;
+  countryForOrder = new Map<number, string>;
 
   constructor() {
     console.log("GETTING ORDERS");
@@ -21,6 +23,9 @@ export class DataServiceService {
           this.allAbNumbers().push(currOrder.id);
           this.csinquiryService.csinquiriesGetCsinquiryWithIdGetCsinquiryWithIdIdGet(currOrder.csid)
           .subscribe(x => this.articleNumbersForOrder.set(currOrder.id, x.articleNumber));
+
+          this.tlinquiryService.tlinquiriesGetTlinquiryWithIdGetTlinquiryWithIdIdGet(currOrder.tlid)
+          .subscribe(x => this.countryForOrder.set(currOrder.id, x.country));
         });
         console.log(this.allAbNumbers());
       });

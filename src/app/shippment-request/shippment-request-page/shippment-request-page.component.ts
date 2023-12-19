@@ -22,9 +22,12 @@ export class ShippmentRequestComponent {
 
   dataService = inject(DataServiceService);
   router = inject(Router);
-  csinquiryService = inject(CsinquiriesService);
   dialogRef = inject(MatDialog);
   csinquiry = signal<CsinquiryDto | undefined>(undefined);
+
+  getWerkForOrder(){
+    
+  }
 
   getArticleNumberForOrder(id:number):string{
     let articleNumber = this.dataService.articleNumbersForOrder.get(id);
