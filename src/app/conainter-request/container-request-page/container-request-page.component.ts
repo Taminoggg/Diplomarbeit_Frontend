@@ -15,7 +15,10 @@ import { ChecklistPopUpComponent } from '../../checklist-pop-up/checklist-pop-up
   templateUrl: './container-request-page.component.html',
   styleUrls: ['./container-request-page.component.scss']
 })
-export class ContainerRequestPageComponent implements OnInit {
+export class ContainerRequestPageComponent implements OnInit, OnChanges {
+  ngOnChanges(changes: SimpleChanges): void {
+    this.dataService.refreshPage(); 
+  }
   ngOnInit(): void {
     console.log('UPDATING.............................');
     this.dataService.refreshPage(); 
@@ -31,6 +34,22 @@ export class ContainerRequestPageComponent implements OnInit {
     let articleNumber = this.dataService.articleNumbersForOrder.get(id);
     if(articleNumber !== undefined){
       return articleNumber;
+    }
+    return '';
+  }
+
+  getRecieveLocationForOrder(id:number):string{
+    let recieveLocationForOrder = this.dataService.recieveLocationForOrder.get(id);
+    if(recieveLocationForOrder !== undefined){
+      return recieveLocationForOrder;
+    }
+    return '';
+  }
+
+  getCountryForOrder(id:number):string{
+    let countryForOrder = this.dataService.countryForOrder.get(id);
+    if(countryForOrder !== undefined){
+      return countryForOrder;
     }
     return '';
   }

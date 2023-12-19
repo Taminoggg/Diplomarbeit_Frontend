@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { CommonModule, JsonPipe } from '@angular/common';
+import { ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 
@@ -30,7 +30,7 @@ export class EditContainerOrderPageComponent implements OnChanges {
         this.csinquiriesService.csinquiriesGetCsinquiryWithIdGetCsinquiryWithIdIdGet(this.csId())
           .subscribe(x => {
             this.currCsInquiry.set(x);
-
+            this.setCsInquirySignals();
           });
       });
   }
@@ -120,7 +120,34 @@ export class EditContainerOrderPageComponent implements OnChanges {
         console.log(x);
       });
 
-    this.router.navigateByUrl('/container-request-page');
+    this.saveCsInquery();
+
+    this.router.navigateByUrl('/shippment-request-page');
+  }
+
+  saveCsInquery() {
+    let editedCsInquery: EditCsinquiryDto = {
+      id: this.currCsInquiry().id,
+      container: this.container(),
+      fastLine: this.fastLine(),
+      directLine: this.directLine(),
+      articleNumber: this.articleNumber(),
+      palletamount: this.palletamount(),
+      customer: this.customer(),
+      abnumber: this.abnumber(),
+      bruttoWeightInKg: this.bruttoWeightInKg(),
+      incoterm: this.incoterm(),
+      containersizeA: this.containersizeA(),
+      containersizeB: this.containersizeB(),
+      containersizeHc: this.containersizeHc(),
+      freeDetention: this.freeDetention(),
+      thctb: this.thctb(),
+      readyToLoad: this.readyToLoad(),
+      loadingPlattform: this.loadingPlattform(),
+    }
+
+    this.csinquiriesService.csinquiriesEditCsinquiryEditCsinquiryPut(editedCsInquery)
+    .subscribe(x => console.log('RETURN VALUE OF CSINQUERY SAVE: ' + x.id + x.abnumber + x.freeDetention + x.readyToLoad));
   }
 
   setOrderSignals() {
@@ -133,7 +160,7 @@ export class EditContainerOrderPageComponent implements OnChanges {
     this.isApproved = signal(this.currOrder().approved);
   }
 
-  setCsInquirySignals(){
+  setCsInquirySignals() {
     this.container = signal(this.currCsInquiry().container);
     this.directLine = signal(this.currCsInquiry().directLine);
     this.articleNumber = signal(this.currCsInquiry().articleNumber);

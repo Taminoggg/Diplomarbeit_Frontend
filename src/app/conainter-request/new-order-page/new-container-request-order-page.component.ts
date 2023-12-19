@@ -114,6 +114,6 @@ export class NewContainerOrderPageComponent implements OnInit {
         });
       });
 
-    this.router.navigateByUrl('/container-request-page');
+    this.router.navigateByUrl('/shippment-request-page');
   }
 }

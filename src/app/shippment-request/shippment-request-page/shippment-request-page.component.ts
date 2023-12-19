@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChecklistPopUpComponent } from '../../checklist-pop-up/checklist-pop-up.component';
 import { DataServiceService } from '../../shared/data-service.service';
@@ -14,7 +14,10 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './shippment-request-page.component.html',
   styleUrls: ['./shippment-request-page.component.scss']
 })
-export class ShippmentRequestComponent {
+export class ShippmentRequestComponent implements OnInit, OnChanges {
+  ngOnChanges(changes: SimpleChanges): void {
+    this.dataService.refreshPage(); 
+  }
   ngOnInit(): void {
     console.log('UPDATING.............................');
     this.dataService.refreshPage(); 
@@ -24,10 +27,6 @@ export class ShippmentRequestComponent {
   router = inject(Router);
   dialogRef = inject(MatDialog);
   csinquiry = signal<CsinquiryDto | undefined>(undefined);
-
-  getWerkForOrder(){
-    
-  }
 
   getArticleNumberForOrder(id:number):string{
     let articleNumber = this.dataService.articleNumbersForOrder.get(id);

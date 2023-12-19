@@ -36,8 +36,8 @@
           <td>{{getArticleNumberForOrder(currOrder.id)}}</td>
           <td>{{getApprovedString(currOrder.approved)}}</td>
           <td>{{currOrder.amount}}</td>
-          <td>LAND</td>
-          <td>ANKUNFTSHAFEN</td>
+          <td>{{getCountryForOrder(currOrder.id)}}</td>
+          <td>{{getRecieveLocationForOrder(currOrder.id)}}</td>
           <td>{{currOrder.lastUpdated | date: 'dd.MM.yyyy'}}</td>
           <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
           <td (click)="editOrderPage(currOrder.id)"><mat-icon>create</mat-icon></td>

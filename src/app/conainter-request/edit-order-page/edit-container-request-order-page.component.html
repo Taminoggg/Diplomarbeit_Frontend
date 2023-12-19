@@ -80,7 +80,7 @@
   </div>  
   
   <label>Ready To Load</label>
-  <input #txtReadyToLoad type="text" value="{{currCsInquiry().readyToLoad | date: 'dd.MM.yyyy'}}" (change)="readyToLoad.set(txtReadyToLoad.value)">
+  <input #txtReadyToLoad type="text" value="{{currCsInquiry().readyToLoad}}" (change)="readyToLoad.set(txtReadyToLoad.value)">
   <br>
   
   <label>Loading Plattform</label>

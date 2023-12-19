@@ -13,8 +13,13 @@ export class DataServiceService {
   allArticleIds = signal<number[]>([]);
   articleNumbersForOrder = new Map<number, string>;
   countryForOrder = new Map<number, string>;
+  recieveLocationForOrder = new Map<number, string>;
 
   constructor() {
+    this.refreshPage();
+  }
+
+  refreshPage(){
     console.log("GETTING ORDERS");
     this.orderService.ordersGetAllOrdersGet()
       .subscribe(x => {
@@ -26,17 +31,9 @@ export class DataServiceService {
 
           this.tlinquiryService.tlinquiriesGetTlinquiryWithIdGetTlinquiryWithIdIdGet(currOrder.tlid)
           .subscribe(x => this.countryForOrder.set(currOrder.id, x.country));
-        });
-        console.log(this.allAbNumbers());
-      });
-  }
 
-  refreshPage(){
-    this.orderService.ordersGetAllOrdersGet()
-      .subscribe(x => {
-        this.allOrders.set(x);
-        this.allOrders().forEach(currOrder => {
-          this.allAbNumbers().push(currOrder.id);
+          this.tlinquiryService.tlinquiriesGetTlinquiryWithIdGetTlinquiryWithIdIdGet(currOrder.tlid)
+          .subscribe(x => this.recieveLocationForOrder.set(currOrder.id, x.retrieveLocation));
         });
         console.log(this.allAbNumbers());
       });

@@ -22,6 +22,8 @@ import { Observable }                                        from 'rxjs';
 import { AddCsinquiryDto } from '../model/addCsinquiryDto';
 // @ts-ignore
 import { CsinquiryDto } from '../model/csinquiryDto';
+// @ts-ignore
+import { EditCsinquiryDto } from '../model/editCsinquiryDto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -225,14 +227,14 @@ export class CsinquiriesService {
     }
 
     /**
-     * @param csinquiryDto 
+     * @param editCsinquiryDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public csinquiriesEditCsinquiryEditCsinquiryPut(csinquiryDto?: CsinquiryDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<CsinquiryDto>;
-    public csinquiriesEditCsinquiryEditCsinquiryPut(csinquiryDto?: CsinquiryDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<CsinquiryDto>>;
-    public csinquiriesEditCsinquiryEditCsinquiryPut(csinquiryDto?: CsinquiryDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<CsinquiryDto>>;
-    public csinquiriesEditCsinquiryEditCsinquiryPut(csinquiryDto?: CsinquiryDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public csinquiriesEditCsinquiryEditCsinquiryPut(editCsinquiryDto?: EditCsinquiryDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<CsinquiryDto>;
+    public csinquiriesEditCsinquiryEditCsinquiryPut(editCsinquiryDto?: EditCsinquiryDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<CsinquiryDto>>;
+    public csinquiriesEditCsinquiryEditCsinquiryPut(editCsinquiryDto?: EditCsinquiryDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<CsinquiryDto>>;
+    public csinquiriesEditCsinquiryEditCsinquiryPut(editCsinquiryDto?: EditCsinquiryDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -282,7 +284,7 @@ export class CsinquiriesService {
         return this.httpClient.request<CsinquiryDto>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: csinquiryDto,
+                body: editCsinquiryDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

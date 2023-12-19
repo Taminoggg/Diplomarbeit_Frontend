@@ -42,7 +42,7 @@
 <br>
 
 <label>Expected Retrieve Week</label>
-<input #txtExpectedRetrieveWeek type="text" [value]="currTlInquiry().expectedRetrieveWeek | date: 'dd.MM.yyyy'"
+<input #txtExpectedRetrieveWeek type="text" [value]="currTlInquiry().expectedRetrieveWeek"
   (change)="expectedRetrieveWeek.set(txtExpectedRetrieveWeek.value)">
 <br>
 
@@ -52,11 +52,11 @@
 <br>
 
 <label>Invoice On</label>
-<input #txtInvoiceOn type="text" [value]="currTlInquiry().invoiceOn | date: 'dd.MM.yyyy'" (change)="invoiceOn.set(txtInvoiceOn.value)">
+<input #txtInvoiceOn type="text" [value]="currTlInquiry().invoiceOn" (change)="invoiceOn.set(txtInvoiceOn.value)">
 <br>
 
 <label>Retrieve Date</label>
-<input #txtRetrieveDate type="text" [value]="currTlInquiry().retrieveDate | date: 'dd.MM.yyyy'"
+<input #txtRetrieveDate type="text" [value]="currTlInquiry().retrieveDate"
   (change)="retrieveDate.set(txtRetrieveDate.value)">
 <br>
 
@@ -100,11 +100,11 @@
 <br>
 
 <label>ETS</label>
-<input #txtETS type="text" [value]="currTlInquiry().ets | date: 'dd.MM.yyyy'" (change)="ets.set(txtETS.value)">
+<input #txtETS type="text" [value]="currTlInquiry().ets" (change)="ets.set(txtETS.value)">
 <br>
 
 <label>ETA</label>
-<input #txtETA type="text" [value]="currTlInquiry().eta | date: 'dd.MM.yyyy'" (change)="eta.set(txtETA.value)">
+<input #txtETA type="text" [value]="currTlInquiry().eta" (change)="eta.set(txtETA.value)">
 <br>
 
 <label>Boat</label>

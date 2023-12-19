@@ -21,6 +21,8 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { AddTlinquiryDto } from '../model/addTlinquiryDto';
 // @ts-ignore
+import { EditTlInqueryDto } from '../model/editTlInqueryDto';
+// @ts-ignore
 import { TlinquiryDto } from '../model/tlinquiryDto';
 
 // @ts-ignore
@@ -225,14 +227,14 @@ export class TlinquiriesService {
     }
 
     /**
-     * @param tlinquiryDto 
+     * @param editTlInqueryDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public tlinquiriesEditTlinquiryEditTlinquiryPut(tlinquiryDto?: TlinquiryDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<TlinquiryDto>;
-    public tlinquiriesEditTlinquiryEditTlinquiryPut(tlinquiryDto?: TlinquiryDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<TlinquiryDto>>;
-    public tlinquiriesEditTlinquiryEditTlinquiryPut(tlinquiryDto?: TlinquiryDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<TlinquiryDto>>;
-    public tlinquiriesEditTlinquiryEditTlinquiryPut(tlinquiryDto?: TlinquiryDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public tlinquiriesEditTlinquiryEditTlinquiryPut(editTlInqueryDto?: EditTlInqueryDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<TlinquiryDto>;
+    public tlinquiriesEditTlinquiryEditTlinquiryPut(editTlInqueryDto?: EditTlInqueryDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<TlinquiryDto>>;
+    public tlinquiriesEditTlinquiryEditTlinquiryPut(editTlInqueryDto?: EditTlInqueryDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<TlinquiryDto>>;
+    public tlinquiriesEditTlinquiryEditTlinquiryPut(editTlInqueryDto?: EditTlInqueryDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -282,7 +284,7 @@ export class TlinquiriesService {
         return this.httpClient.request<TlinquiryDto>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: tlinquiryDto,
+                body: editTlInqueryDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 
@@ -30,6 +30,7 @@ export class EditShippmentOrderPageComponent implements OnChanges {
         this.tlinquiriesService.tlinquiriesGetTlinquiryWithIdGetTlinquiryWithIdIdGet(this.tlId())
           .subscribe(x => {
             this.currTlInquiry.set(x);
+            this.setTlInquirySignals();
           });
       });
   }
@@ -123,7 +124,37 @@ export class EditShippmentOrderPageComponent implements OnChanges {
         console.log(x);
       });
 
-    this.router.navigateByUrl('/container-request-page');
+    this.saveTlInquery();
+
+    this.router.navigateByUrl('/shippment-request-page');
+  }
+
+  saveTlInquery(){
+    let editedTlInquiry: EditTlInqueryDto =
+    {
+      id: this.currTlInquiry().id,
+      inquiryNumber: this.inquiryNumber(),
+      sped: this.sped(),
+      country: this.country(),
+      acceptingPort: this.acceptingPort(),
+      expectedRetrieveWeek: this.expectedRetrieveWeek(),
+      weightInKg: this.weightInKg(),
+      invoiceOn: this.invoiceOn(),
+      retrieveDate: this.retrieveDate(),
+      isContainer40: this.isContainer40(),
+      isContainerHc: this.isContainerHc(),
+      retrieveLocation: this.retrieveLocation(),
+      debtCapitalGeneralForerunEur: this.debtCapitalGeneralForerunEur(),
+      debtCapitalMainDol: this.debtCapitalMainDol(),
+      debtCapitalTrailingDol: this.debtCapitalTrailingDol(),
+      portOfDeparture: this.portOfDeparture(),
+      ets: this.ets(),
+      eta: this.eta(),
+      boat: this.boat()
+    }
+
+    this.tlinquiriesService.tlinquiriesEditTlinquiryEditTlinquiryPut(editedTlInquiry)
+    .subscribe(x => console.log('Editing tlinquiry: '+ x.country + ' ' + x.retrieveLocation));
   }
 
   setOrderSignals() {

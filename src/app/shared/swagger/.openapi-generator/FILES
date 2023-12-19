@@ -25,7 +25,9 @@ model/conversation.ts
 model/conversationDto.ts
 model/csinquiry.ts
 model/csinquiryDto.ts
+model/editCsinquiryDto.ts
 model/editOrderDto.ts
+model/editTlInqueryDto.ts
 model/message.ts
 model/messageConversation.ts
 model/modelFile.ts
