@@ -1,12 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DataServiceService } from '../shared/data-service.service';
+import { DataServiceService } from '../../shared/data-service.service';
 import { MatIconModule } from '@angular/material/icon'
-import { CsinquiriesService, CsinquiryDto } from '../shared/swagger';
 import { Router } from '@angular/router';
 import { MatDialogModule } from '@angular/material/dialog'
-import { ChecklistPopUpComponent } from '../checklist-pop-up/checklist-pop-up.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CsinquiriesService, CsinquiryDto } from '../../shared/swagger';
+import { ChecklistPopUpComponent } from '../../checklist-pop-up/checklist-pop-up.component';
 
 @Component({
   selector: 'app-container-request-page',
@@ -15,13 +15,25 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './container-request-page.component.html',
   styleUrls: ['./container-request-page.component.scss']
 })
-export class ContainerRequestPageComponent {
+export class ContainerRequestPageComponent implements OnInit {
+  ngOnInit(): void {
+    console.log('UPDATING.............................');
+    this.dataService.refreshPage(); 
+  }
 
   dataService = inject(DataServiceService);
   router = inject(Router);
   csinquiryService = inject(CsinquiriesService);
   dialogRef = inject(MatDialog);
   csinquiry = signal<CsinquiryDto | undefined>(undefined);
+
+  getArticleNumberForOrder(id:number):string{
+    let articleNumber = this.dataService.articleNumbersForOrder.get(id);
+    if(articleNumber !== undefined){
+      return articleNumber;
+    }
+    return '';
+  }
 
   getApprovedString(approved:boolean) :string{
     if(approved){
@@ -37,10 +49,10 @@ export class ContainerRequestPageComponent {
   }
 
   addOrderPage(){
-    this.router.navigateByUrl('/new-order-page');
+    this.router.navigateByUrl('/new-container-order-page');
   }
 
   editOrderPage(id:number){
-    this.router.navigateByUrl('/edit-order-page/'+ id);
+    this.router.navigateByUrl('/edit-container-order-page/'+ id);
   }
 }

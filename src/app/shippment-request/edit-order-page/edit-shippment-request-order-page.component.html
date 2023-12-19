@@ -1,0 +1,114 @@
+<label>Status</label>
+<input #txtStatus type="number" value="{{currOrder().status}}" (change)="status.set(+txtStatus.value)">
+<br>
+<label>Kunde</label>
+<input #txtCustName type="text" value="{{currOrder().customerName}}" (change)="customerName.set(txtCustName.value)">
+<br>
+<label>Erstellt von</label>
+<input #txtCreatedBy type="text" value="{{currOrder().createdBy}}" (change)="createdBy.set(txtCreatedBy.value)">
+<br>
+<div class="checkbox-container">
+  <label class="checkbox-label">Genehmigt
+    <input #txtApproved class="checkbox-input" type="checkbox" [checked]="currOrder().approved"
+      value="{{currOrder().approved}}" (change)="isApproved.set(txtApproved.checked)">
+  </label>
+</div>
+<label>Menge</label>
+<input #txtAmount type="number" value="{{currOrder().amount}}" (change)="amount.set(+txtAmount.value)">
+<br>
+<label>Checkliste</label>
+<select #txtChecklistId (change)="checklistId.set(+txtChecklistId.value)" value="{{currOrder().checklistId}}">
+  @for (currChecklist of allCheckliststs(); track $index) {
+  <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+  }
+</select>
+<br>
+<label>Inquiry Number</label>
+<input #txtInquiryNumber type="number" [value]="currTlInquiry().inquiryNumber"
+  (change)="inquiryNumber.set(+txtInquiryNumber.value)">
+<br>
+
+<label>Sped</label>
+<input #txtSped type="text" [value]="currTlInquiry().sped" (change)="sped.set(txtSped.value)">
+<br>
+
+<label>Country</label>
+<input #txtCountry type="text" [value]="currTlInquiry().country" (change)="country.set(txtCountry.value)">
+<br>
+
+<label>Accepting Port</label>
+<input #txtAcceptingPort type="text" [value]="currTlInquiry().acceptingPort"
+  (change)="acceptingPort.set(txtAcceptingPort.value)">
+<br>
+
+<label>Expected Retrieve Week</label>
+<input #txtExpectedRetrieveWeek type="text" [value]="currTlInquiry().expectedRetrieveWeek"
+  (change)="expectedRetrieveWeek.set(txtExpectedRetrieveWeek.value)">
+<br>
+
+<label>Weight In Kg</label>
+<input #txtWeightInKg type="number" [value]="currTlInquiry().weightInKg"
+  (change)="weightInKg.set(+txtWeightInKg.value)">
+<br>
+
+<label>Invoice On</label>
+<input #txtInvoiceOn type="text" [value]="currTlInquiry().invoiceOn" (change)="invoiceOn.set(txtInvoiceOn.value)">
+<br>
+
+<label>Retrieve Date</label>
+<input #txtRetrieveDate type="text" [value]="currTlInquiry().retrieveDate"
+  (change)="retrieveDate.set(txtRetrieveDate.value)">
+<br>
+
+<div class="checkbox-container">
+  <label class="checkbox-label">Is Container 40
+<input #txtIsContainer40 class="checkbox-input" type="checkbox" [checked]="currTlInquiry().isContainer40"
+  (change)="isContainer40.set(txtIsContainer40.checked)">
+</label>
+</div>
+
+<div class="checkbox-container">
+  <label class="checkbox-label">Is Container HC
+    <input #txtIsContainerHc class="checkbox-input" type="checkbox" [checked]="currTlInquiry().isContainerHc"
+      (change)="isContainerHc.set(txtIsContainerHc.checked)">
+  </label>
+</div>
+
+<label>Retrieve Location</label>
+<input #txtRetrieveLocation type="text" [value]="currTlInquiry().retrieveLocation"
+  (change)="retrieveLocation.set(txtRetrieveLocation.value)">
+<br>
+
+<label>Debt Capital General Forerun EUR</label>
+<input #txtDebtCapitalGeneralForerunEur type="number" [value]="currTlInquiry().debtCapitalGeneralForerunEur"
+  (change)="debtCapitalGeneralForerunEur.set(+txtDebtCapitalGeneralForerunEur.value)">
+<br>
+
+<label>Debt Capital Main Dol</label>
+<input #txtDebtCapitalMainDol type="number" [value]="currTlInquiry().debtCapitalMainDol"
+  (change)="debtCapitalMainDol.set(+txtDebtCapitalMainDol.value)">
+<br>
+
+<label>Debt Capital Trailing Dol</label>
+<input #txtDebtCapitalTrailingDol type="number" [value]="currTlInquiry().debtCapitalTrailingDol"
+  (change)="debtCapitalTrailingDol.set(+txtDebtCapitalTrailingDol.value)">
+<br>
+
+<label>Port of Departure</label>
+<input #txtPortOfDeparture type="text" [value]="currTlInquiry().portOfDeparture"
+  (change)="portOfDeparture.set(txtPortOfDeparture.value)">
+<br>
+
+<label>ETS</label>
+<input #txtETS type="text" [value]="currTlInquiry().ets" (change)="ets.set(txtETS.value)">
+<br>
+
+<label>ETA</label>
+<input #txtETA type="text" [value]="currTlInquiry().eta" (change)="eta.set(txtETA.value)">
+<br>
+
+<label>Boat</label>
+<input #txtBoat type="text" [value]="currTlInquiry().boat" (change)="boat.set(txtBoat.value)">
+<br>
+
+<button (click)="saveOrder()">SAVE</button>

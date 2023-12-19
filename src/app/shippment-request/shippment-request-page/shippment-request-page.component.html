@@ -29,12 +29,13 @@
           <td>{{currOrder.id}}</td>
           <td>{{currOrder.customerName}}</td>
           <td>{{currOrder.createdBy}}</td>
-          <td>{{dataService.allAbNumbers()[$index]}}</td>
+          <td>{{getArticleNumberForOrder(currOrder.id)}}</td>
           <td>{{currOrder.status}}</td>
-          <td>TODO</td>
-          <td>{{getApprovedString(currOrder.approved)}}</td>
           <td>{{currOrder.amount}}</td>
+          <td>{{getApprovedString(currOrder.approved)}}</td>
+          <td>WERK</td>
           <td>{{currOrder.lastUpdated | date: 'dd.MM.yyyy'}}</td>
+          <td>ANLAGE</td>
           <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
           <td (click)="editOrderPage(currOrder.id)"><mat-icon>create</mat-icon></td>
       </tr>

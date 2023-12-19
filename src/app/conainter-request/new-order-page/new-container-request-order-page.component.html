@@ -1,0 +1,117 @@
+<html lang="en">
+
+<head>
+  <label>Status</label>
+  <input [ngSignal]="status" type="number">
+  <br>
+  <label>Kunde</label>
+  <input [ngSignal]="customerName" type="text">
+  <br>
+  <label>Erstellt von</label>
+  <input [ngSignal]="createdBy" type="text">
+  <br>
+  <label>Menge</label>
+  <input [ngSignal]="amount" type="number">
+  <br>
+  <label>Checkliste</label>
+  <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
+    @for (currChecklist of allCheckliststs(); track $index) {
+    <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+    }
+  </select>
+  <br>
+  <button (click)="addOrder()">SAVE</button>
+</head>
+
+<body>
+  <label>Status</label>
+  <input [ngSignal]="status" type="number">
+  <br>
+  <label>Kunde</label>
+  <input [ngSignal]="customerName" type="text">
+  <br>
+  <label>Erstellt von</label>
+  <input [ngSignal]="createdBy" type="text">
+  <br>
+  <label>Menge</label>
+  <input [ngSignal]="amount" type="number">
+  <br>
+  <label>Checkliste</label>
+  <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
+    @for (currChecklist of allCheckliststs(); track $index) {
+    <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+    }
+  </select>
+  <br>
+  <label>Container</label>
+  <input [ngSignal]="container" type="text">
+  <br>
+
+  <label>Fast Line</label>
+  <input [ngSignal]="fastLine" type="text">
+  <br>
+
+  <label>Direct Line</label>
+  <input [ngSignal]="directLine" type="text">
+  <br>
+
+  <label>Article Number</label>
+  <input [ngSignal]="articleNumber" type="text">
+  <br>
+
+  <label>Pallet Amount</label>
+  <input [ngSignal]="palletamount" type="number">
+  <br>
+
+  <label>Customer</label>
+  <input [ngSignal]="customer" type="text">
+  <br>
+
+  <label>AB Number</label>
+  <input [ngSignal]="abnumber" type="number">
+  <br>
+
+  <label>Brutto Weight In Kg</label>
+  <input [ngSignal]="bruttoWeightInKg" type="number">
+  <br>
+
+  <label>Incoterm</label>
+  <input [ngSignal]="incoterm" type="text">
+  <br>
+
+  <label>Container Size A</label>
+  <input [ngSignal]="containersizeA" type="number">
+  <br>
+
+  <label>Container Size B</label>
+  <input [ngSignal]="containersizeB" type="number">
+  <br>
+
+  <label>Container Size HC</label>
+  <input [ngSignal]="containersizeHc" type="number">
+  <br>
+
+  <div class="checkbox-container">
+    <label class="checkbox-label">Free Detention
+      <input class="checkbox-input" [ngSignal]="freeDetention" type="checkbox">
+    </label>
+  </div>
+
+  <div class="checkbox-container">
+    <label class="checkbox-label">THCTB
+      <input class="checkbox-input" [ngSignal]="thctb" type="checkbox">
+    </label>
+  </div>
+
+  <label>Ready To Load</label>
+  <input [ngSignal]="readyToLoad" type="text">
+  <br>
+
+  <label>Loading Plattform</label>
+  <input [ngSignal]="loadingPlattform" type="text">
+  <br>
+
+  <button (click)="addOrder()">SAVE</button>
+</body>
+
+</html>

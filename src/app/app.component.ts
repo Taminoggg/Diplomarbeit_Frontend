@@ -14,5 +14,7 @@ export class AppComponent {
   title = 'DAFrontend';
   router = inject(Router);
   
-  
+  navigateToHomePage(){
+    this.router.navigateByUrl('/function-overview-age');
+  }
 }

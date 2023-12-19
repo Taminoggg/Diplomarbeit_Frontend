@@ -1,0 +1,126 @@
+<html lang="en">
+
+<head>
+  <label>Status</label>
+  <input [ngSignal]="status" type="number">
+  <br>
+  <label>Kunde</label>
+  <input [ngSignal]="customerName" type="text">
+  <br>
+  <label>Erstellt von</label>
+  <input [ngSignal]="createdBy" type="text">
+  <br>
+  <label>Menge</label>
+  <input [ngSignal]="amount" type="number">
+  <br>
+  <label>Checkliste</label>
+  <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
+    @for (currChecklist of allCheckliststs(); track $index) {
+    <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+    }
+  </select>
+  <br>
+  <button (click)="addOrder()">SAVE</button>
+</head>
+
+<body>
+  <label>Status</label>
+  <input [ngSignal]="status" type="number">
+  <br>
+  <label>Kunde</label>
+  <input [ngSignal]="customerName" type="text">
+  <br>
+  <label>Erstellt von</label>
+  <input [ngSignal]="createdBy" type="text">
+  <br>
+  <label>Menge</label>
+  <input [ngSignal]="amount" type="number">
+  <br>
+  <label>Checkliste</label>
+  <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
+    @for (currChecklist of allCheckliststs(); track $index) {
+    <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+    }
+  </select>
+  <br>
+
+  <label>Inquiry Number</label>
+  <input [ngSignal]="inquiryNumber" type="number">
+  <br>
+
+  <label>Sped</label>
+  <input [ngSignal]="sped" type="text">
+  <br>
+
+  <label>Country</label>
+  <input [ngSignal]="country" type="text">
+  <br>
+
+  <label>Accepting Port</label>
+  <input [ngSignal]="acceptingPort" type="text">
+  <br>
+
+  <label>Expected Retrieve Week</label>
+  <input [ngSignal]="expectedRetrieveWeek" type="text">
+  <br>
+
+  <label>Weight In Kg</label>
+  <input [ngSignal]="weightInKg" type="number">
+  <br>
+
+  <label>Invoice On</label>
+  <input [ngSignal]="invoiceOn" type="text">
+  <br>
+
+  <label>Retrieve Date</label>
+  <input [ngSignal]="retrieveDate" type="text">
+  <br>
+
+  <div class="checkbox-container">
+    <label class="checkbox-label">Is Container 40
+      <input class="checkbox-input" [ngSignal]="isContainer40" type="checkbox">
+    </label>
+  </div>
+
+  <div class="checkbox-container">
+    <label class="checkbox-label">Is Container HC
+      <input class="checkbox-input" [ngSignal]="isContainerHc" type="checkbox">
+    </label>
+  </div>
+
+  <label>Retrieve Location</label>
+  <input [ngSignal]="retrieveLocation" type="text">
+  <br>
+
+  <label>Debt Capital General Forerun EUR</label>
+  <input [ngSignal]="debtCapitalGeneralForerunEur" type="number">
+  <br>
+
+  <label>Debt Capital Main Dol</label>
+  <input [ngSignal]="debtCapitalMainDol" type="number">
+  <br>
+
+  <label>Debt Capital Trailing Dol</label>
+  <input [ngSignal]="debtCapitalTrailingDol" type="number">
+  <br>
+
+  <label>Port of Departure</label>
+  <input [ngSignal]="portOfDeparture" type="text">
+  <br>
+
+  <label>ETS</label>
+  <input [ngSignal]="ets" type="text">
+  <br>
+
+  <label>ETA</label>
+  <input [ngSignal]="eta" type="text">
+  <br>
+
+  <label>Boat</label>
+  <input [ngSignal]="boat" type="text">
+  <br>
+
+  <button (click)="addOrder()">SAVE</button>
+</body>
+
+</html>

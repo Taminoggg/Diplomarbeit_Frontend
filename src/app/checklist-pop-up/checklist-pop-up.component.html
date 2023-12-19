@@ -1,5 +1,12 @@
-@for (currStep of steps(); track $index) {
-    {{currStep.stepName}}
-    <input type="checkbox">
-}
-<button (click)="saveChanges()">SAVE</button>
+<div id="box">
+    <div id="header">
+        <h3>Checklist</h3>
+    </div>
+    <div id="content">
+        @for (currStep of steps(); track $index) {
+            <label>{{currStep.stepName}} <input type="checkbox"></label>
+            <hr>
+        }
+        <button>SAVE</button>
+    </div>
+</div>

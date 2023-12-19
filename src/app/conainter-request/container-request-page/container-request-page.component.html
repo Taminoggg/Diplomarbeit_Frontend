@@ -1,0 +1,43 @@
+
+<div class="overviewBox">
+  <h1>Übersicht aktive Containerabfragen</h1>
+
+  <button (click)="addOrderPage()"><h2>+ NEU</h2></button>
+</div>
+
+<div class="searchBox">
+  <input type="text" placeholder="Suche...">
+</div>
+
+<div class="orderBox">
+    <table>
+      <tr>
+        <th>Auftrag</th>
+        <th>Kunde</th>
+        <th>Angelegt von</th>
+        <th>AB-Nr.</th>
+        <th>Status</th>
+        <th>Artikel</th>
+        <th>Freigegeben</th>
+        <th>Menge</th>
+        <th>Aktuallisierung</th>
+        <th>Checkliste</th>
+        <th>Bearbeiten</th>
+      </tr>
+      @for (currOrder of dataService.allOrders(); track $index) {
+      <tr>
+          <td>{{currOrder.id}}</td>
+          <td>{{currOrder.customerName}}</td>
+          <td>{{currOrder.createdBy}}</td>
+          <td>{{dataService.allAbNumbers()[$index]}}</td>
+          <td>{{currOrder.status}}</td>
+          <td>{{getArticleNumberForOrder(currOrder.id)}}</td>
+          <td>{{getApprovedString(currOrder.approved)}}</td>
+          <td>{{currOrder.amount}}</td>
+          <td>{{currOrder.lastUpdated | date: 'dd.MM.yyyy'}}</td>
+          <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
+          <td (click)="editOrderPage(currOrder.id)"><mat-icon>create</mat-icon></td>
+      </tr>
+    }
+    </table>
+</div>

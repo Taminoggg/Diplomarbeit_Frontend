@@ -19,7 +19,5 @@ export interface EditOrderDto {
     approved: boolean;
     amount: number;
     checklistId: number;
-    csid: number;
-    tlid: number;
 }
 

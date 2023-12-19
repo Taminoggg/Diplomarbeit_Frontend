@@ -1,7 +1,7 @@
 import { Component, Inject, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ChecklistsService, StepChecklistsService, StepDto, StepsService } from '../shared/swagger';
+import { StepDto, StepsService } from '../shared/swagger';
 
 @Component({
   selector: 'app-checklist-pop-up',
