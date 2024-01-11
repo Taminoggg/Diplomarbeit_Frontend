@@ -10,8 +10,6 @@ header h1{
     color: white;
 }
 
-
-
 .bottomBox a{
     color: white;
 }
@@ -20,6 +18,13 @@ header h1{
     display: flex;
     
 }
+
+.dropdownImg {
+    width: 50px;
+    margin-top: 5px;
+    margin-right: 25px;
+}
+  
 
 @import 'primeicons/primeicons.css';
 @import 'primeng/resources/themes/nova/theme.css';

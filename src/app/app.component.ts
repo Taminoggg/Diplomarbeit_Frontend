@@ -53,6 +53,8 @@ export class AppComponent {
   ];
 
   changeLanguage(selectedLanguage: string): void {
-      this.translocoService.setActiveLang(JSON.stringify(selectedLanguage).split(',')[1].split(':')[1].split('"')[1]);
+    let currLang = JSON.stringify(selectedLanguage).split(',')[1].split(':')[1].split('"')[1]
+      this.translocoService.setActiveLang(currLang);
+      console.log('currlang: ' + currLang);
   }
 }

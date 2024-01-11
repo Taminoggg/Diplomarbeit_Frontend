@@ -1,5 +1,18 @@
 {
-    "german": "German",
-    "english": "English",
-    "polish": "Polish"
+    "new": "+ NEW",
+    "order": "Order",
+    "createdBy": "Created by",
+    "customer": "Customer",
+    "ab-nr": "AB-Nr.",
+    "status": "Stauts",
+    "article": "Article",
+    "approved": "Approved",
+    "amount": "Amount",
+    "country": "Country",
+    "port-of-arrival": "Port of arrival",
+    "last-updated": "Last updated",
+    "checklist": "Checklist",
+    "edit": "Edit",
+    "container-page-header": "Overview active container requests",
+    "playceholdertest": "en"
 }

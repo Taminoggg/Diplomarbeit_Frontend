@@ -7,11 +7,12 @@ import { MatDialogModule } from '@angular/material/dialog'
 import { MatDialog } from '@angular/material/dialog';
 import { CsinquiriesService, CsinquiryDto } from '../../shared/swagger';
 import { ChecklistPopUpComponent } from '../../checklist-pop-up/checklist-pop-up.component';
+import { TranslocoModule } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-container-request-page',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatDialogModule],
+  imports: [CommonModule, MatIconModule, MatDialogModule, TranslocoModule],
   templateUrl: './container-request-page.component.html',
   styleUrls: ['./container-request-page.component.scss']
 })
