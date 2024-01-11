@@ -47,7 +47,8 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js", "src/linq.polyfill.ts" 
+              "zone.js",
+              "src/linq.polyfill.ts"
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",

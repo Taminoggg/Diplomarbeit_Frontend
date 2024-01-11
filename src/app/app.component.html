@@ -1,18 +1,18 @@
 <header>
-    <h1 (click)="navigateToHomePage()"><img src="/assets/TB_Logo.png" alt="Logo"></h1>
-    <nav>
-      <select name="" id="">
-        <option value="">Deutsch</option>
-        <option value="">Englisch</option>
-        <option value="">Polnisch</option>
-      </select>
-    </nav>
-  </header>
-  <div>
-
-    <router-outlet></router-outlet>
-  </div>
-
+  <h1 (click)="navigateToHomePage()"><img src="/assets/images/TB_Logo.png" alt="Logo"></h1>
+  <nav>
+    <p-dropdown [options]="languagesList" [(ngModel)]="selectedLanguage" (ngModelChange)="changeLanguage($event)">
+      <ng-template let-item pTemplate="selectedItem">
+          <img *ngIf="item && item.imgUrl" [src]="item.imgUrl" style="width:16px;vertical-align:middle" />
+      </ng-template>
+      <ng-template let-item pTemplate="item">
+          <img *ngIf="item && item.imgUrl" [src]="item.imgUrl" style="width:16px;vertical-align:middle" />
+      </ng-template>
+  </p-dropdown>
   
- 
-  
+  </nav>
+</header>
+<div>
+
+  <router-outlet></router-outlet>
+</div>

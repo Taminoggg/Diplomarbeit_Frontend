@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, isDevMode } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -6,6 +6,8 @@ import { ApiModule, BASE_PATH } from './shared/swagger';
 import { provideHttpClient } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { TranslocoHttpLoader } from './transloco-loader';
+import { provideTransloco } from '@ngneat/transloco';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,7 +17,15 @@ export const appConfig: ApplicationConfig = {
     { provide: BASE_PATH, useValue: environment.apiRoot },
     provideAnimations(),
     provideAnimations(),
-    provideAnimations()
+    provideAnimations(), provideHttpClient(), provideTransloco({
+        config: { 
+          availableLangs: ['en', 'de', 'pl'],
+          defaultLang: 'de',
+          reRenderOnLangChange: true,
+          prodMode: !isDevMode(),
+        },
+        loader: TranslocoHttpLoader
+      })
 ]
 };
 
