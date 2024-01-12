@@ -1,117 +1,91 @@
-<html lang="en">
+<label>{{'status' | transloco}}</label>
+<input [ngSignal]="status" type="number">
+<br>
 
-<head>
-  <label>Status</label>
-  <input [ngSignal]="status" type="number">
-  <br>
-  <label>Kunde</label>
-  <input [ngSignal]="customerName" type="text">
-  <br>
-  <label>Erstellt von</label>
-  <input [ngSignal]="createdBy" type="text">
-  <br>
-  <label>Menge</label>
-  <input [ngSignal]="amount" type="number">
-  <br>
-  <label>Checkliste</label>
-  <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
-    @for (currChecklist of allCheckliststs(); track $index) {
-    <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
-    }
-  </select>
-  <br>
-  <button (click)="addOrder()">SAVE</button>
-</head>
+<label>{{'customer' | transloco}}</label>
+<input [ngSignal]="customerName" type="text">
+<br>
 
-<body>
-  <label>Status</label>
-  <input [ngSignal]="status" type="number">
-  <br>
-  <label>Kunde</label>
-  <input [ngSignal]="customerName" type="text">
-  <br>
-  <label>Erstellt von</label>
-  <input [ngSignal]="createdBy" type="text">
-  <br>
-  <label>Menge</label>
-  <input [ngSignal]="amount" type="number">
-  <br>
-  <label>Checkliste</label>
-  <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
-    @for (currChecklist of allCheckliststs(); track $index) {
-    <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
-    }
-  </select>
-  <br>
-  <label>Container</label>
-  <input [ngSignal]="container" type="text">
-  <br>
+<label>{{'created-by' | transloco}}</label>
+<input [ngSignal]="createdBy" type="text">
+<br>
 
-  <label>Fast Line</label>
-  <input [ngSignal]="fastLine" type="text">
-  <br>
+<label>{{'amount' | transloco}}</label>
+<input [ngSignal]="amount" type="number">
+<br>
 
-  <label>Direct Line</label>
-  <input [ngSignal]="directLine" type="text">
-  <br>
+<label>{{'checklist' | transloco}}</label>
+<select #currChecklist (change)="checklistId.set(+currChecklist.value)">
+  @for (currChecklist of allCheckliststs(); track $index) {
+  <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+  }
+</select>
+<br>
 
-  <label>Article Number</label>
-  <input [ngSignal]="articleNumber" type="text">
-  <br>
+<label>{{'container' | transloco}}</label>
+<input [ngSignal]="container" type="text">
+<br>
 
-  <label>Pallet Amount</label>
-  <input [ngSignal]="palletamount" type="number">
-  <br>
+<label>{{'fast-line' | transloco}}</label>
+<input [ngSignal]="fastLine" type="text">
+<br>
 
-  <label>Customer</label>
-  <input [ngSignal]="customer" type="text">
-  <br>
+<label>{{'direct-line' | transloco}}</label>
+<input [ngSignal]="directLine" type="text">
+<br>
 
-  <label>AB Number</label>
-  <input [ngSignal]="abnumber" type="number">
-  <br>
+<label>{{'article-number' | transloco}}</label>
+<input [ngSignal]="articleNumber" type="text">
+<br>
 
-  <label>Brutto Weight In Kg</label>
-  <input [ngSignal]="bruttoWeightInKg" type="number">
-  <br>
+<label>{{'pallet-amount' | transloco}}</label>
+<input [ngSignal]="palletamount" type="number">
+<br>
 
-  <label>Incoterm</label>
-  <input [ngSignal]="incoterm" type="text">
-  <br>
+<label>{{'customer' | transloco}}</label>
+<input [ngSignal]="customer" type="text">
+<br>
 
-  <label>Container Size A</label>
-  <input [ngSignal]="containersizeA" type="number">
-  <br>
+<label>{{'ab-nr' | transloco}}</label>
+<input [ngSignal]="abnumber" type="number">
+<br>
 
-  <label>Container Size B</label>
-  <input [ngSignal]="containersizeB" type="number">
-  <br>
+<label>{{'gross-weight-in-kg' | transloco}}</label>
+<input [ngSignal]="bruttoWeightInKg" type="number">
+<br>
 
-  <label>Container Size HC</label>
-  <input [ngSignal]="containersizeHc" type="number">
-  <br>
+<label>{{'incoterm' | transloco}}</label>
+<input [ngSignal]="incoterm" type="text">
+<br>
 
-  <div class="checkbox-container">
-    <label class="checkbox-label">Free Detention
-      <input class="checkbox-input" [ngSignal]="freeDetention" type="checkbox">
-    </label>
-  </div>
+<label>{{'container-size-a' | transloco}}</label>
+<input [ngSignal]="containersizeA" type="number">
+<br>
 
-  <div class="checkbox-container">
-    <label class="checkbox-label">THCTB
-      <input class="checkbox-input" [ngSignal]="thctb" type="checkbox">
-    </label>
-  </div>
+<label>{{'container-size-b' | transloco}}</label>
+<input [ngSignal]="containersizeB" type="number">
+<br>
 
-  <label>Ready To Load</label>
-  <input [ngSignal]="readyToLoad" type="text">
-  <br>
+<label>{{'container-size-hc' | transloco}}</label>
+<input [ngSignal]="containersizeHc" type="number">
+<br>
 
-  <label>Loading Plattform</label>
-  <input [ngSignal]="loadingPlattform" type="text">
-  <br>
+<div class="checkbox-container">
+  <label class="checkbox-label">{{'free-detention' | transloco}}</label>
+    <input class="checkbox-input" [ngSignal]="freeDetention" type="checkbox">
+</div>
 
-  <button (click)="addOrder()">SAVE</button>
-</body>
+<div class="checkbox-container">
+  <label class="checkbox-label">{{'thctb' | transloco}}</label>
+    <input class="checkbox-input" [ngSignal]="thctb" type="checkbox">
+</div>
 
-</html>
+<label>{{'ready-to-load' | transloco}}</label>
+<input [ngSignal]="readyToLoad" type="text">
+<br>
+
+<label>{{'loading-plattform' | transloco}}</label>
+<input [ngSignal]="loadingPlattform" type="text">
+<br>
+
+<button (click)="addOrder()">{{'save' | transloco}}</button>

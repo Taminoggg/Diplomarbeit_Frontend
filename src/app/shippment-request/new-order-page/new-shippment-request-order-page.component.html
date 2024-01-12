@@ -1,126 +1,99 @@
-<html lang="en">
+<label>{{'status' | transloco}}</label>
+<input [ngSignal]="status" type="number">
+<br>
 
-<head>
-  <label>Status</label>
-  <input [ngSignal]="status" type="number">
-  <br>
-  <label>Kunde</label>
-  <input [ngSignal]="customerName" type="text">
-  <br>
-  <label>Erstellt von</label>
-  <input [ngSignal]="createdBy" type="text">
-  <br>
-  <label>Menge</label>
-  <input [ngSignal]="amount" type="number">
-  <br>
-  <label>Checkliste</label>
-  <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
-    @for (currChecklist of allCheckliststs(); track $index) {
-    <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
-    }
-  </select>
-  <br>
-  <button (click)="addOrder()">SAVE</button>
-</head>
+<label>{{'customer' | transloco}}</label>
+<input [ngSignal]="customerName" type="text">
+<br>
 
-<body>
-  <label>Status</label>
-  <input [ngSignal]="status" type="number">
-  <br>
-  <label>Kunde</label>
-  <input [ngSignal]="customerName" type="text">
-  <br>
-  <label>Erstellt von</label>
-  <input [ngSignal]="createdBy" type="text">
-  <br>
-  <label>Menge</label>
-  <input [ngSignal]="amount" type="number">
-  <br>
-  <label>Checkliste</label>
-  <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
-    @for (currChecklist of allCheckliststs(); track $index) {
-    <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
-    }
-  </select>
-  <br>
+<label>{{'created-by' | transloco}}</label>
+<input [ngSignal]="createdBy" type="text">
+<br>
 
-  <label>Inquiry Number</label>
-  <input [ngSignal]="inquiryNumber" type="number">
-  <br>
+<label>{{'amount' | transloco}}</label>
+<input [ngSignal]="amount" type="number">
+<br>
 
-  <label>Sped</label>
-  <input [ngSignal]="sped" type="text">
-  <br>
+<label>{{'checklist' | transloco}}</label>
+<select #currChecklist (change)="checklistId.set(+currChecklist.value)">
+  @for (currChecklist of allCheckliststs(); track $index) {
+  <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+  }
+</select>
+<br>
 
-  <label>Country</label>
-  <input [ngSignal]="country" type="text">
-  <br>
+<label>{{'inquiry-number' | transloco}}</label>
+<input [ngSignal]="inquiryNumber" type="number">
+<br>
 
-  <label>Accepting Port</label>
-  <input [ngSignal]="acceptingPort" type="text">
-  <br>
+<label>{{'sped' | transloco}}</label>
+<input [ngSignal]="sped" type="text">
+<br>
 
-  <label>Expected Retrieve Week</label>
-  <input [ngSignal]="expectedRetrieveWeek" type="text">
-  <br>
+<label>{{'country' | transloco}}</label>
+<input [ngSignal]="country" type="text">
+<br>
 
-  <label>Weight In Kg</label>
-  <input [ngSignal]="weightInKg" type="number">
-  <br>
+<label>{{'accepting-port' | transloco}}</label>
+<input [ngSignal]="acceptingPort" type="text">
+<br>
 
-  <label>Invoice On</label>
-  <input [ngSignal]="invoiceOn" type="text">
-  <br>
+<label>{{'expected-retrieve-week' | transloco}}</label>
+<input [ngSignal]="expectedRetrieveWeek" type="text">
+<br>
 
-  <label>Retrieve Date</label>
-  <input [ngSignal]="retrieveDate" type="text">
-  <br>
+<label>{{'weight-in-kg' | transloco}}</label>
+<input [ngSignal]="weightInKg" type="number">
+<br>
 
-  <div class="checkbox-container">
-    <label class="checkbox-label">Is Container 40
-      <input class="checkbox-input" [ngSignal]="isContainer40" type="checkbox">
-    </label>
-  </div>
+<label>{{'invoice-on' | transloco}}</label>
+<input [ngSignal]="invoiceOn" type="text">
+<br>
 
-  <div class="checkbox-container">
-    <label class="checkbox-label">Is Container HC
-      <input class="checkbox-input" [ngSignal]="isContainerHc" type="checkbox">
-    </label>
-  </div>
+<label>{{'retrieve-date' | transloco}}</label>
+<input [ngSignal]="retrieveDate" type="text">
+<br>
 
-  <label>Retrieve Location</label>
-  <input [ngSignal]="retrieveLocation" type="text">
-  <br>
+<div class="checkbox-container">
+  <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
+    <input class="checkbox-input" [ngSignal]="isContainer40" type="checkbox">
+</div>
 
-  <label>Debt Capital General Forerun EUR</label>
-  <input [ngSignal]="debtCapitalGeneralForerunEur" type="number">
-  <br>
+<div class="checkbox-container">
+  <label class="checkbox-label">is-container-hc</label>
+    <input class="checkbox-input" [ngSignal]="isContainerHc" type="checkbox">
+</div>
 
-  <label>Debt Capital Main Dol</label>
-  <input [ngSignal]="debtCapitalMainDol" type="number">
-  <br>
+<label>{{'retrieve-location' | transloco}}</label>
+<input [ngSignal]="retrieveLocation" type="text">
+<br>
 
-  <label>Debt Capital Trailing Dol</label>
-  <input [ngSignal]="debtCapitalTrailingDol" type="number">
-  <br>
+<label>{{'debt-capital-general-forerun-eur' | transloco}}</label>
+<input [ngSignal]="debtCapitalGeneralForerunEur" type="number">
+<br>
 
-  <label>Port of Departure</label>
-  <input [ngSignal]="portOfDeparture" type="text">
-  <br>
+<label>{{'debt-capital-main-dol' | transloco}}</label>
+<input [ngSignal]="debtCapitalMainDol" type="number">
+<br>
 
-  <label>ETS</label>
-  <input [ngSignal]="ets" type="text">
-  <br>
+<label>{{'debt-capital-trailing-dol' | transloco}}</label>
+<input [ngSignal]="debtCapitalTrailingDol" type="number">
+<br>
 
-  <label>ETA</label>
-  <input [ngSignal]="eta" type="text">
-  <br>
+<label>{{'port-of-departure' | transloco}}</label>
+<input [ngSignal]="portOfDeparture" type="text">
+<br>
 
-  <label>Boat</label>
-  <input [ngSignal]="boat" type="text">
-  <br>
+<label>{{'ets' | transloco}}</label>
+<input [ngSignal]="ets" type="text">
+<br>
 
-  <button (click)="addOrder()">SAVE</button>
-</body>
+<label>{{'eta' | transloco}}</label>
+<input [ngSignal]="eta" type="text">
+<br>
 
-</html>
+<label>{{'boat' | transloco}}</label>
+<input [ngSignal]="boat" type="text">
+<br>
+
+<button (click)="addOrder()">{{'save' | transloco}}</button>

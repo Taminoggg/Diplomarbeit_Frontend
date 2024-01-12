@@ -50,7 +50,7 @@
 <input #txtAbNumber type="text" value="{{currCsInquiry().abnumber}}" (change)="abnumber.set(+txtAbNumber.value)">
 <br>
 
-<label>{{'brutto-weight-in-kg' | transloco}}</label>
+<label>{{'gross-weight-in-kg' | transloco}}</label>
 <input #txtBruttoWeight type="text" value="{{currCsInquiry().bruttoWeightInKg}}"
   (change)="bruttoWeightInKg.set(+txtBruttoWeight.value)">
 <br>
@@ -82,7 +82,7 @@
 
 
 <div class="checkbox-container">
-  <label class="checkbox-label">{{'THCTB' | transloco}}</label>
+  <label class="checkbox-label">{{'thctb' | transloco}}</label>
     <input #txtTHCTB class="checkbox-input" type="checkbox" [checked]="currCsInquiry().thctb"
       (change)="thctb.set(txtTHCTB.checked)">
 </div>

@@ -6,11 +6,12 @@ import { CsinquiriesService, CsinquiryDto } from '../../shared/swagger';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslocoModule } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-shippment-request',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatDialogModule],
+  imports: [CommonModule, MatIconModule, MatDialogModule, TranslocoModule],
   templateUrl: './shippment-request-page.component.html',
   styleUrls: ['./shippment-request-page.component.scss']
 })

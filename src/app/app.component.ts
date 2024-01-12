@@ -44,12 +44,12 @@ export class AppComponent {
       name: 'English',
       shorthand: 'ENG',
     },
-    {
-      imgUrl: '/assets/images/pl.jpeg',
-      code: 'pl',
-      name: 'Polnish',
-      shorthand: 'PL',
-    },
+    //{
+      //imgUrl: '/assets/images/pl.jpeg',
+      //code: 'pl',
+      //name: 'Polnish',
+      //shorthand: 'PL',
+    //},
   ];
 
   changeLanguage(selectedLanguage: string): void {

@@ -1,29 +1,29 @@
 
 <div class="overviewBox">
-  <h1>Übersicht aktive Lieferzeit und Lieferwerkanfragen</h1>
+  <h1>{{'shippment-page-header' | transloco}}</h1>
 
-  <button (click)="addOrderPage()"><h2>+ NEU</h2></button>
+  <button (click)="addOrderPage()"><h2>{{'new' | transloco}}</h2></button>
 </div>
 
 <div class="searchBox">
-  <input type="text" placeholder="Suche...">
+  <input type="text" placeholder="{{'search-placeholder' | transloco}}">
 </div>
 
 <div class="orderBox">
     <table>
       <tr>
-        <th>Auftrag</th>
-        <th>Kunde</th>
-        <th>Angelegt von</th>
-        <th>Artikel</th>
-        <th>Status</th>
-        <th>Menge</th>
-        <th>Freigegeben</th>
-        <th>Werk</th>
-        <th>Aktuallisierung</th>
-        <th>Anlage</th>
-        <th>Checkliste</th>
-        <th>Bearbeiten</th>
+        <th>{{'order' | transloco}}</th>
+        <th>{{'customer' | transloco}}</th>
+        <th>{{'created-by' | transloco}}</th>
+        <th>{{'article' | transloco}}</th>
+        <th>{{'status' | transloco}}</th>
+        <th>{{'amount' | transloco}}</th>
+        <th>{{'approved' | transloco}}</th>
+        <th>{{'factory' | transloco}}</th>
+        <th>{{'last-updated' | transloco}}</th>
+        <th>{{'plant' | transloco}}</th>
+        <th>{{'checklist' | transloco}}</th>
+        <th>{{'edit' | transloco}}</th>
       </tr>
       @for (currOrder of dataService.allOrders(); track $index) {
       <tr>

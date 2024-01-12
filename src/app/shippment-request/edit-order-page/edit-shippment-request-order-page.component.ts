@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
+import { TranslocoModule } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-edit-order-page',
   standalone: true,
-  imports: [CommonModule, NgSignalDirective],
+  imports: [CommonModule, NgSignalDirective, TranslocoModule],
   templateUrl: './edit-shippment-request-order-page.component.html',
   styleUrl: './edit-shippment-request-order-page.component.scss'
 })

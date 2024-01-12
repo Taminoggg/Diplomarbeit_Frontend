@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { AddCsinquiryDto, AddOrderDto, AddTlinquiryDto, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
+import { TranslocoModule } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-new-order-page',
   standalone: true,
-  imports: [CommonModule, NgSignalDirective],
+  imports: [CommonModule, NgSignalDirective, TranslocoModule],
   templateUrl: './new-shippment-request-order-page.component.html',
   styleUrl: './new-shippment-request-order-page.component.scss'
 })
