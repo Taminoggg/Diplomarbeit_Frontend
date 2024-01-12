@@ -41,6 +41,10 @@ export class EditContainerOrderPageComponent implements OnChanges {
   checklistService = inject(ChecklistsService);
   csinquiriesService = inject(CsinquiriesService);
 
+  containerRequestPage():void{
+    this.router.navigateByUrl('/container-request-page');
+  }
+
   currOrder = signal<OrderDto>(
     {
       id: 1,
@@ -148,7 +152,7 @@ export class EditContainerOrderPageComponent implements OnChanges {
     }
 
     this.csinquiriesService.csinquiriesPut(editedCsInquery)
-    .subscribe(x => console.log('RETURN VALUE OF CSINQUERY SAVE: ' + x.id + x.abnumber + x.freeDetention + x.readyToLoad));
+      .subscribe(x => console.log('RETURN VALUE OF CSINQUERY SAVE: ' + x.id + x.abnumber + x.freeDetention + x.readyToLoad));
   }
 
   setOrderSignals() {

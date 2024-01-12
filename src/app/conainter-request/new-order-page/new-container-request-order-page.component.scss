@@ -1,42 +1,43 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-  }
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
 
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
+label {
+  display: block;
+  margin-bottom: 5px;
+}
 
-  input, select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-  }
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
 
-  button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+.savebutton {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-  button:hover {
-    background-color: #45a049;
-  }
+.savebutton:hover {
+  background-color: #45a049;
+}
 
-  .checkbox-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .checkbox-input {
-    margin-right: 90%; 
-  }
-  
-  .checkbox-label {
-    margin: 0;
-  }
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-input {
+  margin-right: 90%;
+}
+
+.checkbox-label {
+  margin: 0;
+}

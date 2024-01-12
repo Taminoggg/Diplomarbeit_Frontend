@@ -17,7 +17,7 @@ checkbox {
     box-sizing: border-box;
 }
 
-button {
+.savebutton {
     background-color: #4CAF50;
     color: white;
     padding: 10px 15px;
@@ -26,21 +26,19 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.savebutton:hover {
     background-color: #45a049;
 }
 
 .checkbox-container {
     display: flex;
     align-items: center;
-  }
-  
-  .checkbox-input {
-    margin-right: 90%; 
-  }
-  
-  .checkbox-label {
+}
+
+.checkbox-input {
+    margin-right: 90%;
+}
+
+.checkbox-label {
     margin: 0;
-  }
-  
-  
+}

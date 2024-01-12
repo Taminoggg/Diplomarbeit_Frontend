@@ -9,12 +9,12 @@ import { NewShippmentOrderPageComponent } from './shippment-request/new-order-pa
 
 
 export const routes: Routes = [
-  {path:'', redirectTo: '/function-overview-age', pathMatch: 'full'},
-  {path:'container-request-page', component: ContainerRequestPageComponent},
-  {path:'new-container-order-page', component: NewContainerOrderPageComponent},
-  {path:'edit-container-order-page/:id', component: EditContainerOrderPageComponent},
-  {path:'new-shippment-order-page', component: NewShippmentOrderPageComponent},
-  {path:'edit-shippment-order-page/:id', component: EditShippmentOrderPageComponent},
-  {path:'function-overview-age', component: FunctionOverviewPageComponent},
-  {path:'shippment-request-page', component: ShippmentRequestComponent}
+  { path: '', redirectTo: '/function-overview-age', pathMatch: 'full' },
+  { path: 'container-request-page', component: ContainerRequestPageComponent },
+  { path: 'new-container-order-page', component: NewContainerOrderPageComponent },
+  { path: 'edit-container-order-page/:id', component: EditContainerOrderPageComponent },
+  { path: 'new-shippment-order-page', component: NewShippmentOrderPageComponent },
+  { path: 'edit-shippment-order-page/:id', component: EditShippmentOrderPageComponent },
+  { path: 'function-overview-age', component: FunctionOverviewPageComponent },
+  { path: 'shippment-request-page', component: ShippmentRequestComponent }
 ];

@@ -13,8 +13,8 @@ import { Router } from '@angular/router';
 export class FunctionOverviewPageComponent {
     router = inject(Router);
 
-    goToUrl(){
+    goToUrl() {
         this.router.ngOnDestroy();
         window.location.href = 'http://www.teufelberger.com/';
-      }
+    }
 }

@@ -55,6 +55,10 @@ export class NewShippmentOrderPageComponent implements OnInit {
   eta = signal('17.12.2023');
   boat = signal('Test');
 
+  shippmentRequestPage() {
+    this.router.navigateByUrl('/shippment-request-page');
+  }
+
   addOrder(): void {
     let tlInquiry: AddTlinquiryDto = {
       inquiryNumber: this.inquiryNumber(),
@@ -79,7 +83,7 @@ export class NewShippmentOrderPageComponent implements OnInit {
 
     let csInquiry: AddCsinquiryDto = {
       container: 'TODO',
-      fastLine:'TODO',
+      fastLine: 'TODO',
       directLine: 'TODO',
       articleNumber: 'TODO',
       palletamount: 1,

@@ -53,6 +53,10 @@ export class NewContainerOrderPageComponent implements OnInit {
   readyToLoad = signal('17.12.2023');
   loadingPlattform = signal('Test');
 
+  containerRequestPage():void{
+    this.router.navigateByUrl('/container-request-page');
+  }
+
   addOrder(): void {
     let csInquiry: AddCsinquiryDto = {
       container: this.container(),
@@ -99,20 +103,20 @@ export class NewContainerOrderPageComponent implements OnInit {
     this.csInquiryService.csinquiriesPost(csInquiry)
       .subscribe(csInquiryObj => {
         this.tlInquiryService.tlinquiriesPost(tlInquiry)
-        .subscribe(tlInquiryObj => {
-          let order: AddOrderDto = {
-            customerName: this.customerName(),
-            status: this.status(),
-            createdBy: this.createdBy(),
-            amount: this.amount(),
-            checklistId: this.checklistId(),
-            csid: csInquiryObj.id,
-            tlid: tlInquiryObj.id
-          };
-  
-          this.orderService.ordersPost(order)
-            .subscribe(x => console.log(x));
-        });
+          .subscribe(tlInquiryObj => {
+            let order: AddOrderDto = {
+              customerName: this.customerName(),
+              status: this.status(),
+              createdBy: this.createdBy(),
+              amount: this.amount(),
+              checklistId: this.checklistId(),
+              csid: csInquiryObj.id,
+              tlid: tlInquiryObj.id
+            };
+
+            this.orderService.ordersPost(order)
+              .subscribe(x => console.log(x));
+          });
       });
 
     this.router.navigateByUrl('/shippment-request-page');

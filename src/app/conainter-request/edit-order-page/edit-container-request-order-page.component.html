@@ -1,3 +1,5 @@
+<button (click)="containerRequestPage()">{{'back' | transloco}}</button>
+
 <label>{{'status' | transloco}}</label>
 <input #txtStatus type="number" value="{{currOrder().status}}" (change)="status.set(+txtStatus.value)">
 <br>
@@ -76,15 +78,15 @@
 
 <div class="checkbox-container">
   <label class="checkbox-label">{{'free-detention' | transloco}}</label>
-    <input #txtFreeDetention class="checkbox-input" type="checkbox" [checked]="currCsInquiry().freeDetention"
-      value="{{currCsInquiry().freeDetention}}" (change)="freeDetention.set(txtFreeDetention.checked)">
+  <input #txtFreeDetention class="checkbox-input" type="checkbox" [checked]="currCsInquiry().freeDetention"
+    value="{{currCsInquiry().freeDetention}}" (change)="freeDetention.set(txtFreeDetention.checked)">
 </div>
 
 
 <div class="checkbox-container">
   <label class="checkbox-label">{{'thctb' | transloco}}</label>
-    <input #txtTHCTB class="checkbox-input" type="checkbox" [checked]="currCsInquiry().thctb"
-      (change)="thctb.set(txtTHCTB.checked)">
+  <input #txtTHCTB class="checkbox-input" type="checkbox" [checked]="currCsInquiry().thctb"
+    (change)="thctb.set(txtTHCTB.checked)">
 </div>
 
 <label>{{'ready-to-load' | transloco}}</label>
@@ -101,4 +103,4 @@
 <input #txtFastLine type="text" value="{{currCsInquiry().fastLine}}" (change)="fastLine.set(txtFastLine.value)">
 <br>
 
-<button (click)="saveOrder()">{{'save' | transloco}}</button>
+<button [ngClass]="'savebutton'" (click)="saveOrder()">{{'save' | transloco}}</button>

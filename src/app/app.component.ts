@@ -22,39 +22,39 @@ export class AppComponent {
     name: 'German',
     shorthand: 'GER',
   }
-  
-  navigateToHomePage(){
+
+  navigateToHomePage() {
     this.router.navigateByUrl('/function-overview-age');
   }
 
-  constructor(private translocoService: TranslocoService) {}
+  constructor(private translocoService: TranslocoService) { }
 
   public languagesList: Array<
     Record<'imgUrl' | 'code' | 'name' | 'shorthand', string>
   > = [
-    {
-      imgUrl: '/assets/images/de.jpeg',
-      code: 'de',
-      name: 'German',
-      shorthand: 'GER',
-    },
-    {
-      imgUrl: '/assets/images/en.jpeg',
-      code: 'en',
-      name: 'English',
-      shorthand: 'ENG',
-    },
-    //{
+      {
+        imgUrl: '/assets/images/de.jpeg',
+        code: 'de',
+        name: 'German',
+        shorthand: 'GER',
+      },
+      {
+        imgUrl: '/assets/images/en.jpeg',
+        code: 'en',
+        name: 'English',
+        shorthand: 'ENG',
+      },
+      //{
       //imgUrl: '/assets/images/pl.jpeg',
       //code: 'pl',
       //name: 'Polnish',
       //shorthand: 'PL',
-    //},
-  ];
+      //},
+    ];
 
   changeLanguage(selectedLanguage: string): void {
     let currLang = JSON.stringify(selectedLanguage).split(',')[1].split(':')[1].split('"')[1]
-      this.translocoService.setActiveLang(currLang);
-      console.log('currlang: ' + currLang);
+    this.translocoService.setActiveLang(currLang);
+    console.log('currlang: ' + currLang);
   }
 }

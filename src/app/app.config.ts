@@ -18,15 +18,15 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideAnimations(),
     provideAnimations(), provideHttpClient(), provideTransloco({
-        config: { 
-          availableLangs: ['en', 'de', 'pl'],
-          defaultLang: 'de',
-          reRenderOnLangChange: true,
-          prodMode: !isDevMode(),
-        },
-        loader: TranslocoHttpLoader
-      })
-]
+      config: {
+        availableLangs: ['en', 'de', 'pl'],
+        defaultLang: 'de',
+        reRenderOnLangChange: true,
+        prodMode: !isDevMode(),
+      },
+      loader: TranslocoHttpLoader
+    })
+  ]
 };
 
 console.log('Based on Angular17 Template v17.0.4 [2023-11-22]');

@@ -1,8 +1,9 @@
-
 <div class="overviewBox">
   <h1>{{'shippment-page-header' | transloco}}</h1>
 
-  <button (click)="addOrderPage()"><h2>{{'new' | transloco}}</h2></button>
+  <button (click)="addOrderPage()">
+    <h2>{{'new' | transloco}}</h2>
+  </button>
 </div>
 
 <div class="searchBox">
@@ -10,36 +11,36 @@
 </div>
 
 <div class="orderBox">
-    <table>
-      <tr>
-        <th>{{'order' | transloco}}</th>
-        <th>{{'customer' | transloco}}</th>
-        <th>{{'created-by' | transloco}}</th>
-        <th>{{'article' | transloco}}</th>
-        <th>{{'status' | transloco}}</th>
-        <th>{{'amount' | transloco}}</th>
-        <th>{{'approved' | transloco}}</th>
-        <th>{{'factory' | transloco}}</th>
-        <th>{{'last-updated' | transloco}}</th>
-        <th>{{'plant' | transloco}}</th>
-        <th>{{'checklist' | transloco}}</th>
-        <th>{{'edit' | transloco}}</th>
-      </tr>
-      @for (currOrder of dataService.allOrders(); track $index) {
-      <tr>
-          <td>{{currOrder.id}}</td>
-          <td>{{currOrder.customerName}}</td>
-          <td>{{currOrder.createdBy}}</td>
-          <td>{{getArticleNumberForOrder(currOrder.id)}}</td>
-          <td>{{currOrder.status}}</td>
-          <td>{{currOrder.amount}}</td>
-          <td>{{getApprovedString(currOrder.approved)}}</td>
-          <td>WERK</td>
-          <td>{{currOrder.lastUpdated | date: 'dd.MM.yyyy'}}</td>
-          <td>ANLAGE</td>
-          <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
-          <td (click)="editOrderPage(currOrder.id)"><mat-icon>create</mat-icon></td>
-      </tr>
+  <table>
+    <tr>
+      <th>{{'order' | transloco}}</th>
+      <th>{{'customer' | transloco}}</th>
+      <th>{{'created-by' | transloco}}</th>
+      <th>{{'article' | transloco}}</th>
+      <th>{{'status' | transloco}}</th>
+      <th>{{'amount' | transloco}}</th>
+      <th>{{'approved' | transloco}}</th>
+      <th>{{'factory' | transloco}}</th>
+      <th>{{'last-updated' | transloco}}</th>
+      <th>{{'plant' | transloco}}</th>
+      <th>{{'checklist' | transloco}}</th>
+      <th>{{'edit' | transloco}}</th>
+    </tr>
+    @for (currOrder of dataService.allOrders(); track $index) {
+    <tr>
+      <td>{{currOrder.id}}</td>
+      <td>{{currOrder.customerName}}</td>
+      <td>{{currOrder.createdBy}}</td>
+      <td>{{getArticleNumberForOrder(currOrder.id)}}</td>
+      <td>{{currOrder.status}}</td>
+      <td>{{currOrder.amount}}</td>
+      <td>{{getApprovedString(currOrder.approved)}}</td>
+      <td>WERK</td>
+      <td>{{currOrder.lastUpdated | date: 'dd.MM.yyyy'}}</td>
+      <td>ANLAGE</td>
+      <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
+      <td (click)="editOrderPage(currOrder.id)"><mat-icon>create</mat-icon></td>
+    </tr>
     }
-    </table>
+  </table>
 </div>

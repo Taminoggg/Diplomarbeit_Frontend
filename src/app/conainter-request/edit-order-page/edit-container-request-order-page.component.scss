@@ -17,18 +17,18 @@ checkbox {
     box-sizing: border-box;
 }
 
-button {
+.savebutton {
     background-color: #4CAF50;
     color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-button:hover {
+  }
+  
+  .savebutton:hover {
     background-color: #45a049;
-}
+  }
 
 .checkbox-container {
     display: flex;

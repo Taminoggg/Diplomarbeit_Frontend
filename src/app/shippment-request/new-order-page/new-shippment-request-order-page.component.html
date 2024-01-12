@@ -1,3 +1,5 @@
+<button (click)="shippmentRequestPage()">{{'back' | transloco}}</button>
+
 <label>{{'status' | transloco}}</label>
 <input [ngSignal]="status" type="number">
 <br>
@@ -56,12 +58,12 @@
 
 <div class="checkbox-container">
   <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
-    <input class="checkbox-input" [ngSignal]="isContainer40" type="checkbox">
+  <input class="checkbox-input" [ngSignal]="isContainer40" type="checkbox">
 </div>
 
 <div class="checkbox-container">
   <label class="checkbox-label">is-container-hc</label>
-    <input class="checkbox-input" [ngSignal]="isContainerHc" type="checkbox">
+  <input class="checkbox-input" [ngSignal]="isContainerHc" type="checkbox">
 </div>
 
 <label>{{'retrieve-location' | transloco}}</label>
@@ -96,4 +98,4 @@
 <input [ngSignal]="boat" type="text">
 <br>
 
-<button (click)="addOrder()">{{'save' | transloco}}</button>
+<button [ngClass]="'savebutton'" (click)="addOrder()">{{'save' | transloco}}</button>

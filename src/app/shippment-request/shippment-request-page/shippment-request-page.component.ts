@@ -17,11 +17,11 @@ import { TranslocoModule } from '@ngneat/transloco';
 })
 export class ShippmentRequestComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
-    this.dataService.refreshPage(); 
+    this.dataService.refreshPage();
   }
   ngOnInit(): void {
     console.log('UPDATING.............................');
-    this.dataService.refreshPage(); 
+    this.dataService.refreshPage();
   }
 
   dataService = inject(DataServiceService);
@@ -29,32 +29,34 @@ export class ShippmentRequestComponent implements OnInit, OnChanges {
   dialogRef = inject(MatDialog);
   csinquiry = signal<CsinquiryDto | undefined>(undefined);
 
-  getArticleNumberForOrder(id:number):string{
+  getArticleNumberForOrder(id: number): string {
     let articleNumber = this.dataService.articleNumbersForOrder.get(id);
-    if(articleNumber !== undefined){
+    if (articleNumber !== undefined) {
       return articleNumber;
     }
     return '';
   }
 
-  getApprovedString(approved:boolean) :string{
-    if(approved){
+  getApprovedString(approved: boolean): string {
+    if (approved) {
       return 'JA';
     }
     return 'NEIN';
   }
 
-  openDialog(id:number){
-    this.dialogRef.open(ChecklistPopUpComponent, {data: {
-      id: id
-    }});
+  openDialog(id: number) {
+    this.dialogRef.open(ChecklistPopUpComponent, {
+      data: {
+        id: id
+      }
+    });
   }
 
-  addOrderPage(){
+  addOrderPage() {
     this.router.navigateByUrl('/new-shippment-order-page');
   }
 
-  editOrderPage(id:number){
-    this.router.navigateByUrl('/edit-shippment-order-page/'+ id);
+  editOrderPage(id: number) {
+    this.router.navigateByUrl('/edit-shippment-order-page/' + id);
   }
 }

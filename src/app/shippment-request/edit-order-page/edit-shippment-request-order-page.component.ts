@@ -41,6 +41,10 @@ export class EditShippmentOrderPageComponent implements OnChanges {
   checklistService = inject(ChecklistsService);
   tlinquiriesService = inject(TlinquiriesService);
 
+  shippmentRequestPage() {
+    this.router.navigateByUrl('/shippment-request-page');
+  }
+
   currOrder = signal<OrderDto>(
     {
       id: 1,
@@ -130,7 +134,7 @@ export class EditShippmentOrderPageComponent implements OnChanges {
     this.router.navigateByUrl('/shippment-request-page');
   }
 
-  saveTlInquery(){
+  saveTlInquery() {
     let editedTlInquiry: EditTlInqueryDto =
     {
       id: this.currTlInquiry().id,
@@ -155,7 +159,7 @@ export class EditShippmentOrderPageComponent implements OnChanges {
     }
 
     this.tlinquiriesService.tlinquiriesPut(editedTlInquiry)
-    .subscribe(x => console.log('Editing tlinquiry: '+ x.country + ' ' + x.retrieveLocation));
+      .subscribe(x => console.log('Editing tlinquiry: ' + x.country + ' ' + x.retrieveLocation));
   }
 
   setOrderSignals() {

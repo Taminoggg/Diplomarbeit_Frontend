@@ -14,9 +14,9 @@ export class ContainerToolFunctionComponent {
   @Input() toolFunctionName: string = "";
   @Input() toolFunctionDescription: string = "";
   @Input() redirectRoute: string = "";
-  
 
-  redirectToRoute() : void {
+
+  redirectToRoute(): void {
     this.router.navigateByUrl(this.redirectRoute);
   }
 }

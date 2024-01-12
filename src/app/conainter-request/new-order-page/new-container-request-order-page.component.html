@@ -1,3 +1,5 @@
+<button (click)="containerRequestPage()">{{'back' | transloco}}</button>
+
 <label>{{'status' | transloco}}</label>
 <input [ngSignal]="status" type="number">
 <br>
@@ -72,12 +74,12 @@
 
 <div class="checkbox-container">
   <label class="checkbox-label">{{'free-detention' | transloco}}</label>
-    <input class="checkbox-input" [ngSignal]="freeDetention" type="checkbox">
+  <input class="checkbox-input" [ngSignal]="freeDetention" type="checkbox">
 </div>
 
 <div class="checkbox-container">
   <label class="checkbox-label">{{'thctb' | transloco}}</label>
-    <input class="checkbox-input" [ngSignal]="thctb" type="checkbox">
+  <input class="checkbox-input" [ngSignal]="thctb" type="checkbox">
 </div>
 
 <label>{{'ready-to-load' | transloco}}</label>
@@ -88,4 +90,4 @@
 <input [ngSignal]="loadingPlattform" type="text">
 <br>
 
-<button (click)="addOrder()">{{'save' | transloco}}</button>
+<button [ngClass]="'savebutton'" (click)="addOrder()">{{'save' | transloco}}</button>

@@ -1,3 +1,5 @@
+<button (click)="shippmentRequestPage()">{{'back' | transloco}}</button>
+
 <label>{{'status' | transloco}}</label>
 <input #txtStatus type="number" value="{{currOrder().status}}" (change)="status.set(+txtStatus.value)">
 <br>
@@ -12,8 +14,8 @@
 
 <div class="checkbox-container">
   <label class="checkbox-label">{{'approved' | transloco}}</label>
-    <input #txtApproved class="checkbox-input" type="checkbox" [checked]="currOrder().approved"
-      value="{{currOrder().approved}}" (change)="isApproved.set(txtApproved.checked)">
+  <input #txtApproved class="checkbox-input" type="checkbox" [checked]="currOrder().approved"
+    value="{{currOrder().approved}}" (change)="isApproved.set(txtApproved.checked)">
 </div>
 
 <label>{{'amount' | transloco}}</label>
@@ -67,14 +69,14 @@
 
 <div class="checkbox-container">
   <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
-<input #txtIsContainer40 class="checkbox-input" type="checkbox" [checked]="currTlInquiry().isContainer40"
-  (change)="isContainer40.set(txtIsContainer40.checked)">
+  <input #txtIsContainer40 class="checkbox-input" type="checkbox" [checked]="currTlInquiry().isContainer40"
+    (change)="isContainer40.set(txtIsContainer40.checked)">
 </div>
 
 <div class="checkbox-container">
   <label class="checkbox-label">{{'is-container-hc' | transloco}}</label>
-    <input #txtIsContainerHc class="checkbox-input" type="checkbox" [checked]="currTlInquiry().isContainerHc"
-      (change)="isContainerHc.set(txtIsContainerHc.checked)">
+  <input #txtIsContainerHc class="checkbox-input" type="checkbox" [checked]="currTlInquiry().isContainerHc"
+    (change)="isContainerHc.set(txtIsContainerHc.checked)">
 </div>
 
 <label>{{'retrieve-location' | transloco}}</label>
@@ -114,4 +116,4 @@
 <input #txtBoat type="text" [value]="currTlInquiry().boat" (change)="boat.set(txtBoat.value)">
 <br>
 
-<button (click)="saveOrder()">{{'save' | transloco}}</button>
+<button [ngClass]="'savebutton'" (click)="saveOrder()">{{'save' | transloco}}</button>
