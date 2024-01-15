@@ -6,6 +6,7 @@ import { NewContainerOrderPageComponent } from './conainter-request/new-order-pa
 import { EditContainerOrderPageComponent } from './conainter-request/edit-order-page/edit-container-request-order-page.component';
 import { EditShippmentOrderPageComponent } from './shippment-request/edit-order-page/edit-shippment-request-order-page.component';
 import { NewShippmentOrderPageComponent } from './shippment-request/new-order-page/new-shippment-request-order-page.component';
+import { ChatForOrderComponent } from './chat-for-order/chat-for-order.component';
 
 
 export const routes: Routes = [
@@ -16,5 +17,6 @@ export const routes: Routes = [
   { path: 'new-shippment-order-page', component: NewShippmentOrderPageComponent },
   { path: 'edit-shippment-order-page/:id', component: EditShippmentOrderPageComponent },
   { path: 'function-overview-age', component: FunctionOverviewPageComponent },
-  { path: 'shippment-request-page', component: ShippmentRequestComponent }
+  { path: 'shippment-request-page', component: ShippmentRequestComponent },
+  { path: 'chat-for-order/:id', component: ChatForOrderComponent },
 ];

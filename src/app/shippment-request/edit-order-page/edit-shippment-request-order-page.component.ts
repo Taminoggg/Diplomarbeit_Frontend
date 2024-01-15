@@ -23,6 +23,7 @@ export class EditShippmentOrderPageComponent implements OnChanges {
         this.allChecklists.set(x);
 
       });
+      
     this.orderService.ordersIdGet(this.id)
       .subscribe(x => {
         this.currOrder.set(x);

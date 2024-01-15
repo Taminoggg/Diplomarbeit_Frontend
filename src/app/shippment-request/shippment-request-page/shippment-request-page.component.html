@@ -25,6 +25,7 @@
       <th>{{'plant' | transloco}}</th>
       <th>{{'checklist' | transloco}}</th>
       <th>{{'edit' | transloco}}</th>
+      <th>{{'chat' | transloco}}</th>
     </tr>
     @for (currOrder of dataService.allOrders(); track $index) {
     <tr>
@@ -40,6 +41,7 @@
       <td>ANLAGE</td>
       <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
       <td (click)="editOrderPage(currOrder.id)"><mat-icon>create</mat-icon></td>
+      <td (click)="chatForOrder(currOrder.id)"><mat-icon>chat</mat-icon></td>
     </tr>
     }
   </table>
