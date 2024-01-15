@@ -1,101 +1,151 @@
-<button (click)="shippmentRequestPage()">{{'back' | transloco}}</button>
-
-<label>{{'status' | transloco}}</label>
-<input [ngSignal]="status" type="number">
-<br>
-
-<label>{{'customer' | transloco}}</label>
-<input [ngSignal]="customerName" type="text">
-<br>
-
-<label>{{'created-by' | transloco}}</label>
-<input [ngSignal]="createdBy" type="text">
-<br>
-
-<label>{{'amount' | transloco}}</label>
-<input [ngSignal]="amount" type="number">
-<br>
-
-<label>{{'checklist' | transloco}}</label>
-<select #currChecklist (change)="checklistId.set(+currChecklist.value)">
-  @for (currChecklist of allCheckliststs(); track $index) {
-  <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
-  }
-</select>
-<br>
-
-<label>{{'inquiry-number' | transloco}}</label>
-<input [ngSignal]="inquiryNumber" type="number">
-<br>
-
-<label>{{'sped' | transloco}}</label>
-<input [ngSignal]="sped" type="text">
-<br>
-
-<label>{{'country' | transloco}}</label>
-<input [ngSignal]="country" type="text">
-<br>
-
-<label>{{'accepting-port' | transloco}}</label>
-<input [ngSignal]="acceptingPort" type="text">
-<br>
-
-<label>{{'expected-retrieve-week' | transloco}}</label>
-<input [ngSignal]="expectedRetrieveWeek" type="text">
-<br>
-
-<label>{{'weight-in-kg' | transloco}}</label>
-<input [ngSignal]="weightInKg" type="number">
-<br>
-
-<label>{{'invoice-on' | transloco}}</label>
-<input [ngSignal]="invoiceOn" type="text">
-<br>
-
-<label>{{'retrieve-date' | transloco}}</label>
-<input [ngSignal]="retrieveDate" type="text">
-<br>
-
-<div class="checkbox-container">
-  <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
-  <input class="checkbox-input" [ngSignal]="isContainer40" type="checkbox">
+<div class="form-row">
+  <button (click)="shippmentRequestPage()">{{'back' | transloco}}</button>
 </div>
 
-<div class="checkbox-container">
-  <label class="checkbox-label">is-container-hc</label>
-  <input class="checkbox-input" [ngSignal]="isContainerHc" type="checkbox">
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'status' | transloco}}</label>
+    <input [ngSignal]="status" type="number">
+  </div>
+
+  <div class="form-group">
+    <label>{{'customer' | transloco}}</label>
+    <input [ngSignal]="customerName" type="text">
+  </div>
+
+  <div class="form-group">
+    <label>{{'created-by' | transloco}}</label>
+    <input [ngSignal]="createdBy" type="text">
+  </div>
 </div>
 
-<label>{{'retrieve-location' | transloco}}</label>
-<input [ngSignal]="retrieveLocation" type="text">
-<br>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'amount' | transloco}}</label>
+    <input [ngSignal]="amount" type="number">
+  </div>
 
-<label>{{'debt-capital-general-forerun-eur' | transloco}}</label>
-<input [ngSignal]="debtCapitalGeneralForerunEur" type="number">
-<br>
+  <div class="form-group">
+    <label>{{'checklist' | transloco}}</label>
+    <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
+      @for (currChecklist of allChecklists(); track $index) {
+      <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+      }
+    </select>
+  </div>
 
-<label>{{'debt-capital-main-dol' | transloco}}</label>
-<input [ngSignal]="debtCapitalMainDol" type="number">
-<br>
+  <div class="form-group">
+    <label>{{'inquiry-number' | transloco}}</label>
+    <input [ngSignal]="inquiryNumber" type="number">
+  </div>
+</div>
 
-<label>{{'debt-capital-trailing-dol' | transloco}}</label>
-<input [ngSignal]="debtCapitalTrailingDol" type="number">
-<br>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'sped' | transloco}}</label>
+    <input [ngSignal]="sped" type="text">
+  </div>
 
-<label>{{'port-of-departure' | transloco}}</label>
-<input [ngSignal]="portOfDeparture" type="text">
-<br>
+  <div class="form-group">
+    <label>{{'country' | transloco}}</label>
+    <input [ngSignal]="country" type="text">
+  </div>
 
-<label>{{'ets' | transloco}}</label>
-<input [ngSignal]="ets" type="text">
-<br>
+  <div class="form-group">
+    <label>{{'accepting-port' | transloco}}</label>
+    <input [ngSignal]="acceptingPort" type="text">
+  </div>
+</div>
 
-<label>{{'eta' | transloco}}</label>
-<input [ngSignal]="eta" type="text">
-<br>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'expected-retrieve-week' | transloco}}</label>
+    <input [ngSignal]="expectedRetrieveWeek" type="text">
+  </div>
 
-<label>{{'boat' | transloco}}</label>
-<input [ngSignal]="boat" type="text">
-<br>
+  <div class="form-group">
+    <label>{{'weight-in-kg' | transloco}}</label>
+    <input [ngSignal]="weightInKg" type="number">
+  </div>
 
-<button [ngClass]="'savebutton'" (click)="addOrder()">{{'save' | transloco}}</button>
+  <div class="form-group">
+    <label>{{'invoice-on' | transloco}}</label>
+    <input [ngSignal]="invoiceOn" type="text">
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'retrieve-date' | transloco}}</label>
+    <input [ngSignal]="retrieveDate" type="text">
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox-container">
+      <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
+      <input class="checkbox-input" [ngSignal]="isContainer40" type="checkbox">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox-container">
+      <label class="checkbox-label">{{'is-container-hc' | transloco}}</label>
+      <input class="checkbox-input" [ngSignal]="isContainerHc" type="checkbox">
+    </div>
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'retrieve-location' | transloco}}</label>
+    <input [ngSignal]="retrieveLocation" type="text">
+  </div>
+
+  <div class="form-group">
+    <label>{{'retrieve-location' | transloco}}</label>
+    <input [ngSignal]="retrieveLocation" type="text">
+  </div>
+
+  <div class="form-group">
+    <label>{{'debt-capital-general-forerun-eur' | transloco}}</label>
+    <input [ngSignal]="debtCapitalGeneralForerunEur" type="number">
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'debt-capital-main-dol' | transloco}}</label>
+    <input [ngSignal]="debtCapitalMainDol" type="number">
+  </div>
+
+  <div class="form-group">
+    <label>{{'debt-capital-trailing-dol' | transloco}}</label>
+    <input [ngSignal]="debtCapitalTrailingDol" type="number">
+  </div>
+
+  <div class="form-group">
+    <label>{{'port-of-departure' | transloco}}</label>
+    <input [ngSignal]="portOfDeparture" type="text">
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'ets' | transloco}}</label>
+    <input [ngSignal]="ets" type="text">
+  </div>
+
+  <div class="form-group">
+    <label>{{'eta' | transloco}}</label>
+    <input [ngSignal]="eta" type="text">
+  </div>
+
+  <div class="form-group">
+    <label>{{'boat' | transloco}}</label>
+    <input [ngSignal]="boat" type="text">
+  </div>
+</div>
+
+<div class="form-row">
+  <button [ngClass]="'savebutton'" (click)="addOrder()">{{'save' | transloco}}</button>
+</div>

@@ -1,106 +1,148 @@
-<button (click)="containerRequestPage()">{{'back' | transloco}}</button>
-
-<label>{{'status' | transloco}}</label>
-<input #txtStatus type="number" value="{{currOrder().status}}" (change)="status.set(+txtStatus.value)">
-<br>
-
-<label>{{'customer' | transloco}}</label>
-<input #txtCustName type="text" value="{{currOrder().customerName}}" (change)="customerName.set(txtCustName.value)">
-<br>
-
-<label>{{'created-by' | transloco}}</label>
-<input #txtCreatedBy type="text" value="{{currOrder().createdBy}}" (change)="createdBy.set(txtCreatedBy.value)">
-<br>
-
-<div class="checkbox-container">
-  <label class="checkbox-label">{{'approved' | transloco}}</label>
-  <input #txtApproved class="checkbox-input" type="checkbox" [checked]="currOrder().approved"
-    value="{{currOrder().approved}}" (change)="isApproved.set(txtApproved.checked)">
+<div class="form-row">
+  <button (click)="containerRequestPage()">{{'back' | transloco}}</button>
 </div>
 
-<label>{{'amount' | transloco}}</label>
-<input #txtAmount type="number" value="{{currOrder().amount}}" (change)="amount.set(+txtAmount.value)">
-<br>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'status' | transloco}}</label>
+    <input #txtStatus type="number" value="{{currOrder().status}}" (change)="status.set(+txtStatus.value)">
+  </div>
 
-<label>{{'checklist' | transloco}}</label>
-<select #txtChecklistId (change)="checklistId.set(+txtChecklistId.value)" value="{{currOrder().checklistId}}">
-  @for (currChecklist of allCheckliststs(); track $index) {
-  <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
-  }
-</select>
-<br>
+  <div class="form-group">
+    <label>{{'customer' | transloco}}</label>
+    <input #txtCustName type="text" value="{{currOrder().customerName}}" (change)="customerName.set(txtCustName.value)">
+  </div>
 
-<label>{{'container' | transloco}}</label>
-<input #txtContainer type="text" value="{{currCsInquiry().container}}" (change)="container.set(txtContainer.value)">
-<br>
-
-<label>{{'direct line' | transloco}}</label>
-<input #txtDirectLine type="text" value="{{currCsInquiry().directLine}}" (change)="directLine.set(txtDirectLine.value)">
-<br>
-
-<label>{{'article-number' | transloco}}</label>
-<input #txtArticleNumber type="text" value="{{currCsInquiry().articleNumber}}"
-  (change)="articleNumber.set(txtArticleNumber.value)">
-<br>
-
-<label>{{'pallet-amount' | transloco}}</label>
-<input #txtPalletAmount type="text" value="{{currCsInquiry().palletamount}}"
-  (change)="palletamount.set(+txtPalletAmount.value)">
-<br>
-
-<label>{{'ab-nr' | transloco}}</label>
-<input #txtAbNumber type="text" value="{{currCsInquiry().abnumber}}" (change)="abnumber.set(+txtAbNumber.value)">
-<br>
-
-<label>{{'gross-weight-in-kg' | transloco}}</label>
-<input #txtBruttoWeight type="text" value="{{currCsInquiry().bruttoWeightInKg}}"
-  (change)="bruttoWeightInKg.set(+txtBruttoWeight.value)">
-<br>
-
-<label>{{'incoterm' | transloco}}</label>
-<input #txtIncoterm type="text" value="{{currCsInquiry().incoterm}}" (change)="incoterm.set(txtIncoterm.value)">
-<br>
-
-<label>{{'container-size-a' | transloco}}</label>
-<input #txtContainerSizeA type="text" value="{{currCsInquiry().containersizeA}}"
-  (change)="containersizeA.set(+txtContainerSizeA.value)">
-<br>
-
-<label>{{'container-size-b' | transloco}}</label>
-<input #txtContainerSizeB type="text" value="{{currCsInquiry().containersizeB}}"
-  (change)="containersizeB.set(+txtContainerSizeB.value)">
-<br>
-
-<label>{{'container-size-hc' | transloco}}</label>
-<input #txtContainerSizeHc type="text" value="{{currCsInquiry().containersizeHc}}"
-  (change)="containersizeHc.set(+txtContainerSizeHc.value)">
-<br>
-
-<div class="checkbox-container">
-  <label class="checkbox-label">{{'free-detention' | transloco}}</label>
-  <input #txtFreeDetention class="checkbox-input" type="checkbox" [checked]="currCsInquiry().freeDetention"
-    value="{{currCsInquiry().freeDetention}}" (change)="freeDetention.set(txtFreeDetention.checked)">
+  <div class="form-group">
+    <label>{{'created-by' | transloco}}</label>
+    <input #txtCreatedBy type="text" value="{{currOrder().createdBy}}" (change)="createdBy.set(txtCreatedBy.value)">
+  </div>
 </div>
 
+<div class="form-row">
+  <div class="form-group">
+    <div class="checkbox-container">
+      <label class="checkbox-label">{{'approved' | transloco}}</label>
+      <input #txtApproved class="checkbox-input" type="checkbox" [checked]="currOrder().approved"
+        value="{{currOrder().approved}}" (change)="isApproved.set(txtApproved.checked)">
+    </div>
+  </div>
 
-<div class="checkbox-container">
-  <label class="checkbox-label">{{'thctb' | transloco}}</label>
-  <input #txtTHCTB class="checkbox-input" type="checkbox" [checked]="currCsInquiry().thctb"
-    (change)="thctb.set(txtTHCTB.checked)">
+  <div class="form-group">
+    <label>{{'amount' | transloco}}</label>
+    <input #txtAmount type="number" value="{{currOrder().amount}}" (change)="amount.set(+txtAmount.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'checklist' | transloco}}</label>
+    <select #txtChecklistId (change)="checklistId.set(+txtChecklistId.value)" value="{{currOrder().checklistId}}">
+      @for (currChecklist of allCheckliststs(); track $index) {
+      <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+      }
+    </select>
+  </div>
 </div>
 
-<label>{{'ready-to-load' | transloco}}</label>
-<input #txtReadyToLoad type="text" value="{{currCsInquiry().readyToLoad}}"
-  (change)="readyToLoad.set(txtReadyToLoad.value)">
-<br>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'container' | transloco}}</label>
+    <input #txtContainer type="text" value="{{currCsInquiry().container}}" (change)="container.set(txtContainer.value)">
+  </div>
 
-<label>{{'loading-plattform' | transloco}}</label>
-<input #txtLoadingPlattform type="text" value="{{currCsInquiry().loadingPlattform}}"
-  (change)="loadingPlattform.set(txtLoadingPlattform.value)">
-<br>
+  <div class="form-group">
+    <label>{{'direct line' | transloco}}</label>
+    <input #txtDirectLine type="text" value="{{currCsInquiry().directLine}}"
+      (change)="directLine.set(txtDirectLine.value)">
+  </div>
 
-<label>{{'fast-line' | transloco}}</label>
-<input #txtFastLine type="text" value="{{currCsInquiry().fastLine}}" (change)="fastLine.set(txtFastLine.value)">
-<br>
+  <div class="form-group">
+    <label>{{'article-number' | transloco}}</label>
+    <input #txtArticleNumber type="text" value="{{currCsInquiry().articleNumber}}"
+      (change)="articleNumber.set(txtArticleNumber.value)">
+  </div>
+</div>
 
-<button [ngClass]="'savebutton'" (click)="saveOrder()">{{'save' | transloco}}</button>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'pallet-amount' | transloco}}</label>
+    <input #txtPalletAmount type="text" value="{{currCsInquiry().palletamount}}"
+      (change)="palletamount.set(+txtPalletAmount.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'ab-nr' | transloco}}</label>
+    <input #txtAbNumber type="text" value="{{currCsInquiry().abnumber}}" (change)="abnumber.set(+txtAbNumber.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'gross-weight-in-kg' | transloco}}</label>
+    <input #txtBruttoWeight type="text" value="{{currCsInquiry().bruttoWeightInKg}}"
+      (change)="bruttoWeightInKg.set(+txtBruttoWeight.value)">
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'incoterm' | transloco}}</label>
+    <input #txtIncoterm type="text" value="{{currCsInquiry().incoterm}}" (change)="incoterm.set(txtIncoterm.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'container-size-a' | transloco}}</label>
+    <input #txtContainerSizeA type="text" value="{{currCsInquiry().containersizeA}}"
+      (change)="containersizeA.set(+txtContainerSizeA.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'container-size-b' | transloco}}</label>
+    <input #txtContainerSizeB type="text" value="{{currCsInquiry().containersizeB}}"
+      (change)="containersizeB.set(+txtContainerSizeB.value)">
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'container-size-hc' | transloco}}</label>
+    <input #txtContainerSizeHc type="text" value="{{currCsInquiry().containersizeHc}}"
+      (change)="containersizeHc.set(+txtContainerSizeHc.value)">
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox-container">
+      <label class="checkbox-label">{{'free-detention' | transloco}}</label>
+      <input #txtFreeDetention class="checkbox-input" type="checkbox" [checked]="currCsInquiry().freeDetention"
+        value="{{currCsInquiry().freeDetention}}" (change)="freeDetention.set(txtFreeDetention.checked)">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox-container">
+      <label class="checkbox-label">{{'thctb' | transloco}}</label>
+      <input #txtTHCTB class="checkbox-input" type="checkbox" [checked]="currCsInquiry().thctb"
+        (change)="thctb.set(txtTHCTB.checked)">
+    </div>
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'ready-to-load' | transloco}}</label>
+    <input #txtReadyToLoad type="text" value="{{currCsInquiry().readyToLoad}}"
+      (change)="readyToLoad.set(txtReadyToLoad.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'loading-plattform' | transloco}}</label>
+    <input #txtLoadingPlattform type="text" value="{{currCsInquiry().loadingPlattform}}"
+      (change)="loadingPlattform.set(txtLoadingPlattform.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'fast-line' | transloco}}</label>
+    <input #txtFastLine type="text" value="{{currCsInquiry().fastLine}}" (change)="fastLine.set(txtFastLine.value)">
+  </div>
+</div>
+
+<div class="form-row">
+  <button [ngClass]="'savebutton'" (click)="saveOrder()">{{'save' | transloco}}</button>
+</div>

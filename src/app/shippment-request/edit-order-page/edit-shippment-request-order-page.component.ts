@@ -20,7 +20,7 @@ export class EditShippmentOrderPageComponent implements OnChanges {
     console.log('id: ' + this.id);
     this.checklistService.checklistsGet()
       .subscribe(x => {
-        this.allCheckliststs.set(x);
+        this.allChecklists.set(x);
 
       });
     this.orderService.ordersIdGet(this.id)
@@ -58,7 +58,7 @@ export class EditShippmentOrderPageComponent implements OnChanges {
       csid: 1,
       tlid: 1
     });
-  allCheckliststs = signal<ChecklistDto[]>([]);
+  allChecklists = signal<ChecklistDto[]>([]);
   currTlInquiry = signal<TlinquiryDto>(
     {
       id: 1,

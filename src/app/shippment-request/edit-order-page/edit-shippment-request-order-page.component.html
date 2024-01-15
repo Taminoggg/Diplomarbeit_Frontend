@@ -1,119 +1,167 @@
-<button (click)="shippmentRequestPage()">{{'back' | transloco}}</button>
-
-<label>{{'status' | transloco}}</label>
-<input #txtStatus type="number" value="{{currOrder().status}}" (change)="status.set(+txtStatus.value)">
-<br>
-
-<label>{{'customer' | transloco}}</label>
-<input #txtCustName type="text" value="{{currOrder().customerName}}" (change)="customerName.set(txtCustName.value)">
-<br>
-
-<label>{{'created-by' | transloco}}</label>
-<input #txtCreatedBy type="text" value="{{currOrder().createdBy}}" (change)="createdBy.set(txtCreatedBy.value)">
-<br>
-
-<div class="checkbox-container">
-  <label class="checkbox-label">{{'approved' | transloco}}</label>
-  <input #txtApproved class="checkbox-input" type="checkbox" [checked]="currOrder().approved"
-    value="{{currOrder().approved}}" (change)="isApproved.set(txtApproved.checked)">
+<div class="form-row">
+  <button (click)="shippmentRequestPage()">{{'back' | transloco}}</button>
 </div>
 
-<label>{{'amount' | transloco}}</label>
-<input #txtAmount type="number" value="{{currOrder().amount}}" (change)="amount.set(+txtAmount.value)">
-<br>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'status' | transloco}}</label>
+    <input #txtStatus type="number" value="{{currOrder().status}}" (change)="status.set(+txtStatus.value)">
+  </div>
 
-<label>{{'checklist' | transloco}}</label>
-<select #txtChecklistId (change)="checklistId.set(+txtChecklistId.value)" value="{{currOrder().checklistId}}">
-  @for (currChecklist of allCheckliststs(); track $index) {
-  <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
-  }
-</select>
-<br>
+  <div class="form-group">
+    <label>{{'customer' | transloco}}</label>
+    <input #txtCustName type="text" value="{{currOrder().customerName}}" (change)="customerName.set(txtCustName.value)">
+  </div>
 
-<label>{{'inquery-number' | transloco}}</label>
-<input #txtInquiryNumber type="number" [value]="currTlInquiry().inquiryNumber"
-  (change)="inquiryNumber.set(+txtInquiryNumber.value)">
-<br>
-
-<label>{{'sped' | transloco}}</label>
-<input #txtSped type="text" [value]="currTlInquiry().sped" (change)="sped.set(txtSped.value)">
-<br>
-
-<label>{{'country' | transloco}}</label>
-<input #txtCountry type="text" [value]="currTlInquiry().country" (change)="country.set(txtCountry.value)">
-<br>
-
-<label>{{'accepting-port' | transloco}}</label>
-<input #txtAcceptingPort type="text" [value]="currTlInquiry().acceptingPort"
-  (change)="acceptingPort.set(txtAcceptingPort.value)">
-<br>
-
-<label>{{'excepted-retrieve-week' | transloco}}</label>
-<input #txtExpectedRetrieveWeek type="text" [value]="currTlInquiry().expectedRetrieveWeek"
-  (change)="expectedRetrieveWeek.set(txtExpectedRetrieveWeek.value)">
-<br>
-
-<label>{{'weight-in-kg' | transloco}}</label>
-<input #txtWeightInKg type="number" [value]="currTlInquiry().weightInKg"
-  (change)="weightInKg.set(+txtWeightInKg.value)">
-<br>
-
-<label>{{'invoice-on' | transloco}}</label>
-<input #txtInvoiceOn type="text" [value]="currTlInquiry().invoiceOn" (change)="invoiceOn.set(txtInvoiceOn.value)">
-<br>
-
-<label>{{'retrieve-date' | transloco}}</label>
-<input #txtRetrieveDate type="text" [value]="currTlInquiry().retrieveDate"
-  (change)="retrieveDate.set(txtRetrieveDate.value)">
-<br>
-
-<div class="checkbox-container">
-  <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
-  <input #txtIsContainer40 class="checkbox-input" type="checkbox" [checked]="currTlInquiry().isContainer40"
-    (change)="isContainer40.set(txtIsContainer40.checked)">
+  <div class="form-group">
+    <label>{{'created-by' | transloco}}</label>
+    <input #txtCreatedBy type="text" value="{{currOrder().createdBy}}" (change)="createdBy.set(txtCreatedBy.value)">
+  </div>
 </div>
 
-<div class="checkbox-container">
-  <label class="checkbox-label">{{'is-container-hc' | transloco}}</label>
-  <input #txtIsContainerHc class="checkbox-input" type="checkbox" [checked]="currTlInquiry().isContainerHc"
-    (change)="isContainerHc.set(txtIsContainerHc.checked)">
+<div class="form-row">
+  <div class="form-group">
+    <div class="checkbox-container">
+      <label class="checkbox-label">{{'approved' | transloco}}</label>
+      <input #txtApproved class="checkbox-input" type="checkbox" [checked]="currOrder().approved"
+        value="{{currOrder().approved}}" (change)="isApproved.set(txtApproved.checked)">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>{{'amount' | transloco}}</label>
+    <input #txtAmount type="number" value="{{currOrder().amount}}" (change)="amount.set(+txtAmount.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'checklist' | transloco}}</label>
+    <select #txtChecklistId (change)="checklistId.set(+txtChecklistId.value)" value="{{currOrder().checklistId}}">
+      @for (currChecklist of allChecklists(); track $index) {
+      <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+      }
+    </select>
+  </div>
 </div>
 
-<label>{{'retrieve-location' | transloco}}</label>
-<input #txtRetrieveLocation type="text" [value]="currTlInquiry().retrieveLocation"
-  (change)="retrieveLocation.set(txtRetrieveLocation.value)">
-<br>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'inquery-number' | transloco}}</label>
+    <input #txtInquiryNumber type="number" [value]="currTlInquiry().inquiryNumber"
+      (change)="inquiryNumber.set(+txtInquiryNumber.value)">
+  </div>
 
-<label>{{'debt-capital-general-forerun-eur' | transloco}}</label>
-<input #txtDebtCapitalGeneralForerunEur type="number" [value]="currTlInquiry().debtCapitalGeneralForerunEur"
-  (change)="debtCapitalGeneralForerunEur.set(+txtDebtCapitalGeneralForerunEur.value)">
-<br>
+  <div class="form-group">
+    <label>{{'sped' | transloco}}</label>
+    <input #txtSped type="text" [value]="currTlInquiry().sped" (change)="sped.set(txtSped.value)">
+  </div>
 
-<label>{{'debt-capital-main-dol' | transloco}}</label>
-<input #txtDebtCapitalMainDol type="number" [value]="currTlInquiry().debtCapitalMainDol"
-  (change)="debtCapitalMainDol.set(+txtDebtCapitalMainDol.value)">
-<br>
+  <div class="form-group">
+    <label>{{'country' | transloco}}</label>
+    <input #txtCountry type="text" [value]="currTlInquiry().country" (change)="country.set(txtCountry.value)">
+  </div>
+</div>
 
-<label>{{'debt-capital-trailing-dol' | transloco}}</label>
-<input #txtDebtCapitalTrailingDol type="number" [value]="currTlInquiry().debtCapitalTrailingDol"
-  (change)="debtCapitalTrailingDol.set(+txtDebtCapitalTrailingDol.value)">
-<br>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'accepting-port' | transloco}}</label>
+    <input #txtAcceptingPort type="text" [value]="currTlInquiry().acceptingPort"
+      (change)="acceptingPort.set(txtAcceptingPort.value)">
+  </div>
 
-<label>{{'port-of-departure' | transloco}}</label>
-<input #txtPortOfDeparture type="text" [value]="currTlInquiry().portOfDeparture"
-  (change)="portOfDeparture.set(txtPortOfDeparture.value)">
-<br>
+  <div class="form-group">
+    <label>{{'excepted-retrieve-week' | transloco}}</label>
+    <input #txtExpectedRetrieveWeek type="text" [value]="currTlInquiry().expectedRetrieveWeek"
+      (change)="expectedRetrieveWeek.set(txtExpectedRetrieveWeek.value)">
+  </div>
 
-<label>{{'ets' | transloco}}</label>
-<input #txtETS type="text" [value]="currTlInquiry().ets" (change)="ets.set(txtETS.value)">
-<br>
+  <div class="form-group">
+    <label>{{'weight-in-kg' | transloco}}</label>
+    <input #txtWeightInKg type="number" [value]="currTlInquiry().weightInKg"
+      (change)="weightInKg.set(+txtWeightInKg.value)">
+  </div>
+</div>
 
-<label>{{'eta' | transloco}}</label>
-<input #txtETA type="text" [value]="currTlInquiry().eta" (change)="eta.set(txtETA.value)">
-<br>
 
-<label>{{'boat' | transloco}}</label>
-<input #txtBoat type="text" [value]="currTlInquiry().boat" (change)="boat.set(txtBoat.value)">
-<br>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'invoice-on' | transloco}}</label>
+    <input #txtInvoiceOn type="text" [value]="currTlInquiry().invoiceOn" (change)="invoiceOn.set(txtInvoiceOn.value)">
+  </div>
 
-<button [ngClass]="'savebutton'" (click)="saveOrder()">{{'save' | transloco}}</button>
+  <div class="form-group">
+    <label>{{'retrieve-date' | transloco}}</label>
+    <input #txtRetrieveDate type="text" [value]="currTlInquiry().retrieveDate"
+      (change)="retrieveDate.set(txtRetrieveDate.value)">
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox-container">
+      <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
+      <input #txtIsContainer40 class="checkbox-input" type="checkbox" [checked]="currTlInquiry().isContainer40"
+        (change)="isContainer40.set(txtIsContainer40.checked)">
+    </div>
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <div class="checkbox-container">
+      <label class="checkbox-label">{{'is-container-hc' | transloco}}</label>
+      <input #txtIsContainerHc class="checkbox-input" type="checkbox" [checked]="currTlInquiry().isContainerHc"
+        (change)="isContainerHc.set(txtIsContainerHc.checked)">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>{{'retrieve-location' | transloco}}</label>
+    <input #txtRetrieveLocation type="text" [value]="currTlInquiry().retrieveLocation"
+      (change)="retrieveLocation.set(txtRetrieveLocation.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'debt-capital-general-forerun-eur' | transloco}}</label>
+    <input #txtDebtCapitalGeneralForerunEur type="number" [value]="currTlInquiry().debtCapitalGeneralForerunEur"
+      (change)="debtCapitalGeneralForerunEur.set(+txtDebtCapitalGeneralForerunEur.value)">
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'debt-capital-main-dol' | transloco}}</label>
+    <input #txtDebtCapitalMainDol type="number" [value]="currTlInquiry().debtCapitalMainDol"
+      (change)="debtCapitalMainDol.set(+txtDebtCapitalMainDol.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'debt-capital-trailing-dol' | transloco}}</label>
+    <input #txtDebtCapitalTrailingDol type="number" [value]="currTlInquiry().debtCapitalTrailingDol"
+      (change)="debtCapitalTrailingDol.set(+txtDebtCapitalTrailingDol.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'port-of-departure' | transloco}}</label>
+    <input #txtPortOfDeparture type="text" [value]="currTlInquiry().portOfDeparture"
+      (change)="portOfDeparture.set(txtPortOfDeparture.value)">
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'ets' | transloco}}</label>
+    <input #txtETS type="text" [value]="currTlInquiry().ets" (change)="ets.set(txtETS.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'eta' | transloco}}</label>
+    <input #txtETA type="text" [value]="currTlInquiry().eta" (change)="eta.set(txtETA.value)">
+  </div>
+
+  <div class="form-group">
+    <label>{{'boat' | transloco}}</label>
+    <input #txtBoat type="text" [value]="currTlInquiry().boat" (change)="boat.set(txtBoat.value)">
+  </div>
+</div>
+
+<div class="form-row">
+  <button [ngClass]="'savebutton'" (click)="saveOrder()">{{'save' | transloco}}</button>
+</div>

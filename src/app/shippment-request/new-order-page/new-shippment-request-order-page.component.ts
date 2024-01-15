@@ -16,7 +16,7 @@ export class NewShippmentOrderPageComponent implements OnInit {
   dataService: any;
   ngOnInit(): void {
     this.checklistService.checklistsGet()
-      .subscribe(x => this.allCheckliststs.set(x));
+      .subscribe(x => this.allChecklists.set(x));
   }
 
   router = inject(Router);
@@ -25,7 +25,7 @@ export class NewShippmentOrderPageComponent implements OnInit {
   csInquiryService = inject(CsinquiriesService);
   tlInquiryService = inject(TlinquiriesService);
 
-  allCheckliststs = signal<ChecklistDto[]>([]);
+  allChecklists = signal<ChecklistDto[]>([]);
 
   csId = signal(1);
   tlId = signal(1);

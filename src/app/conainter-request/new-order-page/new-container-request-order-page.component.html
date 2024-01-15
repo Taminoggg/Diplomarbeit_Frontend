@@ -1,93 +1,130 @@
 <button (click)="containerRequestPage()">{{'back' | transloco}}</button>
 
-<label>{{'status' | transloco}}</label>
-<input [ngSignal]="status" type="number">
-<br>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'status' | transloco}}</label>
+    <input [ngSignal]="status" type="number">
+  </div>
 
-<label>{{'customer' | transloco}}</label>
-<input [ngSignal]="customerName" type="text">
-<br>
+  <div class="form-group">
+    <label>{{'customer' | transloco}}</label>
+    <input [ngSignal]="customerName" type="text">
+  </div>
 
-<label>{{'created-by' | transloco}}</label>
-<input [ngSignal]="createdBy" type="text">
-<br>
-
-<label>{{'amount' | transloco}}</label>
-<input [ngSignal]="amount" type="number">
-<br>
-
-<label>{{'checklist' | transloco}}</label>
-<select #currChecklist (change)="checklistId.set(+currChecklist.value)">
-  @for (currChecklist of allCheckliststs(); track $index) {
-  <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
-  }
-</select>
-<br>
-
-<label>{{'container' | transloco}}</label>
-<input [ngSignal]="container" type="text">
-<br>
-
-<label>{{'fast-line' | transloco}}</label>
-<input [ngSignal]="fastLine" type="text">
-<br>
-
-<label>{{'direct-line' | transloco}}</label>
-<input [ngSignal]="directLine" type="text">
-<br>
-
-<label>{{'article-number' | transloco}}</label>
-<input [ngSignal]="articleNumber" type="text">
-<br>
-
-<label>{{'pallet-amount' | transloco}}</label>
-<input [ngSignal]="palletamount" type="number">
-<br>
-
-<label>{{'customer' | transloco}}</label>
-<input [ngSignal]="customer" type="text">
-<br>
-
-<label>{{'ab-nr' | transloco}}</label>
-<input [ngSignal]="abnumber" type="number">
-<br>
-
-<label>{{'gross-weight-in-kg' | transloco}}</label>
-<input [ngSignal]="bruttoWeightInKg" type="number">
-<br>
-
-<label>{{'incoterm' | transloco}}</label>
-<input [ngSignal]="incoterm" type="text">
-<br>
-
-<label>{{'container-size-a' | transloco}}</label>
-<input [ngSignal]="containersizeA" type="number">
-<br>
-
-<label>{{'container-size-b' | transloco}}</label>
-<input [ngSignal]="containersizeB" type="number">
-<br>
-
-<label>{{'container-size-hc' | transloco}}</label>
-<input [ngSignal]="containersizeHc" type="number">
-<br>
-
-<div class="checkbox-container">
-  <label class="checkbox-label">{{'free-detention' | transloco}}</label>
-  <input class="checkbox-input" [ngSignal]="freeDetention" type="checkbox">
+  <div class="form-group">
+    <label>{{'created-by' | transloco}}</label>
+    <input [ngSignal]="createdBy" type="text">
+  </div>
 </div>
 
-<div class="checkbox-container">
-  <label class="checkbox-label">{{'thctb' | transloco}}</label>
-  <input class="checkbox-input" [ngSignal]="thctb" type="checkbox">
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'amount' | transloco}}</label>
+    <input [ngSignal]="amount" type="number">
+  </div>
+
+  <div class="form-group">
+    <label>{{'checklist' | transloco}}</label>
+    <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
+      @for (currChecklist of allCheckliststs(); track $index) {
+      <option value="{{currChecklist.id}}">{{currChecklist.customerName}}</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>{{'loading-plattform' | transloco}}</label>
+    <input [ngSignal]="loadingPlattform" type="text">
+  </div>
 </div>
 
-<label>{{'ready-to-load' | transloco}}</label>
-<input [ngSignal]="readyToLoad" type="text">
-<br>
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'container' | transloco}}</label>
+    <input [ngSignal]="container" type="text">
+  </div>
 
-<label>{{'loading-plattform' | transloco}}</label>
-<input [ngSignal]="loadingPlattform" type="text">
-<br>
+  <div class="form-group">
+    <label>{{'fast-line' | transloco}}</label>
+    <input [ngSignal]="fastLine" type="text">
+  </div>
+
+  <div class="form-group">
+    <label>{{'direct-line' | transloco}}</label>
+    <input [ngSignal]="directLine" type="text">
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'article-number' | transloco}}</label>
+    <input [ngSignal]="articleNumber" type="text">
+  </div>
+
+  <div class="form-group">
+    <label>{{'pallet-amount' | transloco}}</label>
+    <input [ngSignal]="palletamount" type="number">
+  </div>
+
+  <div class="form-group">
+    <label>{{'customer' | transloco}}</label>
+    <input [ngSignal]="customer" type="text">
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'ab-nr' | transloco}}</label>
+    <input [ngSignal]="abnumber" type="number">
+  </div>
+
+  <div class="form-group">
+    <label>{{'gross-weight-in-kg' | transloco}}</label>
+    <input [ngSignal]="bruttoWeightInKg" type="number">
+  </div>
+
+  <div class="form-group">
+    <label>{{'incoterm' | transloco}}</label>
+    <input [ngSignal]="incoterm" type="text">
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'container-size-a' | transloco}}</label>
+    <input [ngSignal]="containersizeA" type="number">
+  </div>
+
+  <div class="form-group">
+    <label>{{'container-size-b' | transloco}}</label>
+    <input [ngSignal]="containersizeB" type="number">
+  </div>
+
+  <div class="form-group">
+    <label>{{'container-size-hc' | transloco}}</label>
+    <input [ngSignal]="containersizeHc" type="number">
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="form-group">
+    <div class="checkbox-container">
+      <label class="checkbox-label">{{'free-detention' | transloco}}</label>
+      <input class="checkbox-input" [ngSignal]="freeDetention" type="checkbox">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox-container">
+      <label class="checkbox-label">{{'thctb' | transloco}}</label>
+      <input class="checkbox-input" [ngSignal]="thctb" type="checkbox">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>{{'ready-to-load' | transloco}}</label>
+    <input [ngSignal]="readyToLoad" type="text">
+  </div>
+</div>
 
 <button [ngClass]="'savebutton'" (click)="addOrder()">{{'save' | transloco}}</button>

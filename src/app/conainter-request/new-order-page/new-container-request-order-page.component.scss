@@ -3,6 +3,16 @@ body {
   margin: 20px;
 }
 
+.form-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-group {
+  flex: 1;
+  margin-right: 10px;
+}
+
 label {
   display: block;
   margin-bottom: 5px;
@@ -23,6 +33,7 @@ select {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 .savebutton:hover {
@@ -35,7 +46,7 @@ select {
 }
 
 .checkbox-input {
-  margin-right: 90%;
+  margin-right: 10px;
 }
 
 .checkbox-label {
