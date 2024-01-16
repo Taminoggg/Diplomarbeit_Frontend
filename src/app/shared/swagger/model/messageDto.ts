@@ -11,10 +11,10 @@
  */
 
 
-export interface AddStepDto { 
-    stepNumber: number;
-    checklistId: number;
-    stepDescription: string;
-    stepName: string;
+export interface MessageDto { 
+    id: number;
+    content: string;
+    attachmentId: number;
+    dateTime: string;
 }
 

@@ -11,10 +11,9 @@
  */
 
 
-export interface AddStepDto { 
-    stepNumber: number;
-    checklistId: number;
-    stepDescription: string;
-    stepName: string;
+export interface MessageConversationDto { 
+    id: number;
+    messageId: number;
+    conversationId: number;
 }
 

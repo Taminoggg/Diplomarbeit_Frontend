@@ -5,6 +5,9 @@ api/api.ts
 api/checklists.service.ts
 api/conversations.service.ts
 api/csinquiries.service.ts
+api/files.service.ts
+api/messageConversations.service.ts
+api/messages.service.ts
 api/orders.service.ts
 api/stepChecklists.service.ts
 api/steps.service.ts
@@ -14,8 +17,10 @@ encoder.ts
 git_push.sh
 index.ts
 model/addChecklistDto.ts
-model/addConversationDto.ts
 model/addCsinquiryDto.ts
+model/addFileDto.ts
+model/addMessageConversationDto.ts
+model/addMessageDto.ts
 model/addOrderDto.ts
 model/addStepDto.ts
 model/addTlinquiryDto.ts
@@ -28,8 +33,11 @@ model/csinquiryDto.ts
 model/editCsinquiryDto.ts
 model/editOrderDto.ts
 model/editTlInqueryDto.ts
+model/fileDto.ts
 model/message.ts
 model/messageConversation.ts
+model/messageConversationDto.ts
+model/messageDto.ts
 model/modelFile.ts
 model/models.ts
 model/order.ts
