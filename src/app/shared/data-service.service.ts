@@ -16,26 +16,75 @@ export class DataServiceService {
   recieveLocationForOrder = new Map<number, string>;
 
   constructor() {
-    this.refreshPage();
+    this.refreshPage('None', '');
   }
 
-  refreshPage(){
-    console.log("GETTING ORDERS");
-    this.orderService.ordersGet()
-      .subscribe(x => {
-        this.allOrders.set(x);
-        this.allOrders().forEach(currOrder => {
-          this.allAbNumbers().push(currOrder.id);
-          this.csinquiryService.csinquiriesIdGet(currOrder.csid)
-          .subscribe(x => this.articleNumbersForOrder.set(currOrder.id, x.articleNumber));
+  refreshPage(selectedFilter: string, value: string) {
+    console.log("GETTING ORDERS: selectedFilter: " + selectedFilter + " value: " + value);
+    if(value === ""){
+      selectedFilter = 'None';
+    }
+    switch (selectedFilter) {
+      case "None":
+        console.log('case none');
+        this.orderService.ordersGet()
+          .subscribe(x => {
+            this.getDetilsForOrder(x);
+          });
+        break;
+      case "Customername":
+        console.log('case customername');
+        this.orderService.ordersCustomernameGet(value)
+          .subscribe(x => {
+            this.getDetilsForOrder(x);
+          });
+        break;
+      case "Created by":
+        console.log('case create by');
+        this.orderService.ordersCreatedByGet(value)
+          .subscribe(x => {
+            this.getDetilsForOrder(x);
+          });
+        break;
+      case "Status":
+        console.log('case status');
+        this.orderService.ordersStatusGet(parseInt(value))
+          .subscribe(x => {
+            this.getDetilsForOrder(x);
+          });
+        break;
+      case "Approved":
+        console.log('case approved');
+        this.orderService.ordersApprovedGet(value === "true")
+          .subscribe(x => {
+            this.getDetilsForOrder(x);
+          });
+        break;
+      case "Amount":
+        console.log('case amount');
+        this.orderService.ordersAmountGet(parseInt(value))
+          .subscribe(x => {
+            this.getDetilsForOrder(x);
+          });
+        break;
+      default:
+        console.log('default');
+        break;
+    }
+  }
 
-          this.tlinquiryService.tlinquiriesIdGet(currOrder.tlid)
-          .subscribe(x => this.countryForOrder.set(currOrder.id, x.country));
+  getDetilsForOrder(x: OrderDto[]) {
+    this.allOrders.set(x);
+    this.allOrders().forEach(currOrder => {
+      this.allAbNumbers().push(currOrder.id);
+      this.csinquiryService.csinquiriesIdGet(currOrder.csid)
+        .subscribe(x => this.articleNumbersForOrder.set(currOrder.id, x.articleNumber));
 
-          this.tlinquiryService.tlinquiriesIdGet(currOrder.tlid)
-          .subscribe(x => this.recieveLocationForOrder.set(currOrder.id, x.retrieveLocation));
-        });
-        console.log(this.allAbNumbers());
-      });
+      this.tlinquiryService.tlinquiriesIdGet(currOrder.tlid)
+        .subscribe(x => this.countryForOrder.set(currOrder.id, x.country));
+
+      this.tlinquiryService.tlinquiriesIdGet(currOrder.tlid)
+        .subscribe(x => this.recieveLocationForOrder.set(currOrder.id, x.retrieveLocation));
+    });
   }
 }

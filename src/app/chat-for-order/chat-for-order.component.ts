@@ -50,7 +50,7 @@ export class ChatForOrderComponent implements OnInit {
   }
 
   getMessagesForConversation() {
-    this.messageConversationService.messageConversationsIdGet(this.conversation().id)
+    this.messageConversationService.messageConversationsConversationIdGet(this.conversation().id)
       .subscribe(x => this.messagesForConversation.set(x));
   }
 

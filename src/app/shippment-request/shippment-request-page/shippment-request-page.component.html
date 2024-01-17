@@ -7,7 +7,25 @@
 </div>
 
 <div class="searchBox">
-  <input type="text" placeholder="{{'search-placeholder' | transloco}}">
+  <label>Filter: </label>
+  <select #currFilter (change)="setSelectedFilter(currFilter.value)">
+    <option value="None">None</option>
+    <option value="Customername">Customername</option>
+    <option value="Created by">Created by</option>
+    <option value="Status">Status</option>
+    <option value="Approved">Approved</option>
+    <option value="Amount">Amount</option>
+  </select>
+  <div>
+    <ng-container *ngIf="selectedFilter() === 'Customername' || selectedFilter() === 'Created by' || selectedFilter() === 'Last updated'; else numberOrCheckbox">
+      <input (change)="filterOrders()" [ngSignal]="filterValue" type="text" placeholder="{{'search-placeholder' | transloco}}">
+    </ng-container>
+    <ng-template #numberOrCheckbox>
+      <ng-container *ngIf="selectedFilter() === 'Amount' || selectedFilter() === 'Status'">
+        <input (change)="filterOrders()" [ngSignal]="filterValue" type="number">
+      </ng-container>
+    </ng-template>
+  </div>
 </div>
 
 <div class="orderBox">

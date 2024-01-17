@@ -8,23 +8,36 @@ import { MatDialog } from '@angular/material/dialog';
 import { CsinquiriesService, CsinquiryDto } from '../../shared/swagger';
 import { ChecklistPopUpComponent } from '../../checklist-pop-up/checklist-pop-up.component';
 import { TranslocoModule } from '@ngneat/transloco';
+import { NgSignalDirective } from '../../shared/ngSignal.directive';
 
 @Component({
   selector: 'app-container-request-page',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatDialogModule, TranslocoModule],
+  imports: [CommonModule, MatIconModule, MatDialogModule, TranslocoModule, NgSignalDirective],
   templateUrl: './container-request-page.component.html',
   styleUrls: ['./container-request-page.component.scss']
 })
 export class ContainerRequestPageComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
-    this.dataService.refreshPage();
+    this.dataService.refreshPage(this.selectedFilter(), this.filterValue());
   }
   ngOnInit(): void {
-    console.log('UPDATING.............................');
-    this.dataService.refreshPage();
+    this.dataService.refreshPage(this.selectedFilter(), this.filterValue());
   }
 
+  selectedFilter = signal<string>('None');
+  filterValue = signal<string>('');
+
+  setSelectedFilter(value: string) {
+    this.selectedFilter.set(value);
+    this.filterValue.set('');
+    console.log('changing');
+  }
+
+  filterOrders() {
+    this.dataService.refreshPage(this.selectedFilter(), this.filterValue());
+  }
+  
   dataService = inject(DataServiceService);
   router = inject(Router);
   csinquiryService = inject(CsinquiriesService);
