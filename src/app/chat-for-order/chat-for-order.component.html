@@ -1,13 +1,16 @@
+<button  class="back-button" (click)="navigateToHomePage()">{{'back' | transloco}}</button>
 <div class="chat-container">
-  <h1>CHAT for order {{id}}</h1>
+  <h1>{{'chat-for-order' | transloco}} {{id}}</h1>
   <br>
 
   <div class="scroll-container">
     <div class="chat-message user-message">
+      <label>{{'begin-of-the-chat' | transloco}}</label>
+      <br>
       @for (message of messagesForConversation(); track $index) {
-        <label class="datetime">{{message.dateTime}}</label>
-        <label class="content">{{message.content}}</label>
-        <br>
+      <label class="datetime">{{message.dateTime}}</label>
+      <label class="content">{{message.content}}</label>
+      <br>
       }
     </div>
   </div>
@@ -15,10 +18,9 @@
   <div class="input-area">
     <input [ngSignal]="messageContent" (keyup.enter)="sendMessage()" type="text">
     <br>
-
     <div class="form-group">
-      <button [disabled]="!hasMessageContent()" (click)="sendMessage()">Send</button>
-      <button id="loadFileXml" value="loadXml" onclick="document.getElementById('file').click();">Choose File</button>
+      <button [disabled]="!hasMessageContent() && !fileToUpload" (click)="sendMessage()">{{'send' | transloco}}</button>
+      <button id="loadFileXml" value="loadXml" onclick="document.getElementById('file').click();">{{'choose-file' | transloco}}</button>
       <input style="display:none;" id="file" name="file" type="file" (change)="handleFileInput($event)">
     </div>
   </div>
@@ -27,8 +29,13 @@
   <div class="file-input-area">
     @if (fileToUpload) {
     <div class="selected-file">
-      <p>Selected File: {{ fileToUpload.name }}</p>
-      <p>File Size: {{ fileToUpload.size / 1024 | number: '1.2-2' }} KB</p>
+      <label>{{'selected-file' | transloco}}</label>
+      <label>: {{fileToUpload.name}}</label>
+      <br>
+      <label>{{'file-size' | transloco}}</label>
+      <label>:  {{fileToUpload.size / 1024 | number: '1.2-2'}} KB</label>
+      <br>
+      <button (click)="removeFile()">{{'remove-file' | transloco}}</button>
     </div>
     }
   </div>

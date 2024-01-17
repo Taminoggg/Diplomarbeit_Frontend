@@ -2,12 +2,14 @@ import { Component, Input, OnInit, computed, inject, numberAttribute, signal } f
 import { AddMessageConversationDto, AddMessageDto, ConversationDto, ConversationsService, MessageConversationsService, MessageDto, MessagesService } from '../shared/swagger';
 import { NgSignalDirective } from '../shared/ngSignal.directive';
 import { formatNumber, DecimalPipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { TranslocoModule } from '@ngneat/transloco';
 
 
 @Component({
   selector: 'app-chat-for-order',
   standalone: true,
-  imports: [NgSignalDirective, DecimalPipe],
+  imports: [NgSignalDirective, DecimalPipe, TranslocoModule],
   templateUrl: './chat-for-order.component.html',
   styleUrl: './chat-for-order.component.scss'
 })
@@ -16,13 +18,13 @@ export class ChatForOrderComponent implements OnInit {
 
   fileToUpload: File | null = null;
 
-  messageContent = signal<string>("");
-  hasMessageContent = computed(() => this.messageContent().trim());
-
+  router = inject(Router);
   conversationService = inject(ConversationsService);
   messageService = inject(MessagesService);
   messageConversationService = inject(MessageConversationsService);
 
+  hasMessageContent = computed(() => this.messageContent().trim());
+  messageContent = signal<string>("");
   messagesForConversation = signal<MessageDto[]>([]);
   conversation = signal<ConversationDto>(
     {
@@ -47,10 +49,6 @@ export class ChatForOrderComponent implements OnInit {
       });
   }
 
-  formatKB(numberToFormat:number):string{
-    return formatNumber(numberToFormat, '1-2-2');
-  }
-
   getMessagesForConversation() {
     this.messageConversationService.messageConversationsIdGet(this.conversation().id)
       .subscribe(x => this.messagesForConversation.set(x));
@@ -65,7 +63,7 @@ export class ChatForOrderComponent implements OnInit {
       attachmentId: 1
     };
 
-    if (this.fileToUpload != null) {
+    if (this.fileToUpload !== null) {
       //TODO
       message = {
         content: this.messageContent(),
@@ -99,5 +97,13 @@ export class ChatForOrderComponent implements OnInit {
     if (inputElement && inputElement.files && inputElement.files.length > 0) {
       this.fileToUpload = inputElement.files.item(0);
     }
+  }
+
+  removeFile(){
+    this.fileToUpload = null;
+  }
+
+  navigateToHomePage(){
+    this.router.navigateByUrl('/function-overview-age');
   }
 }

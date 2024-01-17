@@ -70,11 +70,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     });
   }
 
-  addOrderPage() {
-    this.router.navigateByUrl('/new-container-order-page');
-  }
-
-  editOrderPage(id: number) {
-    this.router.navigateByUrl('/edit-container-order-page/' + id);
+  navigateToPage(path:string) {
+    this.router.navigateByUrl(path);
   }
 }

@@ -1,7 +1,7 @@
 <div class="overviewBox">
   <h1>{{'container-page-header' | transloco}}</h1>
 
-  <button (click)="addOrderPage()">
+  <button (click)="navigateToPage('/new-container-order-page')">
     <h2>{{'new' | transloco}}</h2>
   </button>
 </div>
@@ -26,6 +26,7 @@
       <th>{{'last-updated' | transloco}}</th>
       <th>{{'checklist' | transloco}}</th>
       <th>{{'edit' | transloco}}</th>
+      <th>{{'chat' | transloco}}</th>
     </tr>
     @for (currOrder of dataService.allOrders(); track $index) {
     <tr>
@@ -41,7 +42,8 @@
       <td>{{getRecieveLocationForOrder(currOrder.id)}}</td>
       <td>{{currOrder.lastUpdated | date: 'dd.MM.yyyy'}}</td>
       <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
-      <td (click)="editOrderPage(currOrder.id)"><mat-icon>create</mat-icon></td>
+      <td (click)="navigateToPage('/edit-container-order-page/' + currOrder.id)"><mat-icon>create</mat-icon></td>
+      <td (click)="navigateToPage('/chat-for-order/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
     </tr>
     }
   </table>

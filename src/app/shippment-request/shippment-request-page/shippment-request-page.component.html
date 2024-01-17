@@ -1,7 +1,7 @@
 <div class="overviewBox">
   <h1>{{'shippment-page-header' | transloco}}</h1>
 
-  <button (click)="addOrderPage()">
+  <button (click)="navigateToPage('/new-shippment-order-page')">
     <h2>{{'new' | transloco}}</h2>
   </button>
 </div>
@@ -40,8 +40,8 @@
       <td>{{currOrder.lastUpdated | date: 'dd.MM.yyyy'}}</td>
       <td>ANLAGE</td>
       <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
-      <td (click)="editOrderPage(currOrder.id)"><mat-icon>create</mat-icon></td>
-      <td (click)="chatForOrder(currOrder.id)"><mat-icon>chat</mat-icon></td>
+      <td (click)="navigateToPage('/edit-shippment-order-page/' + currOrder.id)"><mat-icon>create</mat-icon></td>
+      <td (click)="navigateToPage('/chat-for-order/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
     </tr>
     }
   </table>

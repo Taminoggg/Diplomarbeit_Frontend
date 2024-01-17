@@ -53,5 +53,12 @@
     "excepted-retrieve-week": "Erwartetes Abrufdatum",
     "is-container-hc": "Ist Container HC",
     "back": "Zurück",
-    "chat": "Chat"
+    "chat": "Chat",
+    "chat-for-order": "Chat für Bestellung",
+    "begin-of-the-chat": "Beginn des Chats",
+    "send": "Senden",
+    "choose-file": "Datei wählen",
+    "selected-file": "Ausgewählte Datei",
+    "file-size": "Dateigröße",
+    "remove-file": "Datei entfernen"
 }

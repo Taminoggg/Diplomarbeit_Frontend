@@ -52,15 +52,7 @@ export class ShippmentRequestComponent implements OnInit, OnChanges {
     });
   }
 
-  addOrderPage() {
-    this.router.navigateByUrl('/new-shippment-order-page');
-  }
-
-  editOrderPage(id: number) {
-    this.router.navigateByUrl('/edit-shippment-order-page/' + id);
-  }
-
-  chatForOrder(id: number) {
-    this.router.navigateByUrl('/chat-for-order/' + id);
+  navigateToPage(path:string) {
+    this.router.navigateByUrl(path);
   }
 }

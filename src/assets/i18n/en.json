@@ -53,5 +53,12 @@
     "inquery-number": "Inquiry number",
     "excepted-retrieve-week": "Expected retrieve week",
     "back": "Back",
-    "chat": "Chat"
+    "chat": "Chat",
+    "chat-for-order": "Chat for order",
+    "begin-of-the-chat": "Begin of the chat",
+    "send": "Send",
+    "choose-file": "Choose file",
+    "selected-file": "Selected file",
+    "file-size": "File size",
+    "remove-file": "Remove file"
 }
