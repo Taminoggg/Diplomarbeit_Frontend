@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, computed, inject, numberAttribute, signal } from '@angular/core';
-import { AddMessageConversationDto, AddMessageDto, ConversationDto, ConversationsService, MessageConversationsService, MessageDto, MessagesService } from '../shared/swagger';
+import { AddMessageConversationDto, AddMessageDto, ConversationDto, ConversationsService, FileDto, FilesService, MessageConversationsService, MessageDto, MessagesService } from '../shared/swagger';
 import { NgSignalDirective } from '../shared/ngSignal.directive';
-import { formatNumber, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 
@@ -22,6 +22,7 @@ export class ChatForOrderComponent implements OnInit {
   conversationService = inject(ConversationsService);
   messageService = inject(MessagesService);
   messageConversationService = inject(MessageConversationsService);
+  filesService = inject(FilesService);
 
   hasMessageContent = computed(() => this.messageContent().trim());
   messageContent = signal<string>("");
@@ -35,11 +36,10 @@ export class ChatForOrderComponent implements OnInit {
   ngOnInit(): void {
     this.conversationService.conversationsOrderIdGet(this.id)
       .subscribe(x => {
-        if(x.id != 0){
+        if (x.id != 0) {
           this.conversation.set(x);
           console.log('conversation set')
-          console.log(this.conversation())
-        }else{
+        } else {
           console.log('new conversation added')
           this.conversationService.conversationsPost(this.id)
             .subscribe(x => this.conversation.set(x));
@@ -47,6 +47,10 @@ export class ChatForOrderComponent implements OnInit {
 
         this.getMessagesForConversation();
       });
+  }
+
+  getAttachmentForMessage(attachmentId:number) {
+
   }
 
   getMessagesForConversation() {
@@ -64,18 +68,24 @@ export class ChatForOrderComponent implements OnInit {
     };
 
     if (this.fileToUpload !== null) {
-      //TODO
-      message = {
-        content: this.messageContent(),
-        attachmentId: 1
-      };
+      this.filesService.filesPost(this.fileToUpload)
+        .subscribe(x => {
+          message = {
+            content: this.messageContent(),
+            attachmentId: x.id
+          };
+          this.postMessage(message);
+        });
     } else {
       message = {
         content: this.messageContent(),
         attachmentId: 1
       };
+      this.postMessage(message);
     }
+  }
 
+  postMessage(message: AddMessageDto) {
     this.messageService.messagesPost(message)
       .subscribe(x => {
 
@@ -88,7 +98,8 @@ export class ChatForOrderComponent implements OnInit {
           .subscribe(x => this.getMessagesForConversation());
       });
 
-      this.messageContent.set('');
+    this.messageContent.set('');
+    this.fileToUpload = null;
   }
 
   handleFileInput(event: Event): void {
@@ -99,11 +110,11 @@ export class ChatForOrderComponent implements OnInit {
     }
   }
 
-  removeFile(){
+  removeFile() {
     this.fileToUpload = null;
   }
 
-  navigateToHomePage(){
+  navigateToHomePage() {
     this.router.navigateByUrl('/function-overview-age');
   }
 }

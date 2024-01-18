@@ -1,4 +1,4 @@
-<button  class="back-button" (click)="navigateToHomePage()">{{'back' | transloco}}</button>
+<button class="back-button" (click)="navigateToHomePage()">{{'back' | transloco}}</button>
 <div class="chat-container">
   <h1>{{'chat-for-order' | transloco}} {{id}}</h1>
   <br>
@@ -10,6 +10,7 @@
       @for (message of messagesForConversation(); track $index) {
       <label class="datetime">{{message.dateTime}}</label>
       <label class="content">{{message.content}}</label>
+      <label class="content">{{getAttachmentForMessage(message.attachmentId)}}</label>
       <br>
       }
     </div>
@@ -20,7 +21,8 @@
     <br>
     <div class="form-group">
       <button [disabled]="!hasMessageContent() && !fileToUpload" (click)="sendMessage()">{{'send' | transloco}}</button>
-      <button id="loadFileXml" value="loadXml" onclick="document.getElementById('file').click();">{{'choose-file' | transloco}}</button>
+      <button id="loadFileXml" value="loadXml" onclick="document.getElementById('file').click();">{{'choose-file' |
+        transloco}}</button>
       <input style="display:none;" id="file" name="file" type="file" (change)="handleFileInput($event)">
     </div>
   </div>
@@ -33,7 +35,7 @@
       <label>: {{fileToUpload.name}}</label>
       <br>
       <label>{{'file-size' | transloco}}</label>
-      <label>:  {{fileToUpload.size / 1024 | number: '1.2-2'}} KB</label>
+      <label>: {{fileToUpload.size / 1024 | number: '1.2-2'}} KB</label>
       <br>
       <button (click)="removeFile()">{{'remove-file' | transloco}}</button>
     </div>

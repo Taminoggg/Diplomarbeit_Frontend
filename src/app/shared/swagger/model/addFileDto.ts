@@ -12,6 +12,6 @@
 
 
 export interface AddFileDto { 
-    path: string;
+    file: Blob;
 }
 

@@ -18,7 +18,6 @@ git_push.sh
 index.ts
 model/addChecklistDto.ts
 model/addCsinquiryDto.ts
-model/addFileDto.ts
 model/addMessageConversationDto.ts
 model/addMessageDto.ts
 model/addOrderDto.ts

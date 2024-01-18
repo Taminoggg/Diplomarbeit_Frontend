@@ -1,6 +1,5 @@
 export * from './addChecklistDto';
 export * from './addCsinquiryDto';
-export * from './addFileDto';
 export * from './addMessageConversationDto';
 export * from './addMessageDto';
 export * from './addOrderDto';
