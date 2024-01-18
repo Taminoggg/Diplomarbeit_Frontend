@@ -25,19 +25,22 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     this.dataService.refreshPage(this.selectedFilter(), this.filterValue());
   }
 
-  selectedFilter = signal<string>('None');
+  selectedFilter = signal<string>('Customername');
   filterValue = signal<string>('');
 
   setSelectedFilter(value: string) {
+    this.dataService.refreshPage('None', '');
     this.selectedFilter.set(value);
+    if (this.selectedFilter() === "Approved") {
+      this.dataService.refreshPage(this.selectedFilter(), "false");
+    }
     this.filterValue.set('');
-    console.log('changing');
   }
 
   filterOrders() {
     this.dataService.refreshPage(this.selectedFilter(), this.filterValue());
   }
-  
+
   dataService = inject(DataServiceService);
   router = inject(Router);
   csinquiryService = inject(CsinquiriesService);
@@ -83,7 +86,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     });
   }
 
-  navigateToPage(path:string) {
+  navigateToPage(path: string) {
     this.router.navigateByUrl(path);
   }
 }

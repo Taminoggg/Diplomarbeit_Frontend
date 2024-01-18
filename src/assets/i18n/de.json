@@ -54,11 +54,12 @@
     "is-container-hc": "Ist Container HC",
     "back": "Zurück",
     "chat": "Chat",
-    "chat-for-order": "Chat für Bestellung",
+    "chat-for-order": "Chat für Auftrag",
     "begin-of-the-chat": "Beginn des Chats",
     "send": "Senden",
     "choose-file": "Datei wählen",
     "selected-file": "Ausgewählte Datei",
     "file-size": "Dateigröße",
-    "remove-file": "Datei entfernen"
+    "remove-file": "Datei entfernen",
+    "none": "Keiner"
 }

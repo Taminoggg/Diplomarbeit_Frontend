@@ -25,13 +25,16 @@ export class ShippmentRequestComponent implements OnInit, OnChanges {
     this.dataService.refreshPage(this.selectedFilter(), this.filterValue());
   }
 
-  selectedFilter = signal<string>('None');
+  selectedFilter = signal<string>('Customername');
   filterValue = signal<string>('');
 
   setSelectedFilter(value: string) {
+    this.dataService.refreshPage('None', '');
     this.selectedFilter.set(value);
+    if (this.selectedFilter() === "Approved") {
+      this.dataService.refreshPage(this.selectedFilter(), "false");
+    }
     this.filterValue.set('');
-    console.log('changing');
   }
 
   filterOrders() {
@@ -42,8 +45,8 @@ export class ShippmentRequestComponent implements OnInit, OnChanges {
   router = inject(Router);
   dialogRef = inject(MatDialog);
   csinquiry = signal<CsinquiryDto | undefined>(undefined);
-  
-  
+
+
 
   getArticleNumberForOrder(id: number): string {
     let articleNumber = this.dataService.articleNumbersForOrder.get(id);
@@ -68,7 +71,7 @@ export class ShippmentRequestComponent implements OnInit, OnChanges {
     });
   }
 
-  navigateToPage(path:string) {
+  navigateToPage(path: string) {
     this.router.navigateByUrl(path);
   }
 }

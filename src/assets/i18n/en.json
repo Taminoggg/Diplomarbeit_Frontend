@@ -60,5 +60,6 @@
     "choose-file": "Choose file",
     "selected-file": "Selected file",
     "file-size": "File size",
-    "remove-file": "Remove file"
+    "remove-file": "Remove file",
+    "none": "None"
 }

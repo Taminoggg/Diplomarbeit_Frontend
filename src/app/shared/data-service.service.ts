@@ -54,8 +54,8 @@ export class DataServiceService {
           });
         break;
       case "Approved":
-        console.log('case approved');
-        this.orderService.ordersApprovedGet(value === "true")
+        console.log('case approved ' + JSON.parse(value));
+        this.orderService.ordersApprovedGet(JSON.parse(value))
           .subscribe(x => {
             this.getDetilsForOrder(x);
           });

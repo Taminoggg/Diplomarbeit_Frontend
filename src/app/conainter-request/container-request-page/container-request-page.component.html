@@ -9,22 +9,31 @@
 <div class="searchBox">
   <label>Filter: </label>
   <select #currFilter (change)="setSelectedFilter(currFilter.value)">
-    <option value="None">None</option>
-    <option value="Customername">Customername</option>
-    <option value="Created by">Created by</option>
-    <option value="Status">Status</option>
-    <option value="Approved">Approved</option>
-    <option value="Amount">Amount</option>
+    <option value="Customername">{{'customer' | transloco}}</option>
+    <option value="Created by">{{'created-by' | transloco}}</option>
+    <option value="Status">{{'status' | transloco}}</option>
+    <option value="Approved">{{'approved' | transloco}}</option>
+    <option value="Amount">{{'amount' | transloco}}</option>
   </select>
   <div>
-    <ng-container *ngIf="selectedFilter() === 'Customername' || selectedFilter() === 'Created by' || selectedFilter() === 'Last updated'; else numberOrCheckbox">
-      <input (change)="filterOrders()" [ngSignal]="filterValue" type="text" placeholder="{{'search-placeholder' | transloco}}">
-    </ng-container>
-    <ng-template #numberOrCheckbox>
-      <ng-container *ngIf="selectedFilter() === 'Amount' || selectedFilter() === 'Status'">
-        <input (change)="filterOrders()" [ngSignal]="filterValue" type="number">
-      </ng-container>
-    </ng-template>
+    @if (selectedFilter() === 'Customername' || selectedFilter() === 'Created by' || selectedFilter() === 'Last updated') {
+    <div>
+      <input (change)="filterOrders()" [ngSignal]="filterValue" type="text"
+        placeholder="{{'search-placeholder' | transloco}}">
+    </div>
+    }
+
+    <div>
+      @if (selectedFilter() === 'Amount' || selectedFilter() === 'Status') {
+      <input (change)="filterOrders()" [ngSignal]="filterValue" type="number">
+      }
+    </div>
+
+    <div>
+      @if (selectedFilter() === 'Approved') {
+        <input (change)="filterOrders()" [ngSignal]="filterValue" type="checkbox">
+      }
+    </div>
   </div>
 </div>
 
