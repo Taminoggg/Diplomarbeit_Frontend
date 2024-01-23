@@ -17,7 +17,9 @@
         <div class="fileDisplay">
           <label class="fileText">{{getFileName(message.id)}}</label>
         </div>
-        <img (click)="downloadFile(message.id)" class="downloadImg" src="/assets/images/download.png" alt="Download">
+        <div class="downloadContainer">
+          <img (click)="downloadFile(message.id)" class="downloadImg" src="/assets/images/download.png" alt="Download">
+        </div>
       </div>
       }
       <br>
@@ -54,5 +56,3 @@
     }
   </div>
 </div>
-
-<!--<a href="https://www.flaticon.com/free-icons/download" title="download icons">Download icons created by Bharat Icons - Flaticon</a>-->
