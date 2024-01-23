@@ -40,7 +40,7 @@
     "weight-in-kg": "Weight in kg",
     "invoice-on": "Invoice on",
     "retrieve-date": "Retrieve date",
-    "is-container-40": "Is container 40",
+    "is-container-40": "Is container 40 (if not 20)",
     "retrieve-location": "Retrieve location",
     "debt-capital-general-forerun-eur": "Debt capital general forerun EUR",
     "debt-capital-trailing-dol": "Debt capital trailing Dol",
@@ -61,5 +61,8 @@
     "selected-file": "Selected file",
     "file-size": "File size",
     "remove-file": "Remove file",
-    "none": "None"
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "generatePDF": "Download PDF"
 }

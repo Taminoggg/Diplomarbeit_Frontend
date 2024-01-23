@@ -25,13 +25,13 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     this.dataService.refreshPage(this.selectedFilter(), this.filterValue());
   }
 
-  selectedFilter = signal<string>('Customername');
+  selectedFilter = signal<string>('customername');
   filterValue = signal<string>('');
 
   setSelectedFilter(value: string) {
-    this.dataService.refreshPage('None', '');
+    this.dataService.refreshPage('none', '');
     this.selectedFilter.set(value);
-    if (this.selectedFilter() === "Approved") {
+    if (this.selectedFilter() === "approved") {
       this.dataService.refreshPage(this.selectedFilter(), "false");
     }
     this.filterValue.set('');
@@ -71,11 +71,12 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     return '';
   }
 
-  getApprovedString(approved: boolean): string {
-    if (approved) {
-      return 'JA';
+  getSpedNumberForOrder(id: number): string {
+    let spedNumber = this.dataService.spedNumbersForOrder.get(id);
+    if (spedNumber !== undefined) {
+      return spedNumber;
     }
-    return 'NEIN';
+    return '';
   }
 
   openDialog(id: number) {

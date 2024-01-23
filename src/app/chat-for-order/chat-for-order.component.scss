@@ -35,7 +35,10 @@
   .content {
     background-color: #d9edf7;
     padding: 10px;
-    margin: 10px 0;
+    margin-right: 10px 0;
+    margin-left: 10px 0;
+    margin-top: 5px 0;
+    margin-bottom: 5px 0;
     border-radius: 5px;
   }
 
@@ -70,7 +73,7 @@
   }
 
   .file-input-area {
-    margin-top: 20px;
+    margin-top: 10px;
 
     button {
       padding: 10px;
@@ -103,8 +106,58 @@
   color: #fff;
   border-radius: 5px;
   transition: background-color 0.3s, color 0.3s;
-  
+
   &:hover {
     background-color: #2c3e50;
   }
+}
+
+.sendButton {
+  width: 45px;
+  height: 45px;
+}
+
+.fileDisplay {
+  display: flex;
+  align-items: center;
+  margin-top: 1px;
+  margin-bottom: 5px;
+  max-width: 30%;
+  max-height: 5em;
+  overflow: hidden;
+  line-height: 1.30em;
+}
+
+.fileText {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 2.6em;
+}
+
+.fileImg {
+  height: 2.0em;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+.downloadImg {
+  height: 1.0em;
+  margin-left: 5px;
+  vertical-align: bottom;
+}
+
+.fileContainer {
+  display: flex;
+  align-items: center;
+}
+
+.button-container {
+  display: flex;
+  height: 45px;
+  margin-top: 5px;
+}
+
+.button-container button {
+  margin-right: 10px;
 }

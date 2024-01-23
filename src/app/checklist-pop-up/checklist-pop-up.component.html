@@ -1,12 +1,12 @@
 <div id="box">
     <div id="header">
-        <h3>Checklist</h3>
+        <h3>{{'checklist' | transloco}}</h3>
     </div>
     <div id="content">
         @for (currStep of steps(); track $index) {
             <label>{{currStep.stepName}} <input type="checkbox"></label>
             <hr>
         }
-        <button>SAVE</button>
+        <button (click)="saveChecklist()">{{'save' | transloco}}</button>
     </div>
 </div>

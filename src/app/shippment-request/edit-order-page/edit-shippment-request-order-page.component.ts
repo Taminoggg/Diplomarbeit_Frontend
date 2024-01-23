@@ -4,6 +4,8 @@ import { ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, Edit
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
+import jspdf from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-edit-order-page',
@@ -111,6 +113,24 @@ export class EditShippmentOrderPageComponent implements OnChanges {
   ets = signal(this.currTlInquiry().ets);
   eta = signal(this.currTlInquiry().eta);
   boat = signal(this.currTlInquiry().boat);
+
+  generatePDF() {
+    const data = document.getElementById('contentToConvert');
+    if (data) {
+      html2canvas(data).then((canvas) => {
+        const imgWidth = 208;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        const contentDataURL = canvas.toDataURL('image/png');
+        const pdf = new jspdf('p', 'mm', 'a4');
+
+        pdf.addImage(contentDataURL, 'PNG', 1, 0, imgWidth, imgHeight);
+        pdf.save('myPDF.pdf');
+      });
+    } else {
+      console.error("Element with ID 'contentToConvert' not found.");
+    }
+  }
 
   saveOrder(): void {
     let order: EditOrderDto = {

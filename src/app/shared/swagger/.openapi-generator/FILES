@@ -32,6 +32,7 @@ model/csinquiryDto.ts
 model/editCsinquiryDto.ts
 model/editOrderDto.ts
 model/editTlInqueryDto.ts
+model/fileByteDto.ts
 model/fileDto.ts
 model/message.ts
 model/messageConversation.ts

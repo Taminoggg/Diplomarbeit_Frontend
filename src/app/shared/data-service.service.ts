@@ -11,58 +11,82 @@ export class DataServiceService {
   allOrders = signal<OrderDto[]>([]);
   allAbNumbers = signal<number[]>([]);
   allArticleIds = signal<number[]>([]);
+  spedNumbersForOrder = new Map<number, string>;
+  plantsForOrder = new Map<number, string>;
+  factoriesForOrder = new Map<number, string>;
   articleNumbersForOrder = new Map<number, string>;
   countryForOrder = new Map<number, string>;
   recieveLocationForOrder = new Map<number, string>;
 
   constructor() {
-    this.refreshPage('None', '');
+    this.refreshPage('none', '');
   }
 
   refreshPage(selectedFilter: string, value: string) {
     console.log("GETTING ORDERS: selectedFilter: " + selectedFilter + " value: " + value);
-    if(value === ""){
-      selectedFilter = 'None';
+    if (value === "") {
+      selectedFilter = 'none';
     }
     switch (selectedFilter) {
-      case "None":
+      case "none":
         console.log('case none');
         this.orderService.ordersGet()
           .subscribe(x => {
             this.getDetilsForOrder(x);
           });
         break;
-      case "Customername":
+      case "customername":
         console.log('case customername');
         this.orderService.ordersCustomernameGet(value)
           .subscribe(x => {
             this.getDetilsForOrder(x);
           });
         break;
-      case "Created by":
+      case "createdBy":
         console.log('case create by');
         this.orderService.ordersCreatedByGet(value)
           .subscribe(x => {
             this.getDetilsForOrder(x);
           });
         break;
-      case "Status":
+      case "status":
         console.log('case status');
         this.orderService.ordersStatusGet(parseInt(value))
           .subscribe(x => {
             this.getDetilsForOrder(x);
           });
         break;
-      case "Approved":
+      case "approved":
         console.log('case approved ' + JSON.parse(value));
         this.orderService.ordersApprovedGet(JSON.parse(value))
           .subscribe(x => {
             this.getDetilsForOrder(x);
           });
         break;
-      case "Amount":
+      case "amount":
         console.log('case amount');
         this.orderService.ordersAmountGet(parseInt(value))
+          .subscribe(x => {
+            this.getDetilsForOrder(x);
+          });
+        break;
+      case "lastUpdated":
+        console.log('case last udpated');
+        this.orderService.ordersLastUpdatedGet(value)
+          .subscribe(x => {
+            this.getDetilsForOrder(x);
+          });
+        break;
+      case "country":
+        console.log('case country');
+        this.orderService.ordersCountryGet(value)
+          .subscribe(x => {
+            this.getDetilsForOrder(x);
+          });
+        break;
+      case "sped":
+        console.log('case sped');
+        this.orderService.ordersSpedGet(value)
           .subscribe(x => {
             this.getDetilsForOrder(x);
           });
@@ -79,6 +103,9 @@ export class DataServiceService {
       this.allAbNumbers().push(currOrder.id);
       this.csinquiryService.csinquiriesIdGet(currOrder.csid)
         .subscribe(x => this.articleNumbersForOrder.set(currOrder.id, x.articleNumber));
+
+      this.tlinquiryService.tlinquiriesIdGet(currOrder.tlid)
+        .subscribe(x => this.spedNumbersForOrder.set(currOrder.id, x.sped));
 
       this.tlinquiryService.tlinquiriesIdGet(currOrder.tlid)
         .subscribe(x => this.countryForOrder.set(currOrder.id, x.country));

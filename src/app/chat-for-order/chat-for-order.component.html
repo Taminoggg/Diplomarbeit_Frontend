@@ -10,7 +10,16 @@
       @for (message of messagesForConversation(); track $index) {
       <label class="datetime">{{message.dateTime}}</label>
       <label class="content">{{message.content}}</label>
-      <label class="content">{{getAttachmentForMessage(message.attachmentId)}}</label>
+      @if (fileForMessageExsits(message.id)) {
+      <br>
+      <div class="fileContainer">
+        <img class="fileImg" src="/assets/images/document.png" alt="Document">
+        <div class="fileDisplay">
+          <label class="fileText">{{getFileName(message.id)}}</label>
+        </div>
+        <img (click)="downloadFile(message.id)" class="downloadImg" src="/assets/images/download.png" alt="Download">
+      </div>
+      }
       <br>
       }
     </div>
@@ -19,10 +28,13 @@
   <div class="input-area">
     <input [ngSignal]="messageContent" (keyup.enter)="sendMessage()" type="text">
     <br>
-    <div class="form-group">
-      <button [disabled]="!hasMessageContent() && !fileToUpload" (click)="sendMessage()">{{'send' | transloco}}</button>
-      <button id="loadFileXml" value="loadXml" onclick="document.getElementById('file').click();">{{'choose-file' |
-        transloco}}</button>
+    <div class="button-container">
+      <button class="sendButton" [disabled]="!hasMessageContent() && !fileToUpload" (click)="sendMessage()">
+        <mat-icon>send</mat-icon>
+      </button>
+      <button id="loadFileXml" value="loadXml" onclick="document.getElementById('file').click();">
+        {{ 'choose-file' | transloco }}
+      </button>
       <input style="display:none;" id="file" name="file" type="file" (change)="handleFileInput($event)">
     </div>
   </div>
@@ -31,14 +43,16 @@
   <div class="file-input-area">
     @if (fileToUpload) {
     <div class="selected-file">
-      <label>{{'selected-file' | transloco}}</label>
-      <label>: {{fileToUpload.name}}</label>
+      <label>{{'selected-file' | transloco}}:&nbsp;</label>
+      <label>{{shortendName(fileToUpload.name)}}</label>
       <br>
-      <label>{{'file-size' | transloco}}</label>
-      <label>: {{fileToUpload.size / 1024 | number: '1.2-2'}} KB</label>
+      <label>{{'file-size' | transloco}}:&nbsp;</label>
+      <label>{{fileToUpload.size / 1024 | number: '1.2-2'}} KB</label>
       <br>
       <button (click)="removeFile()">{{'remove-file' | transloco}}</button>
     </div>
     }
   </div>
 </div>
+
+<!--<a href="https://www.flaticon.com/free-icons/download" title="download icons">Download icons created by Bharat Icons - Flaticon</a>-->

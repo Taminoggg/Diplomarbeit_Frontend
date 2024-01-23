@@ -14,6 +14,7 @@ export * from './csinquiryDto';
 export * from './editCsinquiryDto';
 export * from './editOrderDto';
 export * from './editTlInqueryDto';
+export * from './fileByteDto';
 export * from './fileDto';
 export * from './message';
 export * from './messageConversation';
