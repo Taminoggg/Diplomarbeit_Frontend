@@ -148,6 +148,9 @@
   </div>
 </div>
 
+<label>Zusatztext</label>
+<input [ngSignal]="userText" type="text">
+
 <div class="form-row">
   <button [ngClass]="'savebutton'" (click)="saveOrder()">{{'save' | transloco}}</button>
 </div>

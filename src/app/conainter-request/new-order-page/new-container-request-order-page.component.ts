@@ -34,6 +34,7 @@ export class NewContainerOrderPageComponent implements OnInit {
   status = signal(1);
   amount = signal(1);
   checklistId = signal(1);
+  userText = signal('');
 
   //CsData
   container = signal('Test');

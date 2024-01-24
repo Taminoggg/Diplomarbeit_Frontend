@@ -7,7 +7,7 @@
 </div>
 
 <div class="searchBox">
-  <label>Filter: </label>
+  <label>Filter:&nbsp;</label>
   <select #currFilter (change)="setSelectedFilter(currFilter.value)">
     <option value="customername">{{'customer' | transloco}}</option>
     <option value="createdBy">{{'created-by' | transloco}}</option>
@@ -52,17 +52,17 @@
   <table>
     <tr>
       <th>{{'order' | transloco}}</th>
-      <th>{{'customer' | transloco}}</th>
-      <th>{{'created-by' | transloco}}</th>
+      <th (click)="orderOrders('customer')">{{'customer' | transloco}}</th>
+      <th (click)="orderOrders('createdBy')">{{'created-by' | transloco}}</th>
       <th>{{'ab-nr' | transloco}}</th>
-      <th>{{'status' | transloco}}</th>
+      <th (click)="orderOrders('status')">{{'status' | transloco}}</th>
       <th>{{'article' | transloco}}</th>
       <th>{{'approved' | transloco}}</th>
-      <th>{{'amount' | transloco}}</th>
+      <th (click)="orderOrders('amount')">{{'amount' | transloco}}</th>
       <th>{{'country' | transloco}}</th>
       <th>{{'port-of-arrival' | transloco}}</th>
-      <th>{{'last-updated' | transloco}}</th>
-      <th>{{'sped' | transloco}}</th>
+      <th (click)="orderOrders('lastUpdated')">{{'last-updated' | transloco}}</th>
+      <th (click)="orderOrders('sped')">{{'sped' | transloco}}</th>
       <th>{{'checklist' | transloco}}</th>
       <th>{{'edit' | transloco}}</th>
       <th>{{'chat' | transloco}}</th>
@@ -72,7 +72,7 @@
       <td>{{currOrder.id}}</td>
       <td>{{currOrder.customerName}}</td>
       <td>{{currOrder.createdBy}}</td>
-      <td>{{dataService.allAbNumbers()[$index]}}</td>
+      <td>{{getAbNumberForOrder(currOrder.id)}}</td>
       <td>{{currOrder.status}}</td>
       <td>{{getArticleNumberForOrder(currOrder.id)}}</td>
       @if (currOrder.approved) {

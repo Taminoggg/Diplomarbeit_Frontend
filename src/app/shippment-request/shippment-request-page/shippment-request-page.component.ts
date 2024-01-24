@@ -36,6 +36,14 @@ export class ShippmentRequestComponent implements OnInit, OnChanges {
     this.filterValue.set('');
   }
 
+  orderOrders(orderString:string):void{
+    this.dataService.getOrdersOrderedBy(orderString);
+  }
+
+  getAbNumberForOrder(id:number){
+    return this.dataService.abNumberForOrder.get(id);
+  }
+
   filterOrders() {
     console.log(this.filterValue()); 
 

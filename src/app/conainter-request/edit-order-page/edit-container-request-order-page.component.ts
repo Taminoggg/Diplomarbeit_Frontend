@@ -90,6 +90,7 @@ export class EditContainerOrderPageComponent implements OnChanges {
   amount = signal(this.currOrder().amount);
   checklistId = signal(this.currOrder().checklistId);
   isApproved = signal(this.currOrder().approved);
+  userText = signal('');
 
   //CsData
   container = signal(this.currCsInquiry().container);

@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { CsinquiriesService, CsinquiryDto, OrderDto, OrdersService, TlinquiriesService } from './swagger';
+import { CsinquiriesService, OrderDto, OrdersService, TlinquiriesService } from './swagger';
 
 @Injectable({
   providedIn: 'root'
@@ -9,20 +9,90 @@ export class DataServiceService {
   csinquiryService = inject(CsinquiriesService);
   tlinquiryService = inject(TlinquiriesService);
   allOrders = signal<OrderDto[]>([]);
-  allAbNumbers = signal<number[]>([]);
-  allArticleIds = signal<number[]>([]);
+  abNumberForOrder = new Map<number, number>;
+  articleIdForOrder = new Map<number, number>;
   spedNumbersForOrder = new Map<number, string>;
+  dispatchDateForOrder = new Map<number, string>;
   plantsForOrder = new Map<number, string>;
   factoriesForOrder = new Map<number, string>;
   articleNumbersForOrder = new Map<number, string>;
   countryForOrder = new Map<number, string>;
   recieveLocationForOrder = new Map<number, string>;
+  lastSortedBy = signal('');
+  orderIds: number[] = [];
 
   constructor() {
     this.refreshPage('none', '');
   }
 
-  refreshPage(selectedFilter: string, value: string) {
+  getOrdersOrderedBy(orderString: string): void {
+    switch (orderString) {
+
+      case "amount":
+        if (this.lastSortedBy() === "amount") {
+          this.lastSortedBy.set('');
+          this.allOrders().orderByDescending(x => x.amount);
+        } else {
+          this.lastSortedBy.set('amount');
+          this.allOrders().orderBy(x => x.amount);
+        }
+        break;
+
+      case "sped":
+        if (this.lastSortedBy() === "sped") {
+          this.lastSortedBy.set('');
+          this.orderService.ordersDecSpedGet(this.orderIds.join(','))
+          .subscribe(x => this.getDetilsForOrder(x));
+        }else{
+          this.lastSortedBy.set('sped');
+          this.orderService.ordersAscSpedGet(this.orderIds.join(','))
+          .subscribe(x => this.getDetilsForOrder(x));
+        }
+        break;
+
+      case "customer":
+        if (this.lastSortedBy() === "customer") {
+          this.lastSortedBy.set('');
+          this.allOrders().orderByDescending(x => x.customerName);
+        }else{
+          this.lastSortedBy.set('customer');
+          this.allOrders().orderBy(x => x.customerName);
+        }
+        break;
+
+      case "createdBy":
+        if (this.lastSortedBy() === "createdBy") {
+          this.lastSortedBy.set('');
+          this.allOrders().orderByDescending(x => x.createdBy);
+        }else{
+          this.lastSortedBy.set('createdBy');
+          this.allOrders().orderBy(x => x.createdBy);
+        }
+        break;
+
+      case "status":
+        if (this.lastSortedBy() === "status") {
+          this.lastSortedBy.set('');
+          this.allOrders().orderByDescending(x => x.status);
+        }else{    
+          this.lastSortedBy.set('status');
+          this.allOrders().orderBy(x => x.status);
+        }
+        break;
+
+        case "lastUpdated":
+          if (this.lastSortedBy() === "lastUpdated") {
+            this.lastSortedBy.set('');
+            this.allOrders().orderByDescending(x => x.lastUpdated);
+          }else{    
+            this.lastSortedBy.set('lastUpdated');
+            this.allOrders().orderBy(x => x.lastUpdated);
+          }
+          break;
+    }
+  }
+
+  refreshPage(selectedFilter: string, value: string): void {
     console.log("GETTING ORDERS: selectedFilter: " + selectedFilter + " value: " + value);
     if (value === "") {
       selectedFilter = 'none';
@@ -98,9 +168,11 @@ export class DataServiceService {
   }
 
   getDetilsForOrder(x: OrderDto[]) {
+    this.orderIds = [];
     this.allOrders.set(x);
     this.allOrders().forEach(currOrder => {
-      this.allAbNumbers().push(currOrder.id);
+      this.orderIds.push(currOrder.id)
+      this.abNumberForOrder.set(currOrder.id, currOrder.id);//TOTO
       this.csinquiryService.csinquiriesIdGet(currOrder.csid)
         .subscribe(x => this.articleNumbersForOrder.set(currOrder.id, x.articleNumber));
 

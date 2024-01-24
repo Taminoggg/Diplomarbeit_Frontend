@@ -34,6 +34,7 @@ export class NewShippmentOrderPageComponent implements OnInit {
   status = signal(1);
   amount = signal(1);
   checklistId = signal(1);
+  userText = signal('');
 
   //TlData
   inquiryNumber = signal(1);

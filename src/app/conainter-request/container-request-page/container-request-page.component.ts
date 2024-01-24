@@ -71,6 +71,14 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     return '';
   }
 
+  orderOrders(orderString:string):void{
+    this.dataService.getOrdersOrderedBy(orderString);
+  }
+
+  getAbNumberForOrder(id:number){
+    return this.dataService.abNumberForOrder.get(id);
+  }
+
   getSpedNumberForOrder(id: number): string {
     let spedNumber = this.dataService.spedNumbersForOrder.get(id);
     if (spedNumber !== undefined) {
