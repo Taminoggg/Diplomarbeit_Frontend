@@ -40,10 +40,6 @@ export class ShippmentRequestComponent implements OnInit, OnChanges {
     this.dataService.getOrdersOrderedBy(orderString);
   }
 
-  getAbNumberForOrder(id:number){
-    return this.dataService.abNumberForOrder.get(id);
-  }
-
   filterOrders() {
     console.log(this.filterValue()); 
 
@@ -54,22 +50,6 @@ export class ShippmentRequestComponent implements OnInit, OnChanges {
   router = inject(Router);
   dialogRef = inject(MatDialog);
   csinquiry = signal<CsinquiryDto | undefined>(undefined);
-
-  getArticleNumberForOrder(id: number): string {
-    let articleNumber = this.dataService.articleNumbersForOrder.get(id);
-    if (articleNumber !== undefined) {
-      return articleNumber;
-    }
-    return '';
-  }
-
-  getSpedNumberForOrder(id: number): string {
-    let spedNumber = this.dataService.spedNumbersForOrder.get(id);
-    if (spedNumber !== undefined) {
-      return spedNumber;
-    }
-    return '';
-  }
 
   openDialog(id: number) {
     this.dialogRef.open(ChecklistPopUpComponent, {

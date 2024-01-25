@@ -47,44 +47,8 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   dialogRef = inject(MatDialog);
   csinquiry = signal<CsinquiryDto | undefined>(undefined);
 
-  getArticleNumberForOrder(id: number): string {
-    let articleNumber = this.dataService.articleNumbersForOrder.get(id);
-    if (articleNumber !== undefined) {
-      return articleNumber;
-    }
-    return '';
-  }
-
-  getRecieveLocationForOrder(id: number): string {
-    let recieveLocationForOrder = this.dataService.recieveLocationForOrder.get(id);
-    if (recieveLocationForOrder !== undefined) {
-      return recieveLocationForOrder;
-    }
-    return '';
-  }
-
-  getCountryForOrder(id: number): string {
-    let countryForOrder = this.dataService.countryForOrder.get(id);
-    if (countryForOrder !== undefined) {
-      return countryForOrder;
-    }
-    return '';
-  }
-
   orderOrders(orderString:string):void{
     this.dataService.getOrdersOrderedBy(orderString);
-  }
-
-  getAbNumberForOrder(id:number){
-    return this.dataService.abNumberForOrder.get(id);
-  }
-
-  getSpedNumberForOrder(id: number): string {
-    let spedNumber = this.dataService.spedNumbersForOrder.get(id);
-    if (spedNumber !== undefined) {
-      return spedNumber;
-    }
-    return '';
   }
 
   openDialog(id: number) {

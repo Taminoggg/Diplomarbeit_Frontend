@@ -4,11 +4,15 @@ import { AddCsinquiryDto, AddOrderDto, AddTlinquiryDto, ChecklistDto, Checklists
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+
+
 
 @Component({
   selector: 'app-new-order-page',
   standalone: true,
-  imports: [CommonModule, NgSignalDirective, TranslocoModule],
+  imports: [CommonModule, NgSignalDirective, TranslocoModule, FormsModule, ReactiveFormsModule],
   templateUrl: './new-container-request-order-page.component.html',
   styleUrl: './new-container-request-order-page.component.scss'
 })
@@ -17,6 +21,10 @@ export class NewContainerOrderPageComponent implements OnInit {
   ngOnInit(): void {
     this.checklistService.checklistsGet()
       .subscribe(x => this.allCheckliststs.set(x));
+
+    this.myForm = this.fb.group({
+      articleNumbers: this.fb.array([])
+    });
   }
 
   router = inject(Router);
@@ -36,12 +44,37 @@ export class NewContainerOrderPageComponent implements OnInit {
   checklistId = signal(1);
   userText = signal('');
 
+  myForm!: FormGroup;
+
+  constructor(private fb: FormBuilder) { }
+
+  get articleNumbersFormArray() {
+    return this.myForm.get('articleNumbers') as FormArray;
+  }
+
+  addArticleNumber() {
+    this.articleNumbersFormArray.push(this.fb.control(null, Validators.required));
+  }
+
+  removeArticleNumber(index: number) {
+    this.articleNumbersFormArray.removeAt(index);
+  }
+
+  saveArticleNumbers() {
+    const articleNumbers = this.myForm.value.articleNumbers;
+    console.log('Entered Article Numbers:', articleNumbers);
+    // You can save the article numbers to your desired location or perform any other action here
+  }
+
+  articleAmount = [0];
+  articleNumbers = signal<number[]>([]);
+  articleDirectLines = signal<boolean[]>([]);
+  articlePallets = signal<number[]>([]);
+
   //CsData
   container = signal('Test');
   fastLine = signal('Test');
   directLine = signal('Test');
-  articleNumber = signal('Test');
-  palletamount = signal(1);
   customer = signal('Test');
   abnumber = signal(0);
   bruttoWeightInKg = signal(1);
@@ -54,7 +87,7 @@ export class NewContainerOrderPageComponent implements OnInit {
   readyToLoad = signal('17.12.2023');
   loadingPlattform = signal('Test');
 
-  containerRequestPage():void{
+  containerRequestPage(): void {
     this.router.navigateByUrl('/container-request-page');
   }
 
@@ -63,8 +96,8 @@ export class NewContainerOrderPageComponent implements OnInit {
       container: this.container(),
       fastLine: this.fastLine(),
       directLine: this.directLine(),
-      articleNumber: this.articleNumber(),
-      palletamount: this.palletamount(),
+      articleNumber: '1',//this.articleNumber()
+      palletamount: 1,//this.palletamount()
       customer: this.customer(),
       abnumber: this.abnumber(),
       bruttoWeightInKg: this.bruttoWeightInKg(),

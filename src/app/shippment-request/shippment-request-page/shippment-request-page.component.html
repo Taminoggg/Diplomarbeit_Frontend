@@ -51,8 +51,8 @@
 <div class="orderBox">
   <table>
     <tr>
-      <th>{{'ab-nr' | transloco}}</th>
-      <th>Dispatch-Date</th>
+      <th (click)="orderOrders('abNr')">{{'ab-nr' | transloco}}</th>
+      <th (click)="orderOrders('readyToLoad')">{{'ready-to-load' | transloco}}</th>
       <th (click)="orderOrders('customer')">{{'customer' | transloco}}</th>
       <th (click)="orderOrders('createdBy')">{{'created-by' | transloco}}</th>
       <th (click)="orderOrders('status')">{{'status' | transloco}}</th>
@@ -65,8 +65,8 @@
     </tr>
     @for (currOrder of dataService.allOrders(); track $index) {
     <tr>
-      <td>{{getAbNumberForOrder(currOrder.id)}}</td>
-      <td>Dispatch-Date</td>
+      <td>{{currOrder.abNumber}}</td>
+      <td>{{currOrder.readyToLoad}}</td>
       <td>{{currOrder.customerName}}</td>
       <td>{{currOrder.createdBy}}</td>
       <td>{{currOrder.status}}</td>
@@ -78,7 +78,7 @@
       <td>{{'no' | transloco}}</td>
       }
       <td>{{currOrder.lastUpdated | date: 'dd.MM.yyyy'}}</td>
-      <td>{{getSpedNumberForOrder(currOrder.id)}}</td>
+      <td>{{currOrder.sped}}</td>
       <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
       <td (click)="navigateToPage('/edit-shippment-order-page/' + currOrder.id)"><mat-icon>create</mat-icon></td>
       <td (click)="navigateToPage('/chat-for-order/' + currOrder.id)"><mat-icon>chat</mat-icon></td>

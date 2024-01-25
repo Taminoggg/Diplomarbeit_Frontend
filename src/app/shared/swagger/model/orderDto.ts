@@ -20,6 +20,11 @@ export interface OrderDto {
     amount: number;
     lastUpdated: string;
     checklistId: number;
+    articleNumber: string;
+    sped: string;
+    country: string;
+    readyToLoad: string;
+    abNumber: number;
     csid: number;
     tlid: number;
 }

@@ -9,15 +9,6 @@ export class DataServiceService {
   csinquiryService = inject(CsinquiriesService);
   tlinquiryService = inject(TlinquiriesService);
   allOrders = signal<OrderDto[]>([]);
-  abNumberForOrder = new Map<number, number>;
-  articleIdForOrder = new Map<number, number>;
-  spedNumbersForOrder = new Map<number, string>;
-  dispatchDateForOrder = new Map<number, string>;
-  plantsForOrder = new Map<number, string>;
-  factoriesForOrder = new Map<number, string>;
-  articleNumbersForOrder = new Map<number, string>;
-  countryForOrder = new Map<number, string>;
-  recieveLocationForOrder = new Map<number, string>;
   lastSortedBy = signal('');
   orderIds: number[] = [];
 
@@ -41,12 +32,10 @@ export class DataServiceService {
       case "sped":
         if (this.lastSortedBy() === "sped") {
           this.lastSortedBy.set('');
-          this.orderService.ordersDecSpedGet(this.orderIds.join(','))
-          .subscribe(x => this.getDetilsForOrder(x));
+          this.allOrders().orderByDescending(x => x.sped);
         }else{
           this.lastSortedBy.set('sped');
-          this.orderService.ordersAscSpedGet(this.orderIds.join(','))
-          .subscribe(x => this.getDetilsForOrder(x));
+          this.allOrders().orderBy(x => x.sped);
         }
         break;
 
@@ -89,6 +78,26 @@ export class DataServiceService {
             this.allOrders().orderBy(x => x.lastUpdated);
           }
           break;
+
+          case "abNr":
+            if (this.lastSortedBy() === "abNr") {
+              this.lastSortedBy.set('');
+              this.allOrders().orderByDescending(x => x.abNumber);
+            }else{    
+              this.lastSortedBy.set('abNr');
+              this.allOrders().orderBy(x => x.abNumber);
+            }
+            break;
+
+            case "readyToLoad":
+            if (this.lastSortedBy() === "readyToLoad") {
+              this.lastSortedBy.set('');
+              this.allOrders().orderByDescending(x => x.readyToLoad);
+            }else{    
+              this.lastSortedBy.set('readyToLoad');
+              this.allOrders().orderBy(x => x.readyToLoad);
+            }
+            break;
     }
   }
 
@@ -172,18 +181,6 @@ export class DataServiceService {
     this.allOrders.set(x);
     this.allOrders().forEach(currOrder => {
       this.orderIds.push(currOrder.id)
-      this.abNumberForOrder.set(currOrder.id, currOrder.id);//TOTO
-      this.csinquiryService.csinquiriesIdGet(currOrder.csid)
-        .subscribe(x => this.articleNumbersForOrder.set(currOrder.id, x.articleNumber));
-
-      this.tlinquiryService.tlinquiriesIdGet(currOrder.tlid)
-        .subscribe(x => this.spedNumbersForOrder.set(currOrder.id, x.sped));
-
-      this.tlinquiryService.tlinquiriesIdGet(currOrder.tlid)
-        .subscribe(x => this.countryForOrder.set(currOrder.id, x.country));
-
-      this.tlinquiryService.tlinquiriesIdGet(currOrder.tlid)
-        .subscribe(x => this.recieveLocationForOrder.set(currOrder.id, x.retrieveLocation));
     });
   }
 }

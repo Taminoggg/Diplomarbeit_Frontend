@@ -58,7 +58,12 @@ export class EditContainerOrderPageComponent implements OnChanges {
       lastUpdated: 'Test',
       checklistId: 1,
       csid: 1,
-      tlid: 1
+      tlid: 1,
+      articleNumber: '1',
+      sped: 'Test',
+      country: 'Test',
+      abNumber: 1,
+      readyToLoad: 'Test'
     });
   allCheckliststs = signal<ChecklistDto[]>([]);
   currCsInquiry = signal<CsinquiryDto>(

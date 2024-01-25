@@ -59,7 +59,12 @@ export class EditShippmentOrderPageComponent implements OnChanges {
       lastUpdated: 'Test',
       checklistId: 1,
       csid: 1,
-      tlid: 1
+      tlid: 1,
+      readyToLoad: 'Test',
+      abNumber: 1,
+      country: 'Test',
+      sped: 'Test',
+      articleNumber: '1'
     });
   allChecklists = signal<ChecklistDto[]>([]);
   currTlInquiry = signal<TlinquiryDto>(

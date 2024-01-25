@@ -45,30 +45,13 @@
   </div>
 
   <div class="form-group">
-    <label>{{'fast-line' | transloco}}</label>
-    <input [ngSignal]="fastLine" type="text">
+    <label>{{'customer' | transloco}}</label>
+    <input [ngSignal]="customer" type="text">
   </div>
 
   <div class="form-group">
     <label>{{'direct-line' | transloco}}</label>
     <input [ngSignal]="directLine" type="text">
-  </div>
-</div>
-
-<div class="form-row">
-  <div class="form-group">
-    <label>{{'article-number' | transloco}}</label>
-    <input [ngSignal]="articleNumber" type="text">
-  </div>
-
-  <div class="form-group">
-    <label>{{'pallet-amount' | transloco}}</label>
-    <input [ngSignal]="palletamount" type="number">
-  </div>
-
-  <div class="form-group">
-    <label>{{'customer' | transloco}}</label>
-    <input [ngSignal]="customer" type="text">
   </div>
 </div>
 
@@ -126,6 +109,36 @@
     <input [ngSignal]="readyToLoad" type="text">
   </div>
 </div>
+
+<!--@for (article of articleAmount; track $index) {
+<div class="form-row">
+  <div class="form-group">
+    <label>{{'article-number' | transloco}}</label>
+    <input type="text">
+  </div>
+
+  <div class="form-group">
+    <label>{{'fast-line' | transloco}}</label>
+    <input [ngSignal]="fastLine" type="text">
+  </div>
+
+  <div class="form-group">
+    <label>{{'pallet-amount' | transloco}}</label>
+    <input type="number">
+  </div>
+</div>
+}-->
+
+<form [formGroup]="myForm">
+  <div formArrayName="articleNumbers">
+    <div *ngFor="let control of articleNumbersFormArray.controls; let i = index">
+      <input type="number" formControlName="i" placeholder="Enter an article number" />
+      <button type="button" (click)="removeArticleNumber(i)">Remove</button>
+    </div>
+  </div>
+  <button type="button" (click)="addArticleNumber()">Add Article Number</button>
+  <button type="button" (click)="saveArticleNumbers()">Save Article Numbers</button>
+</form>
 
 <label>Zusatztext</label>
 <input [ngSignal]="userText" type="text">
