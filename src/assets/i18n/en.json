@@ -64,5 +64,7 @@
     "none": "None",
     "yes": "Yes",
     "no": "No",
-    "generatePDF": "Download PDF"
+    "generatePDF": "Download PDF",
+    "add-article": "Add article",
+    "remove-article": "Remove article"
 }

@@ -77,7 +77,7 @@
       {
       <td>{{'no' | transloco}}</td>
       }
-      <td>{{currOrder.lastUpdated | date: 'dd.MM.yyyy'}}</td>
+      <td>{{currOrder.lastUpdated}}</td>
       <td>{{currOrder.sped}}</td>
       <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
       <td (click)="navigateToPage('/edit-shippment-order-page/' + currOrder.id)"><mat-icon>create</mat-icon></td>

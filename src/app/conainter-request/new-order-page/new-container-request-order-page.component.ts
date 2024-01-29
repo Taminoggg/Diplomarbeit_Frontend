@@ -7,8 +7,6 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
-
-
 @Component({
   selector: 'app-new-order-page',
   standalone: true,
@@ -23,8 +21,10 @@ export class NewContainerOrderPageComponent implements OnInit {
       .subscribe(x => this.allCheckliststs.set(x));
 
     this.myForm = this.fb.group({
-      articleNumbers: this.fb.array([])
+      articles: this.fb.array([])
     });
+
+    this.addArticle();
   }
 
   router = inject(Router);
@@ -48,28 +48,32 @@ export class NewContainerOrderPageComponent implements OnInit {
 
   constructor(private fb: FormBuilder) { }
 
-  get articleNumbersFormArray() {
-    return this.myForm.get('articleNumbers') as FormArray;
+  get articlesFormArray() {
+    return this.myForm.get('articles') as FormArray;
   }
 
-  addArticleNumber() {
-    this.articleNumbersFormArray.push(this.fb.control(null, Validators.required));
+  addArticle() {
+    const articleGroup = this.fb.group({
+      articleNumber: [0, Validators.required],
+      palletAmount: [0, Validators.required],
+      directline: [false] 
+    });
+
+    this.articlesFormArray.push(articleGroup);
+  }
+  
+  getFormGroup(index: number): FormGroup {
+    return this.articlesFormArray.at(index) as FormGroup;
   }
 
-  removeArticleNumber(index: number) {
-    this.articleNumbersFormArray.removeAt(index);
+  removeArticle(index: number) {
+    this.articlesFormArray.removeAt(index);
   }
 
-  saveArticleNumbers() {
-    const articleNumbers = this.myForm.value.articleNumbers;
-    console.log('Entered Article Numbers:', articleNumbers);
-    // You can save the article numbers to your desired location or perform any other action here
+  saveArticles() {
+    const articles = this.myForm.value.articles;
+    console.log('Entered Articles:', articles);
   }
-
-  articleAmount = [0];
-  articleNumbers = signal<number[]>([]);
-  articleDirectLines = signal<boolean[]>([]);
-  articlePallets = signal<number[]>([]);
 
   //CsData
   container = signal('Test');
