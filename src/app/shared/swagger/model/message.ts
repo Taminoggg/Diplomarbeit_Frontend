@@ -15,7 +15,7 @@ import { MessageConversation } from './messageConversation';
 export interface Message { 
     id?: number;
     content?: string | null;
-    attachmentId?: number;
+    attachmentId?: number | null;
     dateTime?: string;
     attachment?: any;
     readonly messageConversations?: Array<MessageConversation> | null;

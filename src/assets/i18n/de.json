@@ -66,5 +66,16 @@
     "no": "Nein",
     "generatePDF": "PDF herrunterladen",
     "add-article": "Artikel hinzufügen",
-    "remove-article": "Artikel entfernen"
+    "remove-article": "Artikel entfernen",
+    "error-message-status": "Status muss größer 0 sein",
+    "error-message-created-by": "Anlegerformat: 'Max Mustermann' erwartet.",
+    "error-message-amount": "Menge muss größer 0 sein",
+    "error-message-loading-plattform": "Muss einen Wert enthalten.",
+    "error-message-ab-number": "Ab-Nr. muss größer 0 sein",
+    "error-message-gross-weight": "Brutto Gewicht muss größer 0 sein",
+    "error-message-container-size": "Container Größe muss größer 0 sein",
+    "error-message-ready-to-load": "Datumsformat: 'dd.MM.yyyy' erwartet.",
+    "error-message-customer": "Kunde darf nicht leer sein.",
+    "error-message-pallet-amount": "Paletten Anzahl muss größer 0 sein",
+    "error-message-article-number": "Artikel Nummber muss größer 0 sein"
 }

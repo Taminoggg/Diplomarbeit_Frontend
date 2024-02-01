@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, computed, inject, numberAttribute, signal } from '@angular/core';
-import { AddMessageConversationDto, AddMessageDto, ConversationDto, ConversationsService, FileByteDto, FileDto, FilesService, MessageConversationsService, MessageDto, MessagesService } from '../shared/swagger';
+import { AddMessageConversationDto, AddMessageDto, FileByteDto, FilesService, MessageConversationsService, MessageDto, MessagesService } from '../shared/swagger';
 import { NgSignalDirective } from '../shared/ngSignal.directive';
 import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -20,7 +20,6 @@ export class ChatForOrderComponent implements OnInit {
   fileToUpload: File | null = null;
 
   router = inject(Router);
-  conversationService = inject(ConversationsService);
   messageService = inject(MessagesService);
   messageConversationService = inject(MessageConversationsService);
   filesService = inject(FilesService);
@@ -29,30 +28,13 @@ export class ChatForOrderComponent implements OnInit {
   hasMessageContent = computed(() => this.messageContent().trim());
   messageContent = signal<string>(' ');
   messagesForConversation = signal<MessageDto[]>([]);
-  conversation = signal<ConversationDto>(
-    {
-      orderId: 0,
-      id: 0
-    });
 
   ngOnInit(): void {
-    this.conversationService.conversationsOrderIdGet(this.id)
-      .subscribe(x => {
-        if (x.id != 0) {
-          this.conversation.set(x);
-          console.log('conversation set')
-        } else {
-          console.log('new conversation added')
-          this.conversationService.conversationsPost(this.id)
-            .subscribe(x => this.conversation.set(x));
-        }
-
-        this.getMessagesForConversation();
-      });
+    this.getMessagesForConversation();
   }
 
   getMessagesForConversation() {
-    this.messageConversationService.messageConversationsConversationIdGet(this.conversation().id)
+    this.messageConversationService.messageConversationsConversationIdGet(this.id)
       .subscribe(x => {
         this.messagesForConversation.set(x);
         this.messagesForConversation().forEach((message: MessageDto) => {
@@ -95,7 +77,7 @@ export class ChatForOrderComponent implements OnInit {
     return false;
   }
 
-  getFileName(id:number): string{
+  getFileName(id: number): string {
     let file = this.fileForMessage.get(id);
 
     if (file !== undefined) {
@@ -132,8 +114,8 @@ export class ChatForOrderComponent implements OnInit {
     }
   }
 
-  shortendName(name:string){
-    if (name.length < 40 ) return name
+  shortendName(name: string) {
+    if (name.length < 40) return name
     return name.substring(0, 40) + '...';
   }
 
@@ -167,7 +149,7 @@ export class ChatForOrderComponent implements OnInit {
     this.messageService.messagesPost(message)
       .subscribe(x => {
         let messageConversation: AddMessageConversationDto = {
-          conversationId: this.conversation().id,
+          orderId: this.id,
           messageId: x.id
         }
 

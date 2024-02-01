@@ -84,11 +84,6 @@ export class NewShippmentOrderPageComponent implements OnInit {
 
     let csInquiry: AddCsinquiryDto = {
       container: 'TODO',
-      fastLine: 'TODO',
-      directLine: 'TODO',
-      articleNumber: 'TODO',
-      palletamount: 1,
-      customer: 'TODO',
       abnumber: 1,
       bruttoWeightInKg: 1,
       incoterm: 'TODO',

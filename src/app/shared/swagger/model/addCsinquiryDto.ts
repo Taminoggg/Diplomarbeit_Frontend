@@ -13,11 +13,6 @@
 
 export interface AddCsinquiryDto { 
     container: string;
-    fastLine: string;
-    directLine: string;
-    articleNumber: string;
-    palletamount: number;
-    customer: string;
     abnumber: number;
     bruttoWeightInKg: number;
     incoterm: string;

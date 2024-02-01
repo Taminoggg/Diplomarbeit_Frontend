@@ -9,15 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Order } from './order';
 import { Message } from './message';
-import { Conversation } from './conversation';
 
 
 export interface MessageConversation { 
     id?: number;
     messageId?: number;
-    conversationId?: number;
-    conversation?: Conversation;
+    orderId?: number;
+    order?: Order;
     message?: Message;
 }
 

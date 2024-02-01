@@ -11,20 +11,11 @@
  */
 
 
-export interface OrderDto { 
-    id: number;
-    status: number;
-    customerName: string;
-    createdBy: string;
-    approved: boolean;
-    amount: number;
-    lastUpdated: string;
-    checklistId: number;
-    sped: string;
-    country: string;
-    readyToLoad: string;
-    abNumber: number;
-    csid: number;
-    tlid: number;
+export interface AddArticleDto { 
+    articleNumber: number;
+    isDirectLine: boolean;
+    isFastLine: boolean;
+    pallets: number;
+    csInquiryId: number;
 }
 

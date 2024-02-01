@@ -1,7 +1,7 @@
+export * from './articles.service';
+import { ArticlesService } from './articles.service';
 export * from './checklists.service';
 import { ChecklistsService } from './checklists.service';
-export * from './conversations.service';
-import { ConversationsService } from './conversations.service';
 export * from './csinquiries.service';
 import { CsinquiriesService } from './csinquiries.service';
 export * from './files.service';
@@ -18,4 +18,4 @@ export * from './steps.service';
 import { StepsService } from './steps.service';
 export * from './tlinquiries.service';
 import { TlinquiriesService } from './tlinquiries.service';
-export const APIS = [ChecklistsService, ConversationsService, CsinquiriesService, FilesService, MessageConversationsService, MessagesService, OrdersService, StepChecklistsService, StepsService, TlinquiriesService];
+export const APIS = [ArticlesService, ChecklistsService, CsinquiriesService, FilesService, MessageConversationsService, MessagesService, OrdersService, StepChecklistsService, StepsService, TlinquiriesService];

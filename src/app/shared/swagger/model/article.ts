@@ -9,22 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Csinquiry } from './csinquiry';
 
 
-export interface OrderDto { 
-    id: number;
-    status: number;
-    customerName: string;
-    createdBy: string;
-    approved: boolean;
-    amount: number;
-    lastUpdated: string;
-    checklistId: number;
-    sped: string;
-    country: string;
-    readyToLoad: string;
-    abNumber: number;
-    csid: number;
-    tlid: number;
+export interface Article { 
+    id?: number;
+    articleNumber?: number;
+    isDirectLine?: boolean;
+    isFastLine?: boolean;
+    pallets?: number;
+    csinquiryId?: number;
+    csinquiry?: Csinquiry;
 }
 

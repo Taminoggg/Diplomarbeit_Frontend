@@ -10,16 +10,12 @@
  * Do not edit the class manually.
  */
 import { Order } from './order';
+import { Article } from './article';
 
 
 export interface Csinquiry { 
     id?: number;
     container?: string | null;
-    fastLine?: string | null;
-    directLine?: string | null;
-    articleNumber?: string | null;
-    palletamount?: number;
-    customer?: string | null;
     abnumber?: number;
     bruttoWeightInKg?: number;
     incoterm?: string | null;
@@ -30,6 +26,7 @@ export interface Csinquiry {
     thctb?: boolean;
     readyToLoad?: string;
     loadingPlattform?: string | null;
+    readonly articles?: Array<Article> | null;
     readonly orders?: Array<Order> | null;
 }
 

@@ -17,6 +17,7 @@ export interface Step {
     stepNumber?: number;
     stepDescription?: string | null;
     stepName?: string | null;
+    isCompleted?: boolean;
     readonly stepChecklists?: Array<StepChecklist> | null;
 }
 

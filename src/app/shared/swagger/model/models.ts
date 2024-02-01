@@ -1,3 +1,4 @@
+export * from './addArticleDto';
 export * from './addChecklistDto';
 export * from './addCsinquiryDto';
 export * from './addMessageConversationDto';
@@ -5,10 +6,10 @@ export * from './addMessageDto';
 export * from './addOrderDto';
 export * from './addStepDto';
 export * from './addTlinquiryDto';
+export * from './article';
+export * from './articleDto';
 export * from './checklist';
 export * from './checklistDto';
-export * from './conversation';
-export * from './conversationDto';
 export * from './csinquiry';
 export * from './csinquiryDto';
 export * from './editCsinquiryDto';

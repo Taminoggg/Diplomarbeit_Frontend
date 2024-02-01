@@ -1,35 +1,53 @@
-import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { CommonModule, JsonPipe } from '@angular/common';
-import { ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { AddArticleDto, ArticleDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-order-page',
   standalone: true,
-  imports: [CommonModule, NgSignalDirective, TranslocoModule],
+  imports: [CommonModule, NgSignalDirective, TranslocoModule, FormsModule, ReactiveFormsModule],
   templateUrl: './edit-container-request-order-page.component.html',
   styleUrl: './edit-container-request-order-page.component.scss'
 })
-export class EditContainerOrderPageComponent implements OnChanges {
+export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
   dataService: any;
+  articlesService = inject(ArticlesService);
+
+  ngOnInit(): void {
+    console.log('ONINIT');
+    console.log('csid' + this.currOrder().csid);
+    this.myForm = this.fb.group({
+      articles: this.fb.array([])
+    });
+
+
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('id: ' + this.id);
     this.checklistService.checklistsGet()
-      .subscribe(x => {
-        this.allCheckliststs.set(x);
+      .subscribe(x => this.allCheckliststs.set(x));
 
-      });
     this.orderService.ordersIdGet(this.id)
       .subscribe(x => {
         this.currOrder.set(x);
-        console.log(this.currOrder());
+        console.log('currOrder:' + this.currOrder().id);
         this.setOrderSignals();
+
+        this.articlesService.articlesCsInquiryIdGet(this.currOrder().csid)
+          .subscribe(x => x.forEach(x => {
+            console.log('---------- FOREACH LOG ----------');
+            this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id);
+            console.log('aNum: ' + x.articleNumber);
+          }));
+
         this.csinquiriesService.csinquiriesIdGet(this.csId())
           .subscribe(x => {
             this.currCsInquiry.set(x);
@@ -38,12 +56,48 @@ export class EditContainerOrderPageComponent implements OnChanges {
       });
   }
 
+  myForm!: FormGroup;
+
+  constructor(private fb: FormBuilder) { }
+
+  get articlesFormArray() {
+    return this.myForm.get('articles') as FormArray;
+  }
+
+  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id:number) {
+    const articleGroup = this.fb.group({
+      articleNumber: [articleNumber, Validators.required],
+      palletAmount: [palletAmount, Validators.required],
+      directline: [directLine],
+      fastLine: [fastLine],
+      id: [id]
+    });
+
+    this.articlesFormArray.push(articleGroup);
+  }
+
+  getFormGroup(index: number): FormGroup {
+    return this.articlesFormArray.at(index) as FormGroup;
+  }
+
+  removeArticle(index: number) {
+    const articleFormGroup = this.getFormGroup(index);
+    const articleId = articleFormGroup.get('id')?.value; 
+    this.articlesService.articlesDelete(articleId).subscribe(x => console.log('article deleted: ' + articleId)); 
+    this.articlesFormArray.removeAt(index);
+  }
+
+  saveArticles() {
+    const articles = this.myForm.value.articles;
+    console.log('Entered Articles:', articles);
+  }
+
   router = inject(Router);
   orderService = inject(OrdersService);
   checklistService = inject(ChecklistsService);
   csinquiriesService = inject(CsinquiriesService);
 
-  containerRequestPage():void{
+  containerRequestPage(): void {
     this.router.navigateByUrl('/container-request-page');
   }
 
@@ -59,22 +113,17 @@ export class EditContainerOrderPageComponent implements OnChanges {
       checklistId: 1,
       csid: 1,
       tlid: 1,
-      articleNumber: '1',
       sped: 'Test',
       country: 'Test',
       abNumber: 1,
       readyToLoad: 'Test'
     });
+
   allCheckliststs = signal<ChecklistDto[]>([]);
   currCsInquiry = signal<CsinquiryDto>(
     {
       id: 1,
       container: 'Loading',
-      fastLine: 'Loading',
-      directLine: 'Loading',
-      articleNumber: 'Loading',
-      palletamount: 0,
-      customer: 'Loading',
       abnumber: 1,
       bruttoWeightInKg: 0,
       incoterm: 'Loading',
@@ -99,11 +148,6 @@ export class EditContainerOrderPageComponent implements OnChanges {
 
   //CsData
   container = signal(this.currCsInquiry().container);
-  fastLine = signal(this.currCsInquiry().fastLine);
-  directLine = signal(this.currCsInquiry().directLine);
-  articleNumber = signal(this.currCsInquiry().articleNumber);
-  palletamount = signal(this.currCsInquiry().palletamount);
-  customer = signal(this.currCsInquiry().customer);
   abnumber = signal(this.currCsInquiry().abnumber);
   bruttoWeightInKg = signal(this.currCsInquiry().bruttoWeightInKg);
   incoterm = signal(this.currCsInquiry().incoterm);
@@ -152,19 +196,33 @@ export class EditContainerOrderPageComponent implements OnChanges {
       });
 
     this.saveCsInquery();
+    this.saveArticlesToDB();
 
-    this.router.navigateByUrl('/shippment-request-page');
+    this.router.navigateByUrl('/container-request-page');
+  }
+
+  saveArticlesToDB(){
+    for (let i = 0; i < this.articlesFormArray.length; i++) {
+
+      let article: ArticleDto = {
+        isDirectLine: this.getFormGroup(i).get('directline')!.value,
+        isFastLine: this.getFormGroup(i).get('fastLine')!.value,
+        pallets: this.getFormGroup(i).get('palletAmount')!.value,
+        articleNumber: this.getFormGroup(i).get('articleNumber')!.value,
+        csInquiryId: this.currOrder().csid,
+        id: this.getFormGroup(i).get('id')!.value
+      };
+
+      this.articlesService.articlesPut(article).subscribe(x =>
+        console.log('article updated: ' + x.id)
+      );
+    }
   }
 
   saveCsInquery() {
     let editedCsInquery: EditCsinquiryDto = {
       id: this.currCsInquiry().id,
       container: this.container(),
-      fastLine: this.fastLine(),
-      directLine: this.directLine(),
-      articleNumber: this.articleNumber(),
-      palletamount: this.palletamount(),
-      customer: this.customer(),
       abnumber: this.abnumber(),
       bruttoWeightInKg: this.bruttoWeightInKg(),
       incoterm: this.incoterm(),
@@ -193,10 +251,6 @@ export class EditContainerOrderPageComponent implements OnChanges {
 
   setCsInquirySignals() {
     this.container = signal(this.currCsInquiry().container);
-    this.directLine = signal(this.currCsInquiry().directLine);
-    this.articleNumber = signal(this.currCsInquiry().articleNumber);
-    this.palletamount = signal(this.currCsInquiry().palletamount);
-    this.customer = signal(this.currCsInquiry().customer);
     this.abnumber = signal(this.currCsInquiry().abnumber);
     this.bruttoWeightInKg = signal(this.currCsInquiry().bruttoWeightInKg);
     this.incoterm = signal(this.currCsInquiry().incoterm);
@@ -207,6 +261,5 @@ export class EditContainerOrderPageComponent implements OnChanges {
     this.thctb = signal(this.currCsInquiry().thctb);
     this.readyToLoad = signal(this.currCsInquiry().readyToLoad);
     this.loadingPlattform = signal(this.currCsInquiry().loadingPlattform);
-    this.fastLine = signal(this.currCsInquiry().fastLine);
   }
 }

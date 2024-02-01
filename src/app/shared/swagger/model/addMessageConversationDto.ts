@@ -12,7 +12,7 @@
 
 
 export interface AddMessageConversationDto { 
-    conversationId: number;
+    orderId: number;
     messageId: number;
 }
 

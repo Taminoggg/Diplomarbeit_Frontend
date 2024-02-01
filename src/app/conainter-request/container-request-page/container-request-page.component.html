@@ -56,7 +56,6 @@
       <th (click)="orderOrders('createdBy')">{{'created-by' | transloco}}</th>
       <th (click)="orderOrders('abNr')">{{'ab-nr' | transloco}}</th>
       <th (click)="orderOrders('status')">{{'status' | transloco}}</th>
-      <th>{{'article' | transloco}}</th>
       <th>{{'approved' | transloco}}</th>
       <th (click)="orderOrders('amount')">{{'amount' | transloco}}</th>
       <th>{{'country' | transloco}}</th>
@@ -74,7 +73,6 @@
       <td>{{currOrder.createdBy}}</td>
       <td>{{currOrder.abNumber}}</td>
       <td>{{currOrder.status}}</td>
-      <td>{{currOrder.articleNumber}}</td>
       @if (currOrder.approved) {
       <td>{{'yes' | transloco}}</td>
       }

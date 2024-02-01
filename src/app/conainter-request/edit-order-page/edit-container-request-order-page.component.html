@@ -52,26 +52,9 @@
       <input #txtContainer type="text" value="{{currCsInquiry().container}}"
         (change)="container.set(txtContainer.value)">
     </div>
-
-    <div class="form-group">
-      <label>{{'direct line' | transloco}}</label>
-      <input #txtDirectLine type="text" value="{{currCsInquiry().directLine}}"
-        (change)="directLine.set(txtDirectLine.value)">
-    </div>
-
-    <div class="form-group">
-      <label>{{'article-number' | transloco}}</label>
-      <input #txtArticleNumber type="text" value="{{currCsInquiry().articleNumber}}"
-        (change)="articleNumber.set(txtArticleNumber.value)">
-    </div>
   </div>
 
   <div class="form-row">
-    <div class="form-group">
-      <label>{{'pallet-amount' | transloco}}</label>
-      <input #txtPalletAmount type="text" value="{{currCsInquiry().palletamount}}"
-        (change)="palletamount.set(+txtPalletAmount.value)">
-    </div>
 
     <div class="form-group">
       <label>{{'ab-nr' | transloco}}</label>
@@ -140,13 +123,42 @@
       <input #txtLoadingPlattform type="text" value="{{currCsInquiry().loadingPlattform}}"
         (change)="loadingPlattform.set(txtLoadingPlattform.value)">
     </div>
-
-    <div class="form-group">
-      <label>{{'fast-line' | transloco}}</label>
-      <input #txtFastLine type="text" value="{{currCsInquiry().fastLine}}" (change)="fastLine.set(txtFastLine.value)">
-    </div>
   </div>
 </div>
+
+<form [formGroup]="myForm">
+  <div formArrayName="articles">
+    @for (articleGroup of articlesFormArray.controls; track $index) {
+    <div [formGroup]="getFormGroup($index)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>{{'article-number' | transloco}}</label>
+          <input type="number" formControlName="articleNumber" placeholder="Enter an article number">
+        </div>
+
+        <div class="form-group">
+          <label>{{'direct-line' | transloco}}</label>
+          <input type="checkbox" formControlName="directline">
+        </div>
+
+        @if (getFormGroup($index).get('directline')!.value) {
+        <div class="form-group">
+          <label>{{'pallet-amount' | transloco}}</label>
+          <input type="number" formControlName="palletAmount" placeholder="Enter pallet amount">
+        </div>
+        }
+        @else {
+        <div class="form-group"></div>
+        }
+      </div>
+      @if (articlesFormArray.controls.length > 1) {
+      <button class="removeArticle-button" type="button" (click)="removeArticle($index)">{{'remove-article' | transloco}}</button>
+      }
+    </div>
+    }
+  </div>
+  <button class="addArticle-button" type="button" (click)="addArticle(1,1,false,false, 0)">{{'add-article' | transloco}}</button>
+</form>
 
 <label>Zusatztext</label>
 <input [ngSignal]="userText" type="text">

@@ -10,8 +10,8 @@
  * Do not edit the class manually.
  */
 import { Csinquiry } from './csinquiry';
+import { MessageConversation } from './messageConversation';
 import { Checklist } from './checklist';
-import { Conversation } from './conversation';
 import { Tlinquiry } from './tlinquiry';
 
 
@@ -26,8 +26,9 @@ export interface Order {
     checklistId?: number;
     csid?: number;
     tlid?: number;
+    additionalInformation?: string | null;
     checklist?: Checklist;
-    readonly conversations?: Array<Conversation> | null;
+    readonly messageConversations?: Array<MessageConversation> | null;
     cs?: Csinquiry;
     tl?: Tlinquiry;
 }
