@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, inject, signal } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataServiceService } from '../../shared/data-service.service';
 import { MatIconModule } from '@angular/material/icon'
@@ -18,15 +18,22 @@ import { NgSignalDirective } from '../../shared/ngSignal.directive';
   styleUrls: ['./container-request-page.component.scss']
 })
 export class ContainerRequestPageComponent implements OnInit, OnChanges {
+  @Input() showCs = 'cs'
+
+  selectedFilter = signal<string>('customername');
+  filterValue = signal<string>('');
+  dataService = inject(DataServiceService);
+  router = inject(Router);
+  csinquiryService = inject(CsinquiriesService);
+  dialogRef = inject(MatDialog);
+  csinquiry = signal<CsinquiryDto | undefined>(undefined);
+
   ngOnChanges(changes: SimpleChanges): void {
     this.dataService.refreshPage(this.selectedFilter(), this.filterValue());
   }
   ngOnInit(): void {
     this.dataService.refreshPage(this.selectedFilter(), this.filterValue());
   }
-
-  selectedFilter = signal<string>('customername');
-  filterValue = signal<string>('');
 
   setSelectedFilter(value: string) {
     this.dataService.refreshPage('none', '');
@@ -37,18 +44,14 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     this.filterValue.set('');
   }
 
-  filterOrders() {
-    this.dataService.refreshPage(this.selectedFilter(), this.filterValue());
-  }
-
-  dataService = inject(DataServiceService);
-  router = inject(Router);
-  csinquiryService = inject(CsinquiriesService);
-  dialogRef = inject(MatDialog);
-  csinquiry = signal<CsinquiryDto | undefined>(undefined);
-
   orderOrders(orderString:string):void{
     this.dataService.getOrdersOrderedBy(orderString);
+  }
+
+  filterOrders() {
+    console.log(this.filterValue()); 
+
+    this.dataService.refreshPage(this.selectedFilter(), this.filterValue());
   }
 
   openDialog(id: number) {

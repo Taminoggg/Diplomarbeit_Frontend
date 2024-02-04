@@ -219,7 +219,7 @@ export class NewContainerOrderPageComponent implements OnInit {
           });
       });
 
-    this.router.navigateByUrl('/container-request-page');
+    this.containerRequestPage();
   }
 
   publish(){

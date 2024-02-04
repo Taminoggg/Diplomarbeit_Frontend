@@ -1,7 +1,11 @@
 <div class="contentBox">
-  <app-container-tool-function [toolFunctionName]="'Container Anfrage'"
+  <app-container-tool-function [toolFunctionName]="'Container Anfrage CS'"
     [toolFunctionDescription]="'Workflow zwischen Customer Service und Transportlogistik'"
-    [redirectRoute]="'/container-request-page'"></app-container-tool-function>
+    [redirectRoute]="'/container-request-page/cs'"></app-container-tool-function>
+
+    <app-container-tool-function [toolFunctionName]="'Container Anfrage TS'"
+    [toolFunctionDescription]="'Workflow zwischen Customer Service und Transportlogistik'"
+    [redirectRoute]="'/container-request-page/tl'"></app-container-tool-function>
 
   <app-container-tool-function [toolFunctionName]="'Anfrage Lieferzeit und Lieferwerk'"
     [toolFunctionDescription]="'Workflow zwischen Customer Service und Produktionsplanung'"

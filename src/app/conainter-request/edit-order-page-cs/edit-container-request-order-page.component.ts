@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, OnInit, computed } from '@angular/core';
-import { CommonModule, JsonPipe } from '@angular/common';
-import { AddArticleDto, ArticleDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { CommonModule } from '@angular/common';
+import { ArticleDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -18,8 +18,105 @@ import { ValidationService } from '../../validation.service';
 })
 export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
-  dataService: any;
+
   articlesService = inject(ArticlesService);
+  validationService = inject(ValidationService);
+  router = inject(Router);
+  fb = inject(FormBuilder);
+  orderService = inject(OrdersService);
+  checklistService = inject(ChecklistsService);
+  csinquiriesService = inject(CsinquiriesService);
+
+  myForm!: FormGroup;
+  currOrder = signal<OrderDto>(
+    {
+      id: 1,
+      status: 'Test',
+      customerName: 'Test',
+      createdBy: 'Test',
+      approvedByCs: false,
+      approvedByTs: false,
+      amount: 1,
+      lastUpdated: 'Test',
+      checklistId: 1,
+      csid: 1,
+      tlid: 1,
+      sped: 'Test',
+      country: 'Test',
+      abNumber: 1,
+      readyToLoad: 'Test'
+    });
+
+  allChecklists = signal<ChecklistDto[]>([]);
+  currCsInquiry = signal<CsinquiryDto>(
+    {
+      id: 1,
+      container: 'Loading',
+      abnumber: 1,
+      grossWeightInKg: 1,
+      incoterm: 'Loading',
+      containersizeA: 1,
+      containersizeB: 1,
+      containersizeHc: 1,
+      freeDetention: false,
+      thctb: false,
+      readyToLoad: '01.01.1999',
+      loadingPlattform: 'Loading'
+    });
+
+  //OrderData
+  csId = signal(0);
+  customerName = signal('');
+  createdBy = signal('');
+  status = signal('');
+  amount = signal(0);
+  checklistId = signal(0);
+  isApprovedByCs = signal(false);
+  isApprovedByTs = signal(false);
+  additonalInformation = signal<string|undefined|null>('');
+  userText = signal('');
+
+  //CsData
+  container = signal('');
+  abnumber = signal(0);
+  grossWeightInKg = signal(0);
+  incoterm = signal('');
+  containersizeA = signal(0);
+  containersizeB = signal(0);
+  containersizeHc = signal(0);
+  freeDetention = signal(false);
+  thctb = signal(false);
+  readyToLoad = signal('');
+  loadingPlattform = signal('');
+
+  areArticleNumbersValid = signal<boolean>(true);
+  isReadyToLoadValid = computed(() => this.validationService.isReadyToLoadValid(this.readyToLoad()));
+  isLoadingPlattfromValid = computed(() => this.validationService.isLoadingPlattfromValid(this.readyToLoad()));
+  isCustomerValid = computed(() => this.validationService.isCustomerValid(this.customerName()));
+  isCreatedByValid = computed(() => this.validationService.isCreatedByValid(this.createdBy()));
+  isAbNumberValid = computed(() => this.validationService.isAbNumberValid(this.abnumber()));
+  isGrossWeightInKgValid = computed(() => this.validationService.isGrossWeightInKgValid(this.grossWeightInKg()));
+  isStatusValid = computed(() =>  this.validationService.isStatusValid(this.status()));
+  isAmountValid = computed(() => this.validationService.isAmountValid(this.amount()));
+  isContainerSizeAValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeA()));
+  isContainerSizeBValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeB()));
+  isContainerSizeHcValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeHc()));
+  isAllValid = computed(() => {
+    return (
+      this.isReadyToLoadValid() &&
+      this.isCustomerValid() &&
+      this.isLoadingPlattfromValid() &&
+      this.isCreatedByValid() &&
+      this.isAbNumberValid() &&
+      this.isGrossWeightInKgValid() &&
+      this.isStatusValid() &&
+      this.isAmountValid() &&
+      this.isContainerSizeAValid() &&
+      this.isContainerSizeBValid() &&
+      this.isContainerSizeHcValid() && 
+      this.areArticleNumbersValid()
+    );
+  });
 
   ngOnInit(): void {
     this.myForm = this.fb.group({
@@ -30,12 +127,12 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     console.log('id: ' + this.id);
     this.checklistService.checklistsGet()
-      .subscribe(x => this.allCheckliststs.set(x));
+      .subscribe(x => this.allChecklists.set(x));
 
-    this.orderService.ordersIdGet(this.id)
+      this.orderService.ordersIdGet(this.id)
       .subscribe(x => {
         this.currOrder.set(x);
-        console.log('currOrder:' + this.currOrder().id);
+        console.log('currOrderCs:' + this.currOrder().csid);
         this.setOrderSignals();
 
         this.articlesService.articlesCsInquiryIdGet(this.currOrder().csid)
@@ -48,10 +145,6 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
           });
       });
   }
-
-  myForm!: FormGroup;
-
-  constructor(private fb: FormBuilder) { }
 
   get articlesFormArray() {
     return this.myForm.get('articles') as FormArray;
@@ -85,89 +178,9 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
     console.log('Entered Articles:', articles);
   }
 
-  validationService = inject(ValidationService);
-  router = inject(Router);
-  orderService = inject(OrdersService);
-  checklistService = inject(ChecklistsService);
-  csinquiriesService = inject(CsinquiriesService);
-
   containerRequestPage(): void {
-    this.router.navigateByUrl('/container-request-page');
+    this.router.navigateByUrl('/container-request-page/cs');
   }
-
-  currOrder = signal<OrderDto>(
-    {
-      id: 1,
-      status: 'Test',
-      customerName: 'Test',
-      createdBy: 'Test',
-      approvedByCs: false,
-      approvedByTs: false,
-      amount: 0,
-      lastUpdated: 'Test',
-      checklistId: 1,
-      csid: 1,
-      tlid: 1,
-      sped: 'Test',
-      country: 'Test',
-      abNumber: 1,
-      readyToLoad: 'Test'
-    });
-
-  allCheckliststs = signal<ChecklistDto[]>([]);
-  currCsInquiry = signal<CsinquiryDto>(
-    {
-      id: 1,
-      container: 'Loading',
-      abnumber: 1,
-      grossWeightInKg: 0,
-      incoterm: 'Loading',
-      containersizeA: 0,
-      containersizeB: 0,
-      containersizeHc: 0,
-      freeDetention: false,
-      thctb: false,
-      readyToLoad: '01.01.1999',
-      loadingPlattform: 'Loading'
-    });
-
-  //OrderData
-  csId = signal(this.currOrder().csid);
-  customerName = signal(this.currOrder().customerName);
-  createdBy = signal(this.currOrder().createdBy);
-  status = signal(this.currOrder().status);
-  amount = signal(this.currOrder().amount);
-  checklistId = signal(this.currOrder().checklistId);
-  isApprovedByCs = signal(this.currOrder().approvedByCs);
-  isApprovedByTs = signal(this.currOrder().approvedByTs);
-  additonalInformation = signal(this.currOrder().additionalInformation);
-  userText = signal('');
-
-  //CsData
-  container = signal(this.currCsInquiry().container);
-  abnumber = signal(this.currCsInquiry().abnumber);
-  grossWeightInKg = signal(this.currCsInquiry().grossWeightInKg);
-  incoterm = signal(this.currCsInquiry().incoterm);
-  containersizeA = signal(this.currCsInquiry().containersizeA);
-  containersizeB = signal(this.currCsInquiry().containersizeB);
-  containersizeHc = signal(this.currCsInquiry().containersizeHc);
-  freeDetention = signal(this.currCsInquiry().freeDetention);
-  thctb = signal(this.currCsInquiry().thctb);
-  readyToLoad = signal(this.currCsInquiry().readyToLoad);
-  loadingPlattform = signal(this.currCsInquiry().loadingPlattform);
-  areArticleNumbersValid = signal<boolean>(true);
-
-  isReadyToLoadValid = computed(() => this.validationService.isReadyToLoadValid(this.readyToLoad()));
-  isLoadingPlattfromValid = computed(() => this.validationService.isLoadingPlattfromValid(this.readyToLoad()));
-  isCustomerValid = computed(() => this.validationService.isCustomerValid(this.customerName()));
-  isCreatedByValid = computed(() => this.validationService.isCreatedByValid(this.createdBy()));
-  isAbNumberValid = computed(() => this.validationService.isAbNumberValid(this.abnumber()));
-  isGrossWeightInKgValid = computed(() => this.validationService.isGrossWeightInKgValid(this.grossWeightInKg()));
-  isStatusValid = computed(() => this.validationService.isStatusValid(this.status()));
-  isAmountValid = computed(() => this.validationService.isAmountValid(this.amount()));
-  isContainerSizeAValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeA()));
-  isContainerSizeBValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeB()));
-  isContainerSizeHcValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeHc()));
 
   setAreArticleNumbersValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
@@ -183,23 +196,6 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
     }
     this.areArticleNumbersValid.set(true);
   }
-
-  isAllValid = computed(() => {
-    return (
-      this.isReadyToLoadValid() &&
-      this.isCustomerValid() &&
-      this.isLoadingPlattfromValid() &&
-      this.isCreatedByValid() &&
-      this.isAbNumberValid() &&
-      this.isGrossWeightInKgValid() &&
-      this.isStatusValid() &&
-      this.isAmountValid() &&
-      this.isContainerSizeAValid() &&
-      this.isContainerSizeBValid() &&
-      this.isContainerSizeHcValid() && 
-      this.areArticleNumbersValid()
-    );
-  });
 
   generatePDF() {
     const data = document.getElementById('contentToConvert');
@@ -241,7 +237,7 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
     this.saveCsInquery();
     this.saveArticlesToDB();
 
-    this.router.navigateByUrl('/container-request-page');
+    this.containerRequestPage();
   }
 
   saveArticlesToDB(){
@@ -282,32 +278,6 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
       .subscribe(x => console.log('RETURN VALUE OF CSINQUERY SAVE: ' + x.id + x.abnumber + x.freeDetention + x.readyToLoad));
   }
 
-  setOrderSignals() {
-    this.csId = signal(this.currOrder().csid);
-    this.customerName = signal(this.currOrder().customerName);
-    this.createdBy = signal(this.currOrder().createdBy);
-    this.status = signal(this.currOrder().status);
-    this.amount = signal(this.currOrder().amount);
-    this.checklistId = signal(this.currOrder().checklistId);
-    this.isApprovedByCs = signal(this.currOrder().approvedByCs);
-    this.isApprovedByTs = signal(this.currOrder().approvedByTs);
-    this.additonalInformation = signal(this.currOrder().additionalInformation);
-  }
-
-  setCsInquirySignals() {
-    this.container = signal(this.currCsInquiry().container);
-    this.abnumber = signal(this.currCsInquiry().abnumber);
-    this.grossWeightInKg = signal(this.currCsInquiry().grossWeightInKg);
-    this.incoterm = signal(this.currCsInquiry().incoterm);
-    this.containersizeA = signal(this.currCsInquiry().containersizeA);
-    this.containersizeB = signal(this.currCsInquiry().containersizeB);
-    this.containersizeHc = signal(this.currCsInquiry().containersizeHc);
-    this.freeDetention = signal(this.currCsInquiry().freeDetention);
-    this.thctb = signal(this.currCsInquiry().thctb);
-    this.readyToLoad = signal(this.currCsInquiry().readyToLoad);
-    this.loadingPlattform = signal(this.currCsInquiry().loadingPlattform);
-  }
-
   publish(){
     let editOrder : EditApproveOrderDto = {
       id: this.currOrder().id,
@@ -318,5 +288,31 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
     .subscribe(x => console.log('approved'));
     
     this.saveOrder();
+  }
+
+  setOrderSignals() {
+    this.csId.set(this.currOrder().csid);
+    this.customerName.set(this.currOrder().customerName);
+    this.createdBy.set(this.currOrder().createdBy);
+    this.status.set(this.currOrder().status);
+    this.amount.set(this.currOrder().amount);
+    this.checklistId.set(this.currOrder().checklistId);
+    this.isApprovedByCs.set(this.currOrder().approvedByCs);
+    this.isApprovedByTs.set(this.currOrder().approvedByTs);
+    this.additonalInformation.set(this.currOrder().additionalInformation);
+  }
+
+  setCsInquirySignals() {
+    this.container.set(this.currCsInquiry().container);
+    this.abnumber.set(this.currCsInquiry().abnumber);
+    this.grossWeightInKg.set(this.currCsInquiry().grossWeightInKg);
+    this.incoterm.set(this.currCsInquiry().incoterm);
+    this.containersizeA.set(this.currCsInquiry().containersizeA);
+    this.containersizeB.set(this.currCsInquiry().containersizeB);
+    this.containersizeHc.set(this.currCsInquiry().containersizeHc);
+    this.freeDetention.set(this.currCsInquiry().freeDetention);
+    this.thctb.set(this.currCsInquiry().thctb);
+    this.readyToLoad.set(this.currCsInquiry().readyToLoad);
+    this.loadingPlattform.set(this.currCsInquiry().loadingPlattform);
   }
 }

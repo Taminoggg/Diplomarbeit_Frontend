@@ -1,4 +1,4 @@
-import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
@@ -6,17 +6,52 @@ import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
+import { ValidationService } from '../../validation.service';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-order-page',
   standalone: true,
-  imports: [CommonModule, NgSignalDirective, TranslocoModule],
+  imports: [CommonModule, NgSignalDirective, TranslocoModule, FormsModule, ReactiveFormsModule],
   templateUrl: './edit-shippment-request-order-page.component.html',
   styleUrl: './edit-shippment-request-order-page.component.scss'
 })
-export class EditShippmentOrderPageComponent implements OnChanges {
+export class EditShippmentOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
-  dataService: any;
+
+  ngOnInit(): void {
+    this.myForm = this.fb.group({
+      articles: this.fb.array([])
+    });
+  }
+
+  get articlesFormArray() {
+    return this.myForm.get('articles') as FormArray;
+  }
+
+  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id:number) {
+    const articleGroup = this.fb.group({
+      articleNumber: [articleNumber, Validators.required],
+      palletAmount: [palletAmount, Validators.required],
+      directline: [directLine],
+      fastLine: [fastLine],
+      id: [id]
+    });
+
+    this.articlesFormArray.push(articleGroup);
+  }
+
+  getFormGroup(index: number): FormGroup {
+    return this.articlesFormArray.at(index) as FormGroup;
+  }
+
+  saveArticles() {
+    const articles = this.myForm.value.articles;
+    console.log('Entered Articles:', articles);
+  }
+
+  myForm!: FormGroup;
+  fb = inject(FormBuilder);
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('id: ' + this.id);
@@ -43,9 +78,17 @@ export class EditShippmentOrderPageComponent implements OnChanges {
   orderService = inject(OrdersService);
   checklistService = inject(ChecklistsService);
   tlinquiriesService = inject(TlinquiriesService);
+  validationService = inject(ValidationService);
 
-  shippmentRequestPage() {
-    this.router.navigateByUrl('/shippment-request-page');
+  userText = signal('');
+  isCustomerValid = computed(() => this.validationService.isCustomerValid(this.customerName()));
+  isCreatedByValid = computed(() => this.validationService.isCreatedByValid(this.createdBy()));
+  isStatusValid = computed(() => this.validationService.isStatusValid(this.status()));
+  isAmountValid = computed(() => this.validationService.isAmountValid(this.amount()));
+
+
+  containerRequestPage() {
+    this.router.navigateByUrl('/container-request-page/tl');
   }
 
   currOrder = signal<OrderDto>(
@@ -91,34 +134,47 @@ export class EditShippmentOrderPageComponent implements OnChanges {
     });
 
   //OrderData
-  tlId = signal(this.currOrder().tlid);
-  customerName = signal(this.currOrder().customerName);
-  createdBy = signal(this.currOrder().createdBy);
-  status = signal(this.currOrder().status);
-  amount = signal(this.currOrder().amount);
-  checklistId = signal(this.currOrder().checklistId);
-  isApprovedByCs = signal(this.currOrder().approvedByCs);
-  isApprovedByTs = signal(this.currOrder().approvedByTs);
+  tlId = signal(0);
+  customerName = signal('');
+  createdBy = signal('');
+  status = signal('');
+  amount = signal(0);
+  checklistId = signal(0);
+  isApprovedByCs = signal(false);
+  isApprovedByTs = signal(false);
 
   //CsData
-  inquiryNumber = signal(this.currTlInquiry().inquiryNumber);
-  sped = signal(this.currTlInquiry().sped);
-  country = signal(this.currTlInquiry().country);
-  acceptingPort = signal(this.currTlInquiry().acceptingPort);
-  expectedRetrieveWeek = signal(this.currTlInquiry().expectedRetrieveWeek);
-  weightInKg = signal(this.currTlInquiry().weightInKg);
-  invoiceOn = signal(this.currTlInquiry().invoiceOn);
-  retrieveDate = signal(this.currTlInquiry().retrieveDate);
-  isContainer40 = signal(this.currTlInquiry().isContainer40);
-  isContainerHc = signal(this.currTlInquiry().isContainerHc);
-  retrieveLocation = signal(this.currTlInquiry().retrieveLocation);
-  debtCapitalGeneralForerunEur = signal(this.currTlInquiry().debtCapitalGeneralForerunEur);
-  debtCapitalMainDol = signal(this.currTlInquiry().debtCapitalMainDol);
-  debtCapitalTrailingDol = signal(this.currTlInquiry().debtCapitalTrailingDol);
-  portOfDeparture = signal(this.currTlInquiry().portOfDeparture);
-  ets = signal(this.currTlInquiry().ets);
-  eta = signal(this.currTlInquiry().eta);
-  boat = signal(this.currTlInquiry().boat);
+  container = signal('');
+  abnumber = signal(0);
+  grossWeightInKg = signal(0);
+  incoterm = signal('');
+  containersizeA = signal(0);
+  containersizeB = signal(0);
+  containersizeHc = signal(0);
+  freeDetention = signal(false);
+  thctb = signal(false);
+  readyToLoad = signal('');
+  loadingPlattform = signal('');
+
+  //TlData
+  inquiryNumber = signal(0);
+  sped = signal('');
+  country = signal('');
+  acceptingPort = signal('');
+  expectedRetrieveWeek = signal('');
+  weightInKg = signal(0);
+  invoiceOn = signal('');
+  retrieveDate = signal('');
+  isContainer40 = signal(false);
+  isContainerHc = signal(false);
+  retrieveLocation = signal('');
+  debtCapitalGeneralForerunEur = signal(0);
+  debtCapitalMainDol = signal(0);
+  debtCapitalTrailingDol = signal(0);
+  portOfDeparture = signal('');
+  ets = signal('');
+  eta = signal('');
+  boat = signal('');
 
   generatePDF() {
     const data = document.getElementById('contentToConvert');
@@ -159,7 +215,7 @@ export class EditShippmentOrderPageComponent implements OnChanges {
 
     this.saveTlInquery();
 
-    this.router.navigateByUrl('/shippment-request-page');
+    this.containerRequestPage();
   }
 
   saveTlInquery() {
@@ -191,34 +247,34 @@ export class EditShippmentOrderPageComponent implements OnChanges {
   }
 
   setOrderSignals() {
-    this.tlId = signal(this.currOrder().tlid);
-    this.customerName = signal(this.currOrder().customerName);
-    this.createdBy = signal(this.currOrder().createdBy);
-    this.status = signal(this.currOrder().status);
-    this.amount = signal(this.currOrder().amount);
-    this.checklistId = signal(this.currOrder().checklistId);
-    this.isApprovedByCs = signal(this.currOrder().approvedByCs);
-    this.isApprovedByTs = signal(this.currOrder().approvedByTs);
+    this.tlId.set(this.currOrder().tlid);
+    this.customerName.set(this.currOrder().customerName);
+    this.createdBy.set(this.currOrder().createdBy);
+    this.status.set(this.currOrder().status);
+    this.amount.set(this.currOrder().amount);
+    this.checklistId.set(this.currOrder().checklistId);
+    this.isApprovedByCs.set(this.currOrder().approvedByCs);
+    this.isApprovedByTs.set(this.currOrder().approvedByTs);
   }
 
   setTlInquirySignals() {
-    this.inquiryNumber = signal(this.currTlInquiry().inquiryNumber);
-    this.sped = signal(this.currTlInquiry().sped);
-    this.country = signal(this.currTlInquiry().country);
-    this.acceptingPort = signal(this.currTlInquiry().acceptingPort);
-    this.expectedRetrieveWeek = signal(this.currTlInquiry().expectedRetrieveWeek);
-    this.weightInKg = signal(this.currTlInquiry().weightInKg);
-    this.invoiceOn = signal(this.currTlInquiry().invoiceOn);
-    this.retrieveDate = signal(this.currTlInquiry().retrieveDate);
-    this.isContainer40 = signal(this.currTlInquiry().isContainer40);
-    this.isContainerHc = signal(this.currTlInquiry().isContainerHc);
-    this.retrieveLocation = signal(this.currTlInquiry().retrieveLocation);
-    this.debtCapitalGeneralForerunEur = signal(this.currTlInquiry().debtCapitalGeneralForerunEur);
-    this.debtCapitalMainDol = signal(this.currTlInquiry().debtCapitalMainDol);
-    this.debtCapitalTrailingDol = signal(this.currTlInquiry().debtCapitalTrailingDol);
-    this.portOfDeparture = signal(this.currTlInquiry().portOfDeparture);
-    this.ets = signal(this.currTlInquiry().ets);
-    this.eta = signal(this.currTlInquiry().eta);
-    this.boat = signal(this.currTlInquiry().boat);
+    this.inquiryNumber.set(this.currTlInquiry().inquiryNumber);
+    this.sped.set(this.currTlInquiry().sped);
+    this.country.set(this.currTlInquiry().country);
+    this.acceptingPort.set(this.currTlInquiry().acceptingPort);
+    this.expectedRetrieveWeek.set(this.currTlInquiry().expectedRetrieveWeek);
+    this.weightInKg.set(this.currTlInquiry().weightInKg);
+    this.invoiceOn.set(this.currTlInquiry().invoiceOn);
+    this.retrieveDate.set(this.currTlInquiry().retrieveDate);
+    this.isContainer40.set(this.currTlInquiry().isContainer40);
+    this.isContainerHc.set(this.currTlInquiry().isContainerHc);
+    this.retrieveLocation.set(this.currTlInquiry().retrieveLocation);
+    this.debtCapitalGeneralForerunEur.set(this.currTlInquiry().debtCapitalGeneralForerunEur);
+    this.debtCapitalMainDol.set(this.currTlInquiry().debtCapitalMainDol);
+    this.debtCapitalTrailingDol.set(this.currTlInquiry().debtCapitalTrailingDol);
+    this.portOfDeparture.set(this.currTlInquiry().portOfDeparture);
+    this.ets.set(this.currTlInquiry().ets);
+    this.eta.set(this.currTlInquiry().eta);
+    this.boat.set(this.currTlInquiry().boat);
   }
 }
