@@ -72,28 +72,22 @@
     }
   }
 
-  .file-input-area {
-    margin-top: 10px;
+  button {
+    padding: 10px;
+    background-color: #337ab7;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 
-    button {
-      padding: 10px;
-      background-color: #337ab7;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+  input[type="file"] {
+    display: none;
+  }
 
-    input[type="file"] {
-      display: none;
-    }
-
-    .selected-file {
-      margin-top: 10px;
-      padding: 10px;
-      background-color: #dff0d8;
-      border-radius: 5px;
-    }
+  .selected-file {
+    background-color: #dff0d8;
+    border-radius: 5px;
   }
 }
 

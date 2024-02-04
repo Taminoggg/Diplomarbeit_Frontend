@@ -37,22 +37,21 @@
       <button id="loadFileXml" value="loadXml" onclick="document.getElementById('file').click();">
         {{ 'choose-file' | transloco }}
       </button>
-      <input style="display:none;" id="file" name="file" type="file" (change)="handleFileInput($event)">
+      <!-- Wrap both the file input and the remove button within a form -->
+      <form id="fileForm">
+        <input style="display:none;" id="file" name="file" type="file" (change)="handleFileInput($event)">
+        <div class="file-input-area">
+          @if (fileToUpload) {
+          <div class="selected-file">
+            <label>{{'selected-file' | transloco}}:&nbsp;</label>
+            <label>{{shortendName(fileToUpload.name)}}</label>
+            <label>{{'file-size' | transloco}}:&nbsp;</label>
+            <label>{{fileToUpload.size / 1024 | number: '1.2-2'}} KB</label>
+            <button (click)="removeFile()">{{'remove-file' | transloco}}</button>
+          </div>
+          }
+        </div>
+      </form>
     </div>
-  </div>
-  <br>
+  </div>  
 
-  <div class="file-input-area">
-    @if (fileToUpload) {
-    <div class="selected-file">
-      <label>{{'selected-file' | transloco}}:&nbsp;</label>
-      <label>{{shortendName(fileToUpload.name)}}</label>
-      <br>
-      <label>{{'file-size' | transloco}}:&nbsp;</label>
-      <label>{{fileToUpload.size / 1024 | number: '1.2-2'}} KB</label>
-      <br>
-      <button (click)="removeFile()">{{'remove-file' | transloco}}</button>
-    </div>
-    }
-  </div>
-</div>

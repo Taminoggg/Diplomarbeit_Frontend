@@ -7,7 +7,7 @@
   <div class="form-row">
     <div class="form-group">
       <label>{{'status' | transloco}}</label>
-      <input #txtStatus type="number" value="{{currOrder().status}}" (change)="status.set(+txtStatus.value)">
+      <input #txtStatus type="string" value="{{currOrder().status}}" (change)="status.set(txtStatus.value)">
     </div>
 
     <div class="form-group">
@@ -26,8 +26,8 @@
     <div class="form-group">
       <div class="checkbox-container">
         <label class="checkbox-label">{{'approved' | transloco}}</label>
-        <input #txtApproved class="checkbox-input" type="checkbox" [checked]="currOrder().approved"
-          value="{{currOrder().approved}}" (change)="isApproved.set(txtApproved.checked)">
+        <input #txtApproved class="checkbox-input" type="checkbox" [checked]="currOrder().approvedByCs"
+          value="{{currOrder().approvedByCs}}" (change)="isApprovedByCs.set(txtApproved.checked)">
       </div>
     </div>
 

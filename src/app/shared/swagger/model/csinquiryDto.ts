@@ -15,7 +15,7 @@ export interface CsinquiryDto {
     id: number;
     container: string;
     abnumber: number;
-    bruttoWeightInKg: number;
+    grossWeightInKg: number;
     incoterm: string;
     containersizeA: number;
     containersizeB: number;

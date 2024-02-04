@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddArticleDto, AddCsinquiryDto, AddOrderDto, AddTlinquiryDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { EditApproveOrderDto, AddArticleDto, AddCsinquiryDto, AddOrderDto, AddTlinquiryDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { ValidationService } from '../../validation.service';
 
 @Component({
   selector: 'app-new-order-page',
@@ -31,6 +32,7 @@ export class NewContainerOrderPageComponent implements OnInit {
   router = inject(Router);
   fb = inject(FormBuilder);
   orderService = inject(OrdersService);
+  validationService = inject(ValidationService);
   checklistService = inject(ChecklistsService);
   csInquiryService = inject(CsinquiriesService);
   articlesService = inject(ArticlesService);
@@ -38,11 +40,13 @@ export class NewContainerOrderPageComponent implements OnInit {
   cdr = inject(ChangeDetectorRef);
 
   allCheckliststs = signal<ChecklistDto[]>([]);
+
+  orderId = signal(1);
   csId = signal(1);
   tlId = signal(1);
   customerName = signal('Customer');
   createdBy = signal('CreatedBy');
-  status = signal(1);
+  status = signal('Status');
   amount = signal(1);
   checklistId = signal(1);
   userText = signal('');
@@ -60,35 +64,18 @@ export class NewContainerOrderPageComponent implements OnInit {
   readyToLoad = signal('17.12.2023');
   loadingPlattform = signal('Test');
 
-  simpleDatePattern = /^(?<day>[0-2]\d|3[0-1])\.(?<month>0\d|1[0-2])\.(?<year>\d{4})$/gm;
-  isReadyToLoadValid = computed(() => {
-    let result = this.readyToLoad().match(this.simpleDatePattern);
-    return result !== null && result.length > 0;
-  });
-
-
-  isLoadingPlattfromValid = computed(() => {
-    return this.loadingPlattform().length > 0;
-  });
-
-  isCustomerValid = computed(() => {
-    return this.customerName().length > 0;
-  });
-
-  simpleStringPattern = /^[A-Z\d-,][a-zA-Z\d-,]*(?:\s\w+)*$/gm;
-  isCreatedByValid = computed(() => {
-    let result = this.createdBy().match(this.simpleStringPattern);
-    return result !== null && result.length > 0;
-  });
-
-  simpleNumberPattern = /^[1-9]\d*$/gm;
-  isAbNumberValid = computed(() => {
-    let result = this.abnumber().toString().match(this.simpleNumberPattern);
-    return result !== null && result.length > 0;
-  });
-
-  areArticleNumbersValid = signal<boolean>(false);
-
+  isReadyToLoadValid = computed(() => this.validationService.isReadyToLoadValid(this.readyToLoad()));
+  isLoadingPlattfromValid = computed(() => this.validationService.isLoadingPlattfromValid(this.readyToLoad()));
+  isCustomerValid = computed(() => this.validationService.isCustomerValid(this.customerName()));
+  isCreatedByValid = computed(() => this.validationService.isCreatedByValid(this.createdBy()));
+  isAbNumberValid = computed(() => this.validationService.isAbNumberValid(this.abnumber()));
+  isGrossWeightInKgValid = computed(() => this.validationService.isGrossWeightInKgValid(this.grossWeightInKg()));
+  isStatusValid = computed(() => this.validationService.isStatusValid(this.status()));
+  isAmountValid = computed(() => this.validationService.isAmountValid(this.amount()));
+  isContainerSizeAValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeA()));
+  isContainerSizeBValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeB()));
+  isContainerSizeHcValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeHc()));
+  areArticleNumbersValid = signal<boolean>(true);
   setAreArticleNumbersValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
       if (this.getFormGroup(i).get('articleNumber')!.value < 1) {
@@ -103,36 +90,6 @@ export class NewContainerOrderPageComponent implements OnInit {
     }
     this.areArticleNumbersValid.set(true);
   }
-
-  isGrossWeightInKgValid = computed(() => {
-    let result = this.grossWeightInKg().toString().match(this.simpleNumberPattern);
-    return result !== null && result.length > 0;
-  });
-
-  isStatusValid = computed(() => {
-    let result = this.status().toString().match(this.simpleNumberPattern);
-    return result !== null && result.length > 0;
-  });
-
-  isAmountValid = computed(() => {
-    let result = this.amount().toString().match(this.simpleNumberPattern);
-    return result !== null && result.length > 0;
-  });
-
-  isContainerSizeAValid = computed(() => {
-    let result = this.containersizeA().toString().match(this.simpleNumberPattern);
-    return result !== null && result.length > 0;
-  });
-
-  isContainerSizeBValid = computed(() => {
-    let result = this.containersizeB().toString().match(this.simpleNumberPattern);
-    return result !== null && result.length > 0;
-  });
-
-  isContainerSizeHcValid = computed(() => {
-    let result = this.containersizeHc().toString().match(this.simpleNumberPattern);
-    return result !== null && result.length > 0;
-  });
 
   isAllValid = computed(() => {
     return (
@@ -157,7 +114,7 @@ export class NewContainerOrderPageComponent implements OnInit {
 
   addArticle() {
     const articleGroup = this.fb.group({
-      articleNumber: [-1, Validators.required],
+      articleNumber: [1, Validators.required],
       palletAmount: [1, Validators.required],
       directline: [false],
       fastLine: [false]
@@ -184,7 +141,7 @@ export class NewContainerOrderPageComponent implements OnInit {
     this.router.navigateByUrl('/container-request-page');
   }
 
-  addOrder(): void {
+  saveOrder(): void {
     console.log('posted clicked');
 
     let csInquiry: AddCsinquiryDto = {
@@ -258,10 +215,22 @@ export class NewContainerOrderPageComponent implements OnInit {
             console.log('Posting order');
 
             this.orderService.ordersPost(order)
-              .subscribe(x => console.log(x));
+              .subscribe(x => this.orderId.set(x.id));
           });
       });
 
     this.router.navigateByUrl('/container-request-page');
+  }
+
+  publish(){
+    let editOrder : EditApproveOrderDto = {
+      id: this.orderId(),
+      approve: true
+    };
+
+    this.orderService.ordersApprovedByCsPut(editOrder)
+    .subscribe(x => console.log('approved'));
+    
+    this.saveOrder();
   }
 }

@@ -1,12 +1,13 @@
-import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, OnInit } from '@angular/core';
+import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, OnInit, computed } from '@angular/core';
 import { CommonModule, JsonPipe } from '@angular/common';
-import { AddArticleDto, ArticleDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { AddArticleDto, ArticleDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ValidationService } from '../../validation.service';
 
 @Component({
   selector: 'app-edit-order-page',
@@ -21,13 +22,9 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   articlesService = inject(ArticlesService);
 
   ngOnInit(): void {
-    console.log('ONINIT');
-    console.log('csid' + this.currOrder().csid);
     this.myForm = this.fb.group({
       articles: this.fb.array([])
     });
-
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -42,11 +39,7 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
         this.setOrderSignals();
 
         this.articlesService.articlesCsInquiryIdGet(this.currOrder().csid)
-          .subscribe(x => x.forEach(x => {
-            console.log('---------- FOREACH LOG ----------');
-            this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id);
-            console.log('aNum: ' + x.articleNumber);
-          }));
+          .subscribe(x => x.forEach(x => this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id)));
 
         this.csinquiriesService.csinquiriesIdGet(this.csId())
           .subscribe(x => {
@@ -92,6 +85,7 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
     console.log('Entered Articles:', articles);
   }
 
+  validationService = inject(ValidationService);
   router = inject(Router);
   orderService = inject(OrdersService);
   checklistService = inject(ChecklistsService);
@@ -104,10 +98,11 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   currOrder = signal<OrderDto>(
     {
       id: 1,
-      status: 1,
+      status: 'Test',
       customerName: 'Test',
       createdBy: 'Test',
-      approved: false,
+      approvedByCs: false,
+      approvedByTs: false,
       amount: 0,
       lastUpdated: 'Test',
       checklistId: 1,
@@ -125,7 +120,7 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
       id: 1,
       container: 'Loading',
       abnumber: 1,
-      bruttoWeightInKg: 0,
+      grossWeightInKg: 0,
       incoterm: 'Loading',
       containersizeA: 0,
       containersizeB: 0,
@@ -143,13 +138,15 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   status = signal(this.currOrder().status);
   amount = signal(this.currOrder().amount);
   checklistId = signal(this.currOrder().checklistId);
-  isApproved = signal(this.currOrder().approved);
+  isApprovedByCs = signal(this.currOrder().approvedByCs);
+  isApprovedByTs = signal(this.currOrder().approvedByTs);
+  additonalInformation = signal(this.currOrder().additionalInformation);
   userText = signal('');
 
   //CsData
   container = signal(this.currCsInquiry().container);
   abnumber = signal(this.currCsInquiry().abnumber);
-  bruttoWeightInKg = signal(this.currCsInquiry().bruttoWeightInKg);
+  grossWeightInKg = signal(this.currCsInquiry().grossWeightInKg);
   incoterm = signal(this.currCsInquiry().incoterm);
   containersizeA = signal(this.currCsInquiry().containersizeA);
   containersizeB = signal(this.currCsInquiry().containersizeB);
@@ -158,6 +155,51 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   thctb = signal(this.currCsInquiry().thctb);
   readyToLoad = signal(this.currCsInquiry().readyToLoad);
   loadingPlattform = signal(this.currCsInquiry().loadingPlattform);
+  areArticleNumbersValid = signal<boolean>(true);
+
+  isReadyToLoadValid = computed(() => this.validationService.isReadyToLoadValid(this.readyToLoad()));
+  isLoadingPlattfromValid = computed(() => this.validationService.isLoadingPlattfromValid(this.readyToLoad()));
+  isCustomerValid = computed(() => this.validationService.isCustomerValid(this.customerName()));
+  isCreatedByValid = computed(() => this.validationService.isCreatedByValid(this.createdBy()));
+  isAbNumberValid = computed(() => this.validationService.isAbNumberValid(this.abnumber()));
+  isGrossWeightInKgValid = computed(() => this.validationService.isGrossWeightInKgValid(this.grossWeightInKg()));
+  isStatusValid = computed(() => this.validationService.isStatusValid(this.status()));
+  isAmountValid = computed(() => this.validationService.isAmountValid(this.amount()));
+  isContainerSizeAValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeA()));
+  isContainerSizeBValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeB()));
+  isContainerSizeHcValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeHc()));
+
+  setAreArticleNumbersValid() {
+    for (let i = 0; i < this.articlesFormArray.length; i++) {
+      if (this.getFormGroup(i).get('articleNumber')!.value < 1) {
+        this.areArticleNumbersValid.set(false);
+        return;
+      }
+
+      if (this.getFormGroup(i).get('directline')!.value === true && this.getFormGroup(i).get('palletAmount')!.value < 1) {
+        this.areArticleNumbersValid.set(false);
+        return;
+      }
+    }
+    this.areArticleNumbersValid.set(true);
+  }
+
+  isAllValid = computed(() => {
+    return (
+      this.isReadyToLoadValid() &&
+      this.isCustomerValid() &&
+      this.isLoadingPlattfromValid() &&
+      this.isCreatedByValid() &&
+      this.isAbNumberValid() &&
+      this.isGrossWeightInKgValid() &&
+      this.isStatusValid() &&
+      this.isAmountValid() &&
+      this.isContainerSizeAValid() &&
+      this.isContainerSizeBValid() &&
+      this.isContainerSizeHcValid() && 
+      this.areArticleNumbersValid()
+    );
+  });
 
   generatePDF() {
     const data = document.getElementById('contentToConvert');
@@ -185,7 +227,8 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
       amount: this.amount(),
       checklistId: this.checklistId(),
       id: this.id,
-      approved: this.isApproved()
+      approvedByCs: this.isApprovedByCs(),
+      approvedByTs: this.isApprovedByTs()
     };
 
     console.log(order);
@@ -224,7 +267,7 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
       id: this.currCsInquiry().id,
       container: this.container(),
       abnumber: this.abnumber(),
-      bruttoWeightInKg: this.bruttoWeightInKg(),
+      grossWeightInKg: this.grossWeightInKg(),
       incoterm: this.incoterm(),
       containersizeA: this.containersizeA(),
       containersizeB: this.containersizeB(),
@@ -232,7 +275,7 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
       freeDetention: this.freeDetention(),
       thctb: this.thctb(),
       readyToLoad: this.readyToLoad(),
-      loadingPlattform: this.loadingPlattform(),
+      loadingPlattform: this.loadingPlattform()
     }
 
     this.csinquiriesService.csinquiriesPut(editedCsInquery)
@@ -246,13 +289,15 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
     this.status = signal(this.currOrder().status);
     this.amount = signal(this.currOrder().amount);
     this.checklistId = signal(this.currOrder().checklistId);
-    this.isApproved = signal(this.currOrder().approved);
+    this.isApprovedByCs = signal(this.currOrder().approvedByCs);
+    this.isApprovedByTs = signal(this.currOrder().approvedByTs);
+    this.additonalInformation = signal(this.currOrder().additionalInformation);
   }
 
   setCsInquirySignals() {
     this.container = signal(this.currCsInquiry().container);
     this.abnumber = signal(this.currCsInquiry().abnumber);
-    this.bruttoWeightInKg = signal(this.currCsInquiry().bruttoWeightInKg);
+    this.grossWeightInKg = signal(this.currCsInquiry().grossWeightInKg);
     this.incoterm = signal(this.currCsInquiry().incoterm);
     this.containersizeA = signal(this.currCsInquiry().containersizeA);
     this.containersizeB = signal(this.currCsInquiry().containersizeB);
@@ -261,5 +306,17 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
     this.thctb = signal(this.currCsInquiry().thctb);
     this.readyToLoad = signal(this.currCsInquiry().readyToLoad);
     this.loadingPlattform = signal(this.currCsInquiry().loadingPlattform);
+  }
+
+  publish(){
+    let editOrder : EditApproveOrderDto = {
+      id: this.currOrder().id,
+      approve: true
+    };
+
+    this.orderService.ordersApprovedByCsPut(editOrder)
+    .subscribe(x => console.log('approved'));
+    
+    this.saveOrder();
   }
 }

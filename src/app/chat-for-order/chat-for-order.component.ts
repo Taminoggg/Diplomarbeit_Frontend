@@ -121,8 +121,7 @@ export class ChatForOrderComponent implements OnInit {
 
   sendMessage(): void {
     let message: AddMessageDto = {
-      content: "",
-      attachmentId: 1
+      content: ""
     };
 
     if (this.fileToUpload !== null) {
@@ -136,16 +135,13 @@ export class ChatForOrderComponent implements OnInit {
         });
     } else {
       message = {
-        content: this.messageContent(),
-        attachmentId: 1
+        content: this.messageContent()
       };
       this.postMessage(message);
     }
   }
 
   postMessage(message: AddMessageDto) {
-    console.log(message.attachmentId);
-    console.log(message.content);
     this.messageService.messagesPost(message)
       .subscribe(x => {
         let messageConversation: AddMessageConversationDto = {
@@ -165,12 +161,23 @@ export class ChatForOrderComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
 
     if (inputElement && inputElement.files && inputElement.files.length > 0) {
+      // Assign the newly selected file
       this.fileToUpload = inputElement.files.item(0);
+      console.log(this.fileToUpload);
+    }
+    else {
+      this.fileToUpload = null;
     }
   }
 
   removeFile() {
     this.fileToUpload = null;
+    var fileForm = document.getElementById("fileForm") as HTMLFormElement;
+    if (fileForm !== null) {
+      fileForm.reset();
+    } else {
+      console.log("File form element not found.");
+    }
   }
 
   navigateToHomePage() {

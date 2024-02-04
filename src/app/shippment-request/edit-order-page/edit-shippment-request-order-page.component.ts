@@ -51,10 +51,11 @@ export class EditShippmentOrderPageComponent implements OnChanges {
   currOrder = signal<OrderDto>(
     {
       id: 1,
-      status: 1,
+      status: 'Test',
       customerName: 'Test',
       createdBy: 'Test',
-      approved: false,
+      approvedByCs: false,
+      approvedByTs: false,
       amount: 0,
       lastUpdated: 'Test',
       checklistId: 1,
@@ -96,7 +97,8 @@ export class EditShippmentOrderPageComponent implements OnChanges {
   status = signal(this.currOrder().status);
   amount = signal(this.currOrder().amount);
   checklistId = signal(this.currOrder().checklistId);
-  isApproved = signal(this.currOrder().approved);
+  isApprovedByCs = signal(this.currOrder().approvedByCs);
+  isApprovedByTs = signal(this.currOrder().approvedByTs);
 
   //CsData
   inquiryNumber = signal(this.currTlInquiry().inquiryNumber);
@@ -144,7 +146,8 @@ export class EditShippmentOrderPageComponent implements OnChanges {
       amount: this.amount(),
       checklistId: this.checklistId(),
       id: this.id,
-      approved: this.isApproved()
+      approvedByTs: this.isApprovedByTs(),
+      approvedByCs: this.isApprovedByCs()
     };
 
     console.log(order);
@@ -194,7 +197,8 @@ export class EditShippmentOrderPageComponent implements OnChanges {
     this.status = signal(this.currOrder().status);
     this.amount = signal(this.currOrder().amount);
     this.checklistId = signal(this.currOrder().checklistId);
-    this.isApproved = signal(this.currOrder().approved);
+    this.isApprovedByCs = signal(this.currOrder().approvedByCs);
+    this.isApprovedByTs = signal(this.currOrder().approvedByTs);
   }
 
   setTlInquirySignals() {

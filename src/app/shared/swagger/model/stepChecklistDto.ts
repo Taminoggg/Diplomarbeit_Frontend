@@ -9,15 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Checklist } from './checklist';
-import { Step } from './step';
 
 
 export interface StepChecklistDto { 
     id?: number;
     checklistId?: number;
     stepId?: number;
-    checklist?: Checklist;
-    step?: Step;
 }
 

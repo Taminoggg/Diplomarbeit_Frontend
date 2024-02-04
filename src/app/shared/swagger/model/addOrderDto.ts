@@ -12,7 +12,7 @@
 
 
 export interface AddOrderDto { 
-    status: number;
+    status: string;
     customerName: string;
     createdBy: string;
     amount: number;

@@ -73,7 +73,7 @@
       <td>{{currOrder.createdBy}}</td>
       <td>{{currOrder.abNumber}}</td>
       <td>{{currOrder.status}}</td>
-      @if (currOrder.approved) {
+      @if (currOrder.approvedByCs) {
       <td>{{'yes' | transloco}}</td>
       }
       @else

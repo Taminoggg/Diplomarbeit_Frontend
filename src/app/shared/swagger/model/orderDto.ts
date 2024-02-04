@@ -13,11 +13,13 @@
 
 export interface OrderDto { 
     id: number;
-    status: number;
+    status: string;
     customerName: string;
     createdBy: string;
-    approved: boolean;
+    approvedByCs: boolean;
+    approvedByTs: boolean;
     amount: number;
+    additionalInformation?: string | null;
     lastUpdated: string;
     checklistId: number;
     sped: string;

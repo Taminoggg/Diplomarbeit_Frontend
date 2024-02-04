@@ -7,35 +7,39 @@
   <div class="form-row">
     <div class="form-group">
       <label>{{'status' | transloco}}</label>
-      <input #txtStatus type="number" value="{{currOrder().status}}" (change)="status.set(+txtStatus.value)">
+      <input #txtStatus type="string" value="{{currOrder().status}}" (change)="status.set(txtStatus.value)">
+      @if(!isStatusValid()){
+      <label class="error-message">{{'error-message-status' | transloco}}</label>
+      }
     </div>
 
     <div class="form-group">
       <label>{{'customer' | transloco}}</label>
       <input #txtCustName type="text" value="{{currOrder().customerName}}"
         (change)="customerName.set(txtCustName.value)">
+      @if(!isCustomerValid()){
+      <label class="error-message">{{'error-message-customer' | transloco}}</label>
+      }
     </div>
 
     <div class="form-group">
       <label>{{'created-by' | transloco}}</label>
       <input #txtCreatedBy type="text" value="{{currOrder().createdBy}}" (change)="createdBy.set(txtCreatedBy.value)">
-    </div>
-  </div>
-
-  <div class="form-row">
-    <div class="form-group">
-      <div class="checkbox-container">
-        <label class="checkbox-label">{{'approved' | transloco}}</label>
-        <input #txtApproved class="checkbox-input" type="checkbox" [checked]="currOrder().approved"
-          value="{{currOrder().approved}}" (change)="isApproved.set(txtApproved.checked)">
-      </div>
+      @if(!isCreatedByValid()){
+      <label class="error-message">{{'error-message-created-by' | transloco}}</label>
+      }
     </div>
 
     <div class="form-group">
       <label>{{'amount' | transloco}}</label>
-      <input #txtAmount type="number" value="{{currOrder().amount}}" (change)="amount.set(+txtAmount.value)">
+      <input #txtAmount min="1" type="number" value="{{currOrder().amount}}" (change)="amount.set(+txtAmount.value)">
+      @if(!isAmountValid()){
+      <label class="error-message">{{'error-message-amount' | transloco}}</label>
+      }
     </div>
+  </div>
 
+  <div class="form-row">
     <div class="form-group">
       <label>{{'checklist' | transloco}}</label>
       <select #txtChecklistId (change)="checklistId.set(+txtChecklistId.value)" value="{{currOrder().checklistId}}">
@@ -44,56 +48,69 @@
         }
       </select>
     </div>
-  </div>
 
-  <div class="form-row">
     <div class="form-group">
-      <label>{{'container' | transloco}}</label>
-      <input #txtContainer type="text" value="{{currCsInquiry().container}}"
-        (change)="container.set(txtContainer.value)">
+      <label>{{'loading-plattform' | transloco}}</label>
+      <input #txtLoadingPlattform type="text" value="{{currCsInquiry().loadingPlattform}}"
+        (change)="loadingPlattform.set(txtLoadingPlattform.value)">
+      @if(!isLoadingPlattfromValid()){
+      <label class="error-message">{{'error-message-loading-plattform' | transloco}}</label>
+      }
     </div>
-  </div>
-
-  <div class="form-row">
 
     <div class="form-group">
       <label>{{'ab-nr' | transloco}}</label>
       <input #txtAbNumber type="text" value="{{currCsInquiry().abnumber}}" (change)="abnumber.set(+txtAbNumber.value)">
+      @if(!isAbNumberValid()){
+      <label class="error-message">{{'error-message-ab-number' | transloco}}</label>
+      }
     </div>
 
     <div class="form-group">
       <label>{{'gross-weight-in-kg' | transloco}}</label>
-      <input #txtBruttoWeight type="text" value="{{currCsInquiry().bruttoWeightInKg}}"
-        (change)="bruttoWeightInKg.set(+txtBruttoWeight.value)">
+      <input #txtBruttoWeight type="text" value="{{currCsInquiry().grossWeightInKg}}"
+        (change)="grossWeightInKg.set(+txtBruttoWeight.value)">
+      @if(!isGrossWeightInKgValid()){
+      <label class="error-message">{{'error-message-gross-weight' | transloco}}</label>
+      }
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-group">
-      <label>{{'incoterm' | transloco}}</label>
-      <input #txtIncoterm type="text" value="{{currCsInquiry().incoterm}}" (change)="incoterm.set(txtIncoterm.value)">
-    </div>
-
-    <div class="form-group">
       <label>{{'container-size-a' | transloco}}</label>
       <input #txtContainerSizeA type="text" value="{{currCsInquiry().containersizeA}}"
         (change)="containersizeA.set(+txtContainerSizeA.value)">
+      @if(!isContainerSizeAValid()){
+      <label class="error-message">{{'error-message-container-size' | transloco}}</label>
+      }
     </div>
 
     <div class="form-group">
       <label>{{'container-size-b' | transloco}}</label>
       <input #txtContainerSizeB type="text" value="{{currCsInquiry().containersizeB}}"
         (change)="containersizeB.set(+txtContainerSizeB.value)">
+      @if(!isContainerSizeBValid()){
+      <label class="error-message">{{'error-message-container-size' | transloco}}</label>
+      }
     </div>
-  </div>
 
-  <div class="form-row">
     <div class="form-group">
       <label>{{'container-size-hc' | transloco}}</label>
       <input #txtContainerSizeHc type="text" value="{{currCsInquiry().containersizeHc}}"
         (change)="containersizeHc.set(+txtContainerSizeHc.value)">
+      @if(!isContainerSizeHcValid()){
+      <label class="error-message">{{'error-message-container-size' | transloco}}</label>
+      }
     </div>
 
+    <div class="form-group">
+      <label>{{'incoterm' | transloco}}</label>
+      <input #txtIncoterm type="text" value="{{currCsInquiry().incoterm}}" (change)="incoterm.set(txtIncoterm.value)">
+    </div>
+  </div>
+
+  <div class="form-row">
     <div class="form-group">
       <div class="checkbox-container">
         <label class="checkbox-label">{{'free-detention' | transloco}}</label>
@@ -119,9 +136,8 @@
     </div>
 
     <div class="form-group">
-      <label>{{'loading-plattform' | transloco}}</label>
-      <input #txtLoadingPlattform type="text" value="{{currCsInquiry().loadingPlattform}}"
-        (change)="loadingPlattform.set(txtLoadingPlattform.value)">
+      <label>Zusatztext</label>
+      <input #txtAdditionalInformation value="{{currOrder().additionalInformation}}" (change)="additonalInformation.set(txtAdditionalInformation.value)" type="text">
     </div>
   </div>
 </div>
@@ -152,17 +168,22 @@
         }
       </div>
       @if (articlesFormArray.controls.length > 1) {
-      <button class="removeArticle-button" type="button" (click)="removeArticle($index)">{{'remove-article' | transloco}}</button>
+      <button class="removeArticle-button" type="button" (click)="removeArticle($index)">{{'remove-article' |
+        transloco}}</button>
       }
     </div>
     }
   </div>
-  <button class="addArticle-button" type="button" (click)="addArticle(1,1,false,false, 0)">{{'add-article' | transloco}}</button>
+  <button class="addArticle-button" type="button" (click)="addArticle(1,1,false,false, 0)">{{'add-article' |
+    transloco}}</button>
 </form>
 
-<label>Zusatztext</label>
-<input [ngSignal]="userText" type="text">
-
 <div class="form-row">
-  <button [ngClass]="'savebutton'" (click)="saveOrder()">{{'save' | transloco}}</button>
+  <div class="form-group">
+    <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
+  </div>
+  <div class="form-group">
+    <button class="save-button" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
+      transloco}}</button>
+  </div>
 </div>

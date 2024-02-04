@@ -9,12 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Step } from './step';
 
 
 export interface ChecklistDto { 
     id: number;
     customerName: string;
-    steps: Array<Step>;
 }
 

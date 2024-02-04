@@ -9,16 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { StepChecklist } from './stepChecklist';
 
 
-export interface Step { 
+export interface EditStepDto { 
     id?: number;
     stepNumber?: number;
     stepDescription?: string | null;
     stepName?: string | null;
-    isCompleted?: boolean;
-    lastUpdated?: string;
-    readonly stepChecklists?: Array<StepChecklist> | null;
+    checked?: boolean;
 }
 

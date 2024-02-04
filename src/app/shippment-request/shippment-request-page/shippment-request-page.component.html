@@ -1,9 +1,5 @@
 <div class="overviewBox">
   <h1>{{'shippment-page-header' | transloco}}</h1>
-
-  <button (click)="navigateToPage('/new-shippment-order-page')">
-    <h2>{{'new' | transloco}}</h2>
-  </button>
 </div>
 
 <div class="searchBox">
@@ -70,7 +66,7 @@
       <td>{{currOrder.customerName}}</td>
       <td>{{currOrder.createdBy}}</td>
       <td>{{currOrder.status}}</td>
-      @if (currOrder.approved) {
+      @if (currOrder.approvedByTs) {
       <td>{{'yes' | transloco}}</td>
       }
       @else

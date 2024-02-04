@@ -130,7 +130,7 @@ export class DataServiceService {
         break;
       case "status":
         console.log('case status');
-        this.orderService.ordersStatusGet(parseInt(value))
+        this.orderService.ordersStatusGet(value)
           .subscribe(x => {
             this.getDetilsForOrder(x);
           });

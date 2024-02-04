@@ -17,10 +17,11 @@ import { Tlinquiry } from './tlinquiry';
 
 export interface Order { 
     id?: number;
-    status?: number;
+    status?: string | null;
     customerName?: string | null;
     createdBy?: string | null;
-    approved?: boolean;
+    approvedByCs?: boolean;
+    approvedByTs?: boolean;
     amount?: number;
     lastUpdated?: string;
     checklistId?: number;

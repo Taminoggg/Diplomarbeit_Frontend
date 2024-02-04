@@ -30,8 +30,10 @@ model/checklist.ts
 model/checklistDto.ts
 model/csinquiry.ts
 model/csinquiryDto.ts
+model/editApproveOrderDto.ts
 model/editCsinquiryDto.ts
 model/editOrderDto.ts
+model/editStepDto.ts
 model/editTlInqueryDto.ts
 model/fileByteDto.ts
 model/fileDto.ts

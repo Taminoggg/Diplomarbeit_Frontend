@@ -13,10 +13,11 @@
 
 export interface EditOrderDto { 
     id: number;
-    status: number;
+    status: string;
     customerName: string;
     createdBy: string;
-    approved: boolean;
+    approvedByCs: boolean;
+    approvedByTs: boolean;
     amount: number;
     checklistId: number;
 }

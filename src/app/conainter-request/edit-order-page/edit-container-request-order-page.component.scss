@@ -68,8 +68,6 @@ select {
   }
 }
 
-
-
 .addArticle-button {
   background-color: blue;
   color: white;
@@ -96,4 +94,15 @@ select {
 
 .removeArticle-button:hover {
   background-color: darkred;
+}
+
+.error-message {
+  margin-top: -5px;
+  position: absolute;
+  color: #ff6347;
+  background-color: #f8d7da;
+  border: 1px solid darken(#ff6347, 5%);
+  padding: 1px;
+  border-radius: 0px;
+  font: 14px Arial, sans-serif;
 }
