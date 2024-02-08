@@ -16,6 +16,11 @@ export interface Article {
     id?: number;
     articleNumber?: number;
     isDirectLine?: boolean;
+    minHeigthRequired?: number | null;
+    desiredDeliveryDate?: string | null;
+    inquiryForFixedOrder?: boolean | null;
+    inquiryForQuotation?: boolean | null;
+    additionalInformation?: string | null;
     isFastLine?: boolean;
     pallets?: number;
     csinquiryId?: number;

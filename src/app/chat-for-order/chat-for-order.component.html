@@ -37,7 +37,6 @@
       <button id="loadFileXml" value="loadXml" onclick="document.getElementById('file').click();">
         {{ 'choose-file' | transloco }}
       </button>
-      <!-- Wrap both the file input and the remove button within a form -->
       <form id="fileForm">
         <input style="display:none;" id="file" name="file" type="file" (change)="handleFileInput($event)">
         <div class="file-input-area">

@@ -56,8 +56,7 @@ select {
 .save-button,
 .back-button,
 .add-article-button,
-.remove-article-button,
-.butt {
+.remove-article-button{
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
@@ -80,6 +79,11 @@ select {
 
   &:hover {
     background-color: #45a049;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
@@ -110,4 +114,12 @@ select {
   &:hover {
     background-color: darkblue;
   }
+}
+
+.error-message {
+  position: absolute;
+  color: red;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: -10px;
 }

@@ -1,184 +1,78 @@
-@if (showCs === "cs") {
-  <div class="overviewBox">
-    <h1>{{'container-page-header' | transloco}}</h1>
-  
-    <button (click)="navigateToPage('/new-container-order-page')">
-      <h2>{{'new' | transloco}}</h2>
-    </button>
-  </div>
-  
-  <div class="searchBox">
-    <label>Filter:&nbsp;</label>
-    <select #currFilter (change)="setSelectedFilter(currFilter.value)">
-      <option value="customername">{{'customer' | transloco}}</option>
-      <option value="createdBy">{{'created-by' | transloco}}</option>
-      <option value="status">{{'status' | transloco}}</option>
-      <option value="lastUpdated">{{'last-updated' | transloco}}</option>
-      <option value="approved">{{'approved' | transloco}}</option>
-      <option value="amount">{{'amount' | transloco}}</option>
-      <option value="country">{{'country' | transloco}}</option>
-      <option value="sped">{{'sped' | transloco}}</option>
-    </select>
-    <div>
-  
-      @if (selectedFilter() === 'customername' || selectedFilter() === 'createdBy' || selectedFilter() === 'country'||
-      selectedFilter() === 'sped') {
+<div class="overviewBox">
+  <h1>{{ (htmlContent === "containerRequestCS" ? 'container-page-header-cs' : (htmlContent === "containerRequestTL" ?
+    'container-page-header-tl' : 'shippment-page-header')) | transloco }}</h1>
+  @if (htmlContent === 'containerRequestCS') {
+  <button (click)="navigateToPage('/new-container-order-page')"><h2>{{'new' | transloco}}</h2></button>
+  }
+</div>
+
+<div class="searchBox">
+  <label>Filter:&nbsp;</label>
+  <select #currFilter (change)="setSelectedFilter(currFilter.value)">
+    <option value="customername">{{'customer' | transloco}}</option>
+    <option value="createdBy">{{'created-by' | transloco}}</option>
+    <option value="status">{{'status' | transloco}}</option>
+    <option value="lastUpdated">{{'last-updated' | transloco}}</option>
+    <option *ngIf="htmlContent !== 'productionPlanningCS'" value="approvedByCs">{{'approved' | transloco}}</option>
+    <option *ngIf="htmlContent !== 'containerRequestTL' && htmlContent !== 'productionPlanningCS'" value="approvedByTl">
+      {{'approved-by-tl' | transloco}}</option>
+    <option value="amount">{{'amount' | transloco}}</option>
+    <option value="country">{{'country' | transloco}}</option>
+    <option value="sped">{{'sped' | transloco}}</option>
+  </select>
+  <div>
+    <div
+      *ngIf="selectedFilter() === 'customername' || selectedFilter() === 'createdBy' || selectedFilter() === 'country' || selectedFilter() === 'sped'">
       <div>
         <input (change)="filterOrders()" [ngSignal]="filterValue" type="text"
           placeholder="{{'search-placeholder' | transloco}}">
       </div>
-      }
-  
-      @if (selectedFilter() === 'amount' || selectedFilter() === 'status') {
+    </div>
+    <div *ngIf="selectedFilter() === 'amount' || selectedFilter() === 'status'">
       <div>
-        <input (change)="filterOrders()" [ngSignal]="filterValue" type="number">
+        <input (change)="filterOrders()" [ngSignal]="filterValue"
+          type="{{selectedFilter() === 'amount' ? 'number' : 'text'}}">
       </div>
-      }
-  
-      @if (selectedFilter() === 'approved') {
+    </div>
+    <div
+      *ngIf="selectedFilter() === 'approvedByCs' || (htmlContent !== 'containerRequestTL' && selectedFilter() === 'approvedByTl')">
       <div>
         <input (change)="filterOrders()" [ngSignal]="filterValue" type="checkbox">
       </div>
-      }
-  
-      @if (selectedFilter() === 'lastUpdated') {
+    </div>
+    <div *ngIf="selectedFilter() === 'lastUpdated'">
       <div>
         <input (change)="filterOrders()" [ngSignal]="filterValue" type="date">
       </div>
-      }
-  
     </div>
   </div>
-  
-  <div class="orderBox">
-    <table>
-      <tr>
-        <th>{{'order' | transloco}}</th>
-        <th (click)="orderOrders('customer')">{{'customer' | transloco}}</th>
-        <th (click)="orderOrders('createdBy')">{{'created-by' | transloco}}</th>
-        <th (click)="orderOrders('abNr')">{{'ab-nr' | transloco}}</th>
-        <th (click)="orderOrders('status')">{{'status' | transloco}}</th>
-        <th>{{'approved' | transloco}}</th>
-        <th (click)="orderOrders('amount')">{{'amount' | transloco}}</th>
-        <th>{{'country' | transloco}}</th>
-        <th (click)="orderOrders('readyToLoad')">{{'ready-to-load' | transloco}}</th>
-        <th (click)="orderOrders('lastUpdated')">{{'last-updated' | transloco}}</th>
-        <th (click)="orderOrders('sped')">{{'sped' | transloco}}</th>
-        <th>{{'checklist' | transloco}}</th>
-        <th>{{'edit' | transloco}}</th>
-        <th>{{'chat' | transloco}}</th>
-      </tr>
-      @for (currOrder of dataService.allOrders(); track $index) {
-      <tr>
-        <td>{{currOrder.id}}</td>
-        <td>{{currOrder.customerName}}</td>
-        <td>{{currOrder.createdBy}}</td>
-        <td>{{currOrder.abNumber}}</td>
-        <td>{{currOrder.status}}</td>
-        @if (currOrder.approvedByCs) {
-        <td>{{'yes' | transloco}}</td>
-        }
-        @else
-        {
-        <td>{{'no' | transloco}}</td>
-        }
-        <td>{{currOrder.amount}}</td>
-        <td>{{currOrder.country}}</td>
-        <td>{{currOrder.readyToLoad}}</td>
-        <td>{{currOrder.lastUpdated}}</td>
-        <td>{{currOrder.sped}}</td>
-        <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
-        <td (click)="navigateToPage('/edit-container-order-page/' + currOrder.id)"><mat-icon>create</mat-icon></td>
-        <td (click)="navigateToPage('/chat-for-order/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
-      </tr>
-      }
-    </table>
-  </div>
-  }
-  @else {
-    <div class="overviewBox">
-      <h1>{{'shippment-page-header' | transloco}}</h1>
-    </div>
-    
-    <div class="searchBox">
-      <label>Filter:&nbsp;</label>
-      <select #currFilter (change)="setSelectedFilter(currFilter.value)">
-        <option value="customername">{{'customer' | transloco}}</option>
-        <option value="createdBy">{{'created-by' | transloco}}</option>
-        <option value="status">{{'status' | transloco}}</option>
-        <option value="lastUpdated">{{'last-updated' | transloco}}</option>
-        <option value="approved">{{'approved' | transloco}}</option>
-        <option value="amount">{{'amount' | transloco}}</option>
-        <option value="country">{{'country' | transloco}}</option>
-        <option value="sped">{{'sped' | transloco}}</option>
-      </select>
-      <div>
-    
-        @if (selectedFilter() === 'customername' || selectedFilter() === 'createdBy' || selectedFilter() === 'country'||
-        selectedFilter() === 'sped') {
-        <div>
-          <input (change)="filterOrders()" [ngSignal]="filterValue" type="text"
-            placeholder="{{'search-placeholder' | transloco}}">
-        </div>
-        }
-    
-        @if (selectedFilter() === 'amount' || selectedFilter() === 'status') {
-        <div>
-          <input (change)="filterOrders()" [ngSignal]="filterValue" type="number">
-        </div>
-        }
-    
-        @if (selectedFilter() === 'approved') {
-        <div>
-          <input (change)="filterOrders()" [ngSignal]="filterValue" type="checkbox">
-        </div>
-        }
-    
-        @if (selectedFilter() === 'lastUpdated') {
-        <div>
-          <input (change)="filterOrders()" [ngSignal]="filterValue" type="date">
-        </div>
-        }
-    
-      </div>
-    </div>
-    
-    <div class="orderBox">
-      <table>
-        <tr>
-          <th (click)="orderOrders('abNr')">{{'ab-nr' | transloco}}</th>
-          <th (click)="orderOrders('readyToLoad')">{{'ready-to-load' | transloco}}</th>
-          <th (click)="orderOrders('customer')">{{'customer' | transloco}}</th>
-          <th (click)="orderOrders('createdBy')">{{'created-by' | transloco}}</th>
-          <th (click)="orderOrders('status')">{{'status' | transloco}}</th>
-          <th>{{'approved' | transloco}}</th>
-          <th (click)="orderOrders('lastUpdated')">{{'last-updated' | transloco}}</th>
-          <th (click)="orderOrders('sped')">{{'sped' | transloco}}</th>
-          <th>{{'checklist' | transloco}}</th>
-          <th>{{'edit' | transloco}}</th>
-          <th>{{'chat' | transloco}}</th>
-        </tr>
-        @for (currOrder of dataService.allOrders(); track $index) {
-        <tr>
-          <td>{{currOrder.abNumber}}</td>
-          <td>{{currOrder.readyToLoad}}</td>
-          <td>{{currOrder.customerName}}</td>
-          <td>{{currOrder.createdBy}}</td>
-          <td>{{currOrder.status}}</td>
-          @if (currOrder.approvedByTs) {
+</div>
+
+<div class="orderBox">
+  <table>
+    <tr>
+      <th *ngFor="let header of tableHeaders" (click)="orderOrders(header.value)">{{header.label | transloco}}</th>
+    </tr>
+    @for (currOrder of dataService.allOrders(); track $index) {
+    <tr>
+      @for (prop of orderProperties; track $index) {
+      @if (prop !== 'approvedByCs' && prop !== 'approvedByTl') {
+      <td>
+        {{currOrder[prop]}}
+      </td>
+      }@else {
+        @if (currOrder[prop]) {
           <td>{{'yes' | transloco}}</td>
-          }
-          @else
-          {
+        }@else {
           <td>{{'no' | transloco}}</td>
-          }
-          <td>{{currOrder.lastUpdated}}</td>
-          <td>{{currOrder.sped}}</td>
-          <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
-          <td (click)="navigateToPage('/edit-shippment-order-page/' + currOrder.id)"><mat-icon>create</mat-icon></td>
-          <td (click)="navigateToPage('/chat-for-order/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
-        </tr>
         }
-      </table>
-    </div>
-  }
+      
+      }
+      }
+      <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
+      <td (click)="navigateToEditPage(currOrder.id)"><mat-icon>create</mat-icon></td>
+      <td (click)="navigateToPage('/chat-for-order/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
+    </tr>
+    }
+  </table>
+</div>

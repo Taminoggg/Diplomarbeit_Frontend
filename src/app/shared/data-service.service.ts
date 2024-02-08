@@ -12,10 +12,6 @@ export class DataServiceService {
   lastSortedBy = signal('');
   orderIds: number[] = [];
 
-  constructor() {
-    this.refreshPage('none', '');
-  }
-
   getOrdersOrderedBy(orderString: string): void {
     switch (orderString) {
 
@@ -33,7 +29,7 @@ export class DataServiceService {
         if (this.lastSortedBy() === "sped") {
           this.lastSortedBy.set('');
           this.allOrders().orderByDescending(x => x.sped);
-        }else{
+        } else {
           this.lastSortedBy.set('sped');
           this.allOrders().orderBy(x => x.sped);
         }
@@ -43,7 +39,7 @@ export class DataServiceService {
         if (this.lastSortedBy() === "customer") {
           this.lastSortedBy.set('');
           this.allOrders().orderByDescending(x => x.customerName);
-        }else{
+        } else {
           this.lastSortedBy.set('customer');
           this.allOrders().orderBy(x => x.customerName);
         }
@@ -53,7 +49,7 @@ export class DataServiceService {
         if (this.lastSortedBy() === "createdBy") {
           this.lastSortedBy.set('');
           this.allOrders().orderByDescending(x => x.createdBy);
-        }else{
+        } else {
           this.lastSortedBy.set('createdBy');
           this.allOrders().orderBy(x => x.createdBy);
         }
@@ -63,45 +59,45 @@ export class DataServiceService {
         if (this.lastSortedBy() === "status") {
           this.lastSortedBy.set('');
           this.allOrders().orderByDescending(x => x.status);
-        }else{    
+        } else {
           this.lastSortedBy.set('status');
           this.allOrders().orderBy(x => x.status);
         }
         break;
 
-        case "lastUpdated":
-          if (this.lastSortedBy() === "lastUpdated") {
-            this.lastSortedBy.set('');
-            this.allOrders().orderByDescending(x => x.lastUpdated);
-          }else{    
-            this.lastSortedBy.set('lastUpdated');
-            this.allOrders().orderBy(x => x.lastUpdated);
-          }
-          break;
+      case "lastUpdated":
+        if (this.lastSortedBy() === "lastUpdated") {
+          this.lastSortedBy.set('');
+          this.allOrders().orderByDescending(x => x.lastUpdated);
+        } else {
+          this.lastSortedBy.set('lastUpdated');
+          this.allOrders().orderBy(x => x.lastUpdated);
+        }
+        break;
 
-          case "abNr":
-            if (this.lastSortedBy() === "abNr") {
-              this.lastSortedBy.set('');
-              this.allOrders().orderByDescending(x => x.abNumber);
-            }else{    
-              this.lastSortedBy.set('abNr');
-              this.allOrders().orderBy(x => x.abNumber);
-            }
-            break;
+      case "abNr":
+        if (this.lastSortedBy() === "abNr") {
+          this.lastSortedBy.set('');
+          this.allOrders().orderByDescending(x => x.abNumber);
+        } else {
+          this.lastSortedBy.set('abNr');
+          this.allOrders().orderBy(x => x.abNumber);
+        }
+        break;
 
-            case "readyToLoad":
-            if (this.lastSortedBy() === "readyToLoad") {
-              this.lastSortedBy.set('');
-              this.allOrders().orderByDescending(x => x.readyToLoad);
-            }else{    
-              this.lastSortedBy.set('readyToLoad');
-              this.allOrders().orderBy(x => x.readyToLoad);
-            }
-            break;
+      case "readyToLoad":
+        if (this.lastSortedBy() === "readyToLoad") {
+          this.lastSortedBy.set('');
+          this.allOrders().orderByDescending(x => x.readyToLoad);
+        } else {
+          this.lastSortedBy.set('readyToLoad');
+          this.allOrders().orderBy(x => x.readyToLoad);
+        }
+        break;
     }
   }
 
-  refreshPage(selectedFilter: string, value: string): void {
+  refreshPage(selectedFilter: string, value: string, filteredBy: string): void {
     console.log("GETTING ORDERS: selectedFilter: " + selectedFilter + " value: " + value);
     if (value === "") {
       selectedFilter = 'none';
@@ -111,63 +107,70 @@ export class DataServiceService {
         console.log('case none');
         this.orderService.ordersGet()
           .subscribe(x => {
-            this.getDetilsForOrder(x);
+            this.getDetilsForOrder(x, filteredBy);
           });
         break;
       case "customername":
         console.log('case customername');
         this.orderService.ordersCustomernameGet(value)
           .subscribe(x => {
-            this.getDetilsForOrder(x);
+            this.getDetilsForOrder(x, filteredBy);
           });
         break;
       case "createdBy":
         console.log('case create by');
         this.orderService.ordersCreatedByGet(value)
           .subscribe(x => {
-            this.getDetilsForOrder(x);
+            this.getDetilsForOrder(x, filteredBy);
           });
         break;
       case "status":
         console.log('case status');
         this.orderService.ordersStatusGet(value)
           .subscribe(x => {
-            this.getDetilsForOrder(x);
+            this.getDetilsForOrder(x, filteredBy);
           });
         break;
-      case "approved":
-        console.log('case approved ' + JSON.parse(value));
-        this.orderService.ordersApprovedGet(JSON.parse(value))
+      case "approvedByCs":
+        console.log('case approvedByCs ' + JSON.parse(value));
+        this.orderService.ordersApprovedByCsGet(JSON.parse(value))
           .subscribe(x => {
-            this.getDetilsForOrder(x);
+            this.getDetilsForOrder(x, filteredBy);
+          });
+        break;
+      case "approvedByTl":
+        console.log('case approvedByTl ' + JSON.parse(value));
+        this.orderService.ordersApprovedByTlGet(JSON.parse(value))
+          .subscribe(x => {
+            this.getDetilsForOrder(x, filteredBy);
           });
         break;
       case "amount":
         console.log('case amount');
         this.orderService.ordersAmountGet(parseInt(value))
           .subscribe(x => {
-            this.getDetilsForOrder(x);
+            this.getDetilsForOrder(x, filteredBy);
           });
         break;
       case "lastUpdated":
         console.log('case last udpated');
         this.orderService.ordersLastUpdatedGet(value)
           .subscribe(x => {
-            this.getDetilsForOrder(x);
+            this.getDetilsForOrder(x, filteredBy);
           });
         break;
       case "country":
         console.log('case country');
         this.orderService.ordersCountryGet(value)
           .subscribe(x => {
-            this.getDetilsForOrder(x);
+            this.getDetilsForOrder(x, filteredBy);
           });
         break;
       case "sped":
         console.log('case sped');
         this.orderService.ordersSpedGet(value)
           .subscribe(x => {
-            this.getDetilsForOrder(x);
+            this.getDetilsForOrder(x, filteredBy);
           });
         break;
       default:
@@ -176,11 +179,21 @@ export class DataServiceService {
     }
   }
 
-  getDetilsForOrder(x: OrderDto[]) {
+  getDetilsForOrder(x: OrderDto[], filteredBy: string) {
     this.orderIds = [];
     this.allOrders.set(x);
+
     this.allOrders().forEach(currOrder => {
       this.orderIds.push(currOrder.id)
     });
+
+    console.log('filtering orders');
+    console.log(this.allOrders());
+    if (filteredBy === "containerRequestTL") {
+      this.allOrders.set(this.allOrders().filter(x => x.approvedByCs === true));
+    }else if(filteredBy === "productionPlanningCS"){
+      this.allOrders.set(this.allOrders().filter(x => x.approvedByTl === true));
+    }
+    console.log(this.allOrders());
   }
 }

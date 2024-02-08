@@ -17,9 +17,9 @@ export interface OrderDto {
     customerName: string;
     createdBy: string;
     approvedByCs: boolean;
-    approvedByTs: boolean;
+    approvedByTl: boolean;
     amount: number;
-    additionalInformation?: string | null;
+    additionalInformation: string;
     lastUpdated: string;
     checklistId: number;
     sped: string;

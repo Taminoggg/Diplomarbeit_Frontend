@@ -9,47 +9,22 @@ export class ValidationService {
   simpleStringPattern = /^[A-Z\d-,][a-zA-Z\d-,]*(?:\s\w+)*$/gm;
   simpleNumberPattern = /^[1-9]\d*$/gm;
 
-  constructor() { }
-
-  isReadyToLoadValid(readyToLoad: string): boolean {
-    let result = readyToLoad.match(this.simpleDatePattern);
+  isDateValid(date: string): boolean {
+    let result = date.match(this.simpleDatePattern);
     return result !== null && result.length > 0;
   }
 
-  isLoadingPlattfromValid(loadingPlattform: string): boolean {
-    return loadingPlattform.length > 0;
+  isAnyInputValid(inputString: string): boolean {
+    return inputString.length > 0;
   }
 
-  isCustomerValid(customerName: string): boolean {
-    return customerName.length > 0;
-  }
-
-  isCreatedByValid(createdBy: string): boolean {
-    let result = createdBy.match(this.simpleStringPattern);
+  isNameStringValid(nameString: string): boolean {
+    let result = nameString.match(this.simpleStringPattern);
     return result !== null && result.length > 0;
   }
 
-  isAbNumberValid(abnumber: number): boolean {
-    let result = abnumber.toString().match(this.simpleNumberPattern);
-    return result !== null && result.length > 0;
-  }
-
-  isGrossWeightInKgValid(grossWeightInKg: number): boolean {
-    let result = grossWeightInKg.toString().match(this.simpleNumberPattern);
-    return result !== null && result.length > 0;
-  }
-
-  isStatusValid(status: string): boolean {
-    return status.length > 0;
-  }
-
-  isAmountValid(amount: number): boolean {
-    let result = amount.toString().match(this.simpleNumberPattern);
-    return result !== null && result.length > 0;
-  }
-
-  isContainerSizeValid(containersize: number): boolean {
-    let result = containersize.toString().match(this.simpleNumberPattern);
+  isNumberValid(number: number): boolean {
+    let result = number.toString().match(this.simpleNumberPattern);
     return result !== null && result.length > 0;
   }
 

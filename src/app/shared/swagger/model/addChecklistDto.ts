@@ -12,6 +12,6 @@
 
 
 export interface AddChecklistDto { 
-    customerName: string;
+    checklistname: string;
 }
 

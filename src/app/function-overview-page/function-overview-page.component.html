@@ -1,15 +1,15 @@
 <div class="contentBox">
   <app-container-tool-function [toolFunctionName]="'Container Anfrage CS'"
     [toolFunctionDescription]="'Workflow zwischen Customer Service und Transportlogistik'"
-    [redirectRoute]="'/container-request-page/cs'"></app-container-tool-function>
+    [redirectRoute]="'/container-request-page/containerRequestCS'"></app-container-tool-function>
 
-    <app-container-tool-function [toolFunctionName]="'Container Anfrage TS'"
+    <app-container-tool-function [toolFunctionName]="'Container Anfrage TL'"
     [toolFunctionDescription]="'Workflow zwischen Customer Service und Transportlogistik'"
-    [redirectRoute]="'/container-request-page/tl'"></app-container-tool-function>
+    [redirectRoute]="'/container-request-page/containerRequestTL'"></app-container-tool-function>
 
   <app-container-tool-function [toolFunctionName]="'Anfrage Lieferzeit und Lieferwerk'"
     [toolFunctionDescription]="'Workflow zwischen Customer Service und Produktionsplanung'"
-    [redirectRoute]="'/shippment-request-page'"></app-container-tool-function>
+    [redirectRoute]="'/container-request-page/productionPlanningCS'"></app-container-tool-function>
 </div>
 <div class="bottomBox">
   <p>&#64;2023 Copyright: <u (click)="goToUrl()">Teufelberger.com</u></p>

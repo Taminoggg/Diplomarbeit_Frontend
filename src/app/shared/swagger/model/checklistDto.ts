@@ -13,6 +13,6 @@
 
 export interface ChecklistDto { 
     id: number;
-    customerName: string;
+    checklistname: string;
 }
 

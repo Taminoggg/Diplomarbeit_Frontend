@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticleDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { AddArticleDto, ArticleDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -13,10 +13,10 @@ import { ValidationService } from '../../validation.service';
   selector: 'app-edit-order-page',
   standalone: true,
   imports: [CommonModule, NgSignalDirective, TranslocoModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './edit-container-request-order-page.component.html',
-  styleUrl: './edit-container-request-order-page.component.scss'
+  templateUrl: './edit-cs-container-request-order-page.component.html',
+  styleUrl: './edit-cs-container-request-order-page.component.scss'
 })
-export class EditContainerOrderPageComponent implements OnChanges, OnInit {
+export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
 
   articlesService = inject(ArticlesService);
@@ -35,7 +35,7 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
       customerName: 'Test',
       createdBy: 'Test',
       approvedByCs: false,
-      approvedByTs: false,
+      approvedByTl: false,
       amount: 1,
       lastUpdated: 'Test',
       checklistId: 1,
@@ -44,7 +44,8 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
       sped: 'Test',
       country: 'Test',
       abNumber: 1,
-      readyToLoad: 'Test'
+      readyToLoad: 'Test',
+      additionalInformation: ''
     });
 
   allChecklists = signal<ChecklistDto[]>([]);
@@ -72,9 +73,8 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   amount = signal(0);
   checklistId = signal(0);
   isApprovedByCs = signal(false);
-  isApprovedByTs = signal(false);
-  additonalInformation = signal<string|undefined|null>('');
-  userText = signal('');
+  isApprovedByTl = signal(false);
+  additonalInformation = signal('');
 
   //CsData
   container = signal('');
@@ -90,17 +90,18 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   loadingPlattform = signal('');
 
   areArticleNumbersValid = signal<boolean>(true);
-  isReadyToLoadValid = computed(() => this.validationService.isReadyToLoadValid(this.readyToLoad()));
-  isLoadingPlattfromValid = computed(() => this.validationService.isLoadingPlattfromValid(this.readyToLoad()));
-  isCustomerValid = computed(() => this.validationService.isCustomerValid(this.customerName()));
-  isCreatedByValid = computed(() => this.validationService.isCreatedByValid(this.createdBy()));
-  isAbNumberValid = computed(() => this.validationService.isAbNumberValid(this.abnumber()));
-  isGrossWeightInKgValid = computed(() => this.validationService.isGrossWeightInKgValid(this.grossWeightInKg()));
-  isStatusValid = computed(() =>  this.validationService.isStatusValid(this.status()));
-  isAmountValid = computed(() => this.validationService.isAmountValid(this.amount()));
-  isContainerSizeAValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeA()));
-  isContainerSizeBValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeB()));
-  isContainerSizeHcValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeHc()));
+  isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
+  isLoadingPlattfromValid = computed(() => this.validationService.isAnyInputValid(this.loadingPlattform()));
+  isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.customerName()));
+  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.createdBy()));
+  isAbNumberValid = computed(() => this.validationService.isNumberValid(this.abnumber()));
+  isGrossWeightInKgValid = computed(() => this.validationService.isNumberValid(this.grossWeightInKg()));
+  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.status()));
+  isAmountValid = computed(() => this.validationService.isNumberValid(this.amount()));
+  isContainerSizeAValid = computed(() => this.validationService.isNumberValid(this.containersizeA()));
+  isContainerSizeBValid = computed(() => this.validationService.isNumberValid(this.containersizeB()));
+  isContainerSizeHcValid = computed(() => this.validationService.isNumberValid(this.containersizeHc()));
+  isIncotermValid = computed(() => this.validationService.isAnyInputValid(this.incoterm()));
   isAllValid = computed(() => {
     return (
       this.isReadyToLoadValid() &&
@@ -113,7 +114,7 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
       this.isAmountValid() &&
       this.isContainerSizeAValid() &&
       this.isContainerSizeBValid() &&
-      this.isContainerSizeHcValid() && 
+      this.isContainerSizeHcValid() &&
       this.areArticleNumbersValid()
     );
   });
@@ -125,20 +126,18 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('id: ' + this.id);
     this.checklistService.checklistsGet()
       .subscribe(x => this.allChecklists.set(x));
 
-      this.orderService.ordersIdGet(this.id)
+    this.orderService.ordersIdGet(this.id)
       .subscribe(x => {
         this.currOrder.set(x);
-        console.log('currOrderCs:' + this.currOrder().csid);
         this.setOrderSignals();
 
         this.articlesService.articlesCsInquiryIdGet(this.currOrder().csid)
           .subscribe(x => x.forEach(x => this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id)));
 
-        this.csinquiriesService.csinquiriesIdGet(this.csId())
+        this.csinquiriesService.csinquiriesIdGet(this.currOrder().csid)
           .subscribe(x => {
             this.currCsInquiry.set(x);
             this.setCsInquirySignals();
@@ -150,7 +149,7 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id:number) {
+  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id: number) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber, Validators.required],
       palletAmount: [palletAmount, Validators.required],
@@ -168,8 +167,8 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
 
   removeArticle(index: number) {
     const articleFormGroup = this.getFormGroup(index);
-    const articleId = articleFormGroup.get('id')?.value; 
-    this.articlesService.articlesDelete(articleId).subscribe(x => console.log('article deleted: ' + articleId)); 
+    const articleId = articleFormGroup.get('id')?.value;
+    this.articlesService.articlesDelete(articleId).subscribe(x => console.log('article deleted: ' + articleId));
     this.articlesFormArray.removeAt(index);
   }
 
@@ -179,7 +178,7 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   }
 
   containerRequestPage(): void {
-    this.router.navigateByUrl('/container-request-page/cs');
+    this.router.navigateByUrl('/container-request-page/containerRequestCS');
   }
 
   setAreArticleNumbersValid() {
@@ -216,46 +215,65 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
   }
 
   saveOrder(): void {
-    let order: EditOrderDto = {
-      customerName: this.customerName(),
-      status: this.status(),
-      createdBy: this.createdBy(),
-      amount: this.amount(),
-      checklistId: this.checklistId(),
-      id: this.id,
-      approvedByCs: this.isApprovedByCs(),
-      approvedByTs: this.isApprovedByTs()
-    };
+    console.log(this.additonalInformation());
+
+    let order: EditOrderDto;
+    if (this.additonalInformation() === '') {
+      console.log(1);
+       order = {
+        customerName: this.customerName(),
+        status: this.status(),
+        createdBy: this.createdBy(),
+        amount: this.amount(),
+        checklistId: this.checklistId(),
+        id: this.id,
+        approvedByTl: this.isApprovedByTl(),
+        approvedByCs: this.isApprovedByCs()
+      };
+    }else{
+      console.log(2);
+      order = {
+        customerName: this.customerName(),
+        status: this.status(),
+        createdBy: this.createdBy(),
+        amount: this.amount(),
+        checklistId: this.checklistId(),
+        id: this.id,
+        approvedByTl: this.isApprovedByTl(),
+        approvedByCs: this.isApprovedByCs(),
+        additionalInformation: this.additonalInformation()
+      };
+    }
 
     console.log(order);
 
     this.orderService.ordersPut(order)
       .subscribe(x => {
-        console.log(x);
+        this.saveCsInquery();
+        this.saveArticlesToDB();
+        this.containerRequestPage();
       });
 
-    this.saveCsInquery();
-    this.saveArticlesToDB();
-
-    this.containerRequestPage();
   }
 
-  saveArticlesToDB(){
-    for (let i = 0; i < this.articlesFormArray.length; i++) {
+  saveArticlesToDB() {
+    this.articlesService.articlesCsIdDelete(this.currCsInquiry().id)
+      .subscribe(x => {
+        for (let i = 0; i < this.articlesFormArray.length; i++) {
 
-      let article: ArticleDto = {
-        isDirectLine: this.getFormGroup(i).get('directline')!.value,
-        isFastLine: this.getFormGroup(i).get('fastLine')!.value,
-        pallets: this.getFormGroup(i).get('palletAmount')!.value,
-        articleNumber: this.getFormGroup(i).get('articleNumber')!.value,
-        csInquiryId: this.currOrder().csid,
-        id: this.getFormGroup(i).get('id')!.value
-      };
+          let article: AddArticleDto = {
+            isDirectLine: this.getFormGroup(i).get('directline')!.value,
+            isFastLine: this.getFormGroup(i).get('fastLine')!.value,
+            pallets: this.getFormGroup(i).get('palletAmount')!.value,
+            articleNumber: this.getFormGroup(i).get('articleNumber')!.value,
+            csInquiryId: this.currCsInquiry().id
+          };
 
-      this.articlesService.articlesPut(article).subscribe(x =>
-        console.log('article updated: ' + x.id)
-      );
-    }
+          this.articlesService.articlesPost(article).subscribe(x =>
+            console.log('article posted: ' + x.id)
+          );
+        }
+      });
   }
 
   saveCsInquery() {
@@ -278,15 +296,15 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
       .subscribe(x => console.log('RETURN VALUE OF CSINQUERY SAVE: ' + x.id + x.abnumber + x.freeDetention + x.readyToLoad));
   }
 
-  publish(){
-    let editOrder : EditApproveOrderDto = {
+  publish() {
+    let editOrder: EditApproveOrderDto = {
       id: this.currOrder().id,
       approve: true
     };
 
     this.orderService.ordersApprovedByCsPut(editOrder)
-    .subscribe(x => console.log('approved'));
-    
+      .subscribe(x => console.log('approved'));
+
     this.saveOrder();
   }
 
@@ -298,8 +316,11 @@ export class EditContainerOrderPageComponent implements OnChanges, OnInit {
     this.amount.set(this.currOrder().amount);
     this.checklistId.set(this.currOrder().checklistId);
     this.isApprovedByCs.set(this.currOrder().approvedByCs);
-    this.isApprovedByTs.set(this.currOrder().approvedByTs);
-    this.additonalInformation.set(this.currOrder().additionalInformation);
+    this.isApprovedByTl.set(this.currOrder().approvedByTl);
+    let additonalInformation = this.currOrder().additionalInformation
+    if (additonalInformation != null && additonalInformation != undefined) {
+      this.additonalInformation.set(additonalInformation);
+    }
   }
 
   setCsInquirySignals() {

@@ -49,7 +49,7 @@ export class NewContainerOrderPageComponent implements OnInit {
   status = signal('Status');
   amount = signal(1);
   checklistId = signal(1);
-  userText = signal('');
+  additonalInformation = signal('');
 
   //CsData
   container = signal('Test');
@@ -64,17 +64,17 @@ export class NewContainerOrderPageComponent implements OnInit {
   readyToLoad = signal('17.12.2023');
   loadingPlattform = signal('Test');
 
-  isReadyToLoadValid = computed(() => this.validationService.isReadyToLoadValid(this.readyToLoad()));
-  isLoadingPlattfromValid = computed(() => this.validationService.isLoadingPlattfromValid(this.readyToLoad()));
-  isCustomerValid = computed(() => this.validationService.isCustomerValid(this.customerName()));
-  isCreatedByValid = computed(() => this.validationService.isCreatedByValid(this.createdBy()));
-  isAbNumberValid = computed(() => this.validationService.isAbNumberValid(this.abnumber()));
-  isGrossWeightInKgValid = computed(() => this.validationService.isGrossWeightInKgValid(this.grossWeightInKg()));
-  isStatusValid = computed(() => this.validationService.isStatusValid(this.status()));
-  isAmountValid = computed(() => this.validationService.isAmountValid(this.amount()));
-  isContainerSizeAValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeA()));
-  isContainerSizeBValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeB()));
-  isContainerSizeHcValid = computed(() => this.validationService.isContainerSizeValid(this.containersizeHc()));
+  isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
+  isLoadingPlattfromValid = computed(() => this.validationService.isAnyInputValid(this.readyToLoad()));
+  isCustomerValid = computed(() => this.validationService.isNameStringValid(this.customerName()));
+  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.createdBy()));
+  isAbNumberValid = computed(() => this.validationService.isNumberValid(this.abnumber()));
+  isGrossWeightInKgValid = computed(() => this.validationService.isNumberValid(this.grossWeightInKg()));
+  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.status()));
+  isAmountValid = computed(() => this.validationService.isNumberValid(this.amount()));
+  isContainerSizeAValid = computed(() => this.validationService.isNumberValid(this.containersizeA()));
+  isContainerSizeBValid = computed(() => this.validationService.isNumberValid(this.containersizeB()));
+  isContainerSizeHcValid = computed(() => this.validationService.isNumberValid(this.containersizeHc()));
   areArticleNumbersValid = signal<boolean>(true);
   setAreArticleNumbersValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
@@ -117,7 +117,12 @@ export class NewContainerOrderPageComponent implements OnInit {
       articleNumber: [1, Validators.required],
       palletAmount: [1, Validators.required],
       directline: [false],
-      fastLine: [false]
+      fastLine: [false],
+      additonalInformation: [''],
+      minHeigthRequired: [1, Validators.required],
+      desiredDeliveryDate: [''],
+      inquiryForFixedOrder: [''],
+      inquiryForQuotation: ['']
     });
 
     this.articlesFormArray.push(articleGroup);
@@ -138,7 +143,7 @@ export class NewContainerOrderPageComponent implements OnInit {
   }
 
   containerRequestPage(): void {
-    this.router.navigateByUrl('/container-request-page');
+    this.router.navigateByUrl('/container-request-page/containerRequestCS');
   }
 
   saveOrder(): void {
@@ -202,35 +207,38 @@ export class NewContainerOrderPageComponent implements OnInit {
 
         this.tlInquiryService.tlinquiriesPost(tlInquiry)
           .subscribe(tlInquiryObj => {
-            let order: AddOrderDto = {
-              customerName: this.customerName(),
-              status: this.status(),
-              createdBy: this.createdBy(),
-              amount: this.amount(),
-              checklistId: this.checklistId(),
-              csid: csInquiryObj.id,
-              tlid: tlInquiryObj.id
-            };
+            let order: AddOrderDto;
+            if(this.additonalInformation() === ''){
+              order = {
+                customerName: this.customerName(),
+                status: this.status(),
+                createdBy: this.createdBy(),
+                amount: this.amount(),
+                checklistId: this.checklistId(),
+                csid: csInquiryObj.id,
+                tlid: tlInquiryObj.id
+              };
+            }else{
+              order = {
+                customerName: this.customerName(),
+                status: this.status(),
+                createdBy: this.createdBy(),
+                amount: this.amount(),
+                checklistId: this.checklistId(),
+                csid: csInquiryObj.id,
+                tlid: tlInquiryObj.id,
+                additionalInformation: this.additonalInformation()
+              };
+            }
 
             console.log('Posting order');
 
             this.orderService.ordersPost(order)
-              .subscribe(x => this.orderId.set(x.id));
+              .subscribe(x => {
+                this.orderId.set(x.id);
+                this.containerRequestPage();
+              });
           });
       });
-
-    this.containerRequestPage();
-  }
-
-  publish(){
-    let editOrder : EditApproveOrderDto = {
-      id: this.orderId(),
-      approve: true
-    };
-
-    this.orderService.ordersApprovedByCsPut(editOrder)
-    .subscribe(x => console.log('approved'));
-    
-    this.saveOrder();
   }
 }

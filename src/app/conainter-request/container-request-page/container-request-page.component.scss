@@ -52,3 +52,12 @@ th, td {
 th {
   background-color: #f2f2f2;
 }
+
+.container {
+  display: flex;
+  justify-content: flex-end; // Aligns items to the right
+}
+
+.right-corner-div label {
+  margin-right: 5px; // Adjust as needed
+}

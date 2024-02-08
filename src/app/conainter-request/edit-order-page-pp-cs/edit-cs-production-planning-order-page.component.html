@@ -1,0 +1,294 @@
+<div class="form-container">
+  <div class="form-row">
+    <button class="back-button" (click)="containerRequestPage()">{{'back' | transloco}}</button>
+    <button class="save-button" (click)="generatePDF()">{{'generatePDF' | transloco}}</button>
+  </div>
+
+  <div id="contentToConvert" class="form-content">
+    <div class="csData">
+      <div class="form-row">
+        <div class="form-group">
+          <label>{{'customer' | transloco}}</label>
+          <input readonly [ngSignal]="customerName" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>{{'created-by' | transloco}}</label>
+          <input readonly [ngSignal]="createdBy" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>{{'amount' | transloco}}</label>
+          <input readonly [ngSignal]="amount" type="number">
+        </div>
+
+        <div class="form-group">
+          <label>{{'ready-to-load' | transloco}}</label>
+          <input readonly [ngSignal]="readyToLoad" type="text">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>{{'checklist' | transloco}}</label>
+          <input readonly type="text" [ngSignal]="currChecklistname">
+        </div>
+
+        <div class="form-group">
+          <label>{{'loading-plattform' | transloco}}</label>
+          <input readonly [ngSignal]="loadingPlattform" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>{{'ab-nr' | transloco}}</label>
+          <input readonly [ngSignal]="abnumber" type="number">
+        </div>
+
+        <div class="form-group">
+          <label>{{'gross-weight-in-kg' | transloco}}</label>
+          <input readonly [ngSignal]="grossWeightInKg" type="number">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>{{'container-size-a' | transloco}}</label>
+          <input readonly [ngSignal]="containersizeA" type="number">
+        </div>
+
+        <div class="form-group">
+          <label>{{'container-size-b' | transloco}}</label>
+          <input readonly [ngSignal]="containersizeB" type="number">
+        </div>
+
+        <div class="form-group">
+          <label>{{'container-size-hc' | transloco}}</label>
+          <input readonly [ngSignal]="containersizeHc" type="number">
+        </div>
+
+        <div class="form-group">
+          <label>{{'incoterm' | transloco}}</label>
+          <input readonly [ngSignal]="incoterm" type="text">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <div class="checkbox-container">
+            <label class="checkbox-label">{{'free-detention' | transloco}}</label>
+            <input class="checkbox-input" [ngSignal]="freeDetention" type="checkbox" onclick="return false;"
+              onkeydown="return false;">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-container">
+            <label class="checkbox-label">{{'thctb' | transloco}}</label>
+            <input [ngSignal]="thctb" type="checkbox" onclick="return false;" onkeydown="return false;">
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="myForm">
+        <div formArrayName="articles">
+          @for (articleGroup of articlesFormArray.controls; track $index) {
+          <div [formGroup]="getFormGroup($index)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>{{'article-number' | transloco}}</label>
+                <input readonly type="number" formControlName="articleNumber">
+              </div>
+
+              <div class="form-group">
+                <div class="checkbox-container">
+                  <label class="checkbox-label">{{'direct-line' | transloco}}</label>
+                  <input class="checkbox-input" type="checkbox" formControlName="directline" onclick="return false;"
+                    onkeydown="return false;">
+                </div>
+              </div>
+
+              @if (getFormGroup($index).get('directline')!.value) {
+              <div class="form-group">
+                <label>{{'pallet-amount' | transloco}}</label>
+                <input readonly type="number" formControlName="palletAmount">
+              </div>
+              }
+              @else {
+              <div class="form-group"></div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+      </form>
+    </div>
+
+    <br>
+    <label class="note">Edited by CS</label>
+    <hr>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>{{'status' | transloco}}</label>
+        <input type="text" [ngSignal]="status">
+        @if(!isStatusValid()){
+        <label class="error-message">{{'error-message-status' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'inquery-number' | transloco}}</label>
+        <input type="number" [ngSignal]="inquiryNumber">
+        @if(!isInquiryNumberValid()){
+          <label class="error-message">{{'error-message-status' | transloco}}</label>
+          }
+      </div>
+
+      <div class="form-group">
+        <label>{{'sped' | transloco}}</label>
+        <input type="text" [ngSignal]="sped">
+      </div>
+
+      <div class="form-group">
+        <label>{{'country' | transloco}}</label>
+        <input type="text" [ngSignal]="country">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>{{'accepting-port' | transloco}}</label>
+        <input type="text" [ngSignal]="acceptingPort">
+      </div>
+
+      <div class="form-group">
+        <label>{{'excepted-retrieve-week' | transloco}}</label>
+        <input type="text" [ngSignal]="expectedRetrieveWeek">
+      </div>
+
+      <div class="form-group">
+        <label>{{'weight-in-kg' | transloco}}</label>
+        <input type="number" [ngSignal]="weightInKg">
+      </div>
+
+      <div class="form-group">
+        <label>{{'invoice-on' | transloco}}</label>
+        <input type="text" [ngSignal]="invoiceOn">
+      </div>
+    </div>
+
+    <div class="form-row">
+
+      <div class="form-group">
+        <label>{{'retrieve-date' | transloco}}</label>
+        <input type="text" [ngSignal]="retrieveDate">
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-container">
+          <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
+          <input class="checkbox-input" type="checkbox" [ngSignal]="isContainer40">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-container">
+          <label class="checkbox-label">{{'is-container-hc' | transloco}}</label>
+          <input class="checkbox-input" type="checkbox" [ngSignal]="isContainerHc">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>{{'retrieve-location' | transloco}}</label>
+        <input type="text" [ngSignal]="retrieveLocation">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>{{'debt-capital-general-forerun-eur' | transloco}}</label>
+        <input type="number" [ngSignal]="debtCapitalGeneralForerunEur">
+      </div>
+
+      <div class="form-group">
+        <label>{{'debt-capital-main-dol' | transloco}}</label>
+        <input type="number" [ngSignal]="debtCapitalMainDol">
+      </div>
+
+      <div class="form-group">
+        <label>{{'debt-capital-trailing-dol' | transloco}}</label>
+        <input type="number" [ngSignal]="debtCapitalTrailingDol">
+      </div>
+
+      <div class="form-group">
+        <label>{{'port-of-departure' | transloco}}</label>
+        <input type="text" [ngSignal]="portOfDeparture">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>{{'ets' | transloco}}</label>
+        <input type="text" [ngSignal]="ets">
+      </div>
+
+      <div class="form-group">
+        <label>{{'eta' | transloco}}</label>
+        <input type="text" [ngSignal]="eta">
+      </div>
+
+      <div class="form-group">
+        <label>{{'boat' | transloco}}</label>
+        <input type="text" [ngSignal]="boat">
+      </div>
+
+      <div class="form-group">
+        <label>{{'additional-text' | transloco}}</label>
+        <input [ngSignal]="additonalInformation" type="text">
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="myForm">
+    <div formArrayName="articles">
+      @for (articleGroup of articlesFormArray.controls; track $index) {
+      <div [formGroup]="getFormGroup($index)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>{{'article-number' | transloco}}</label>
+            <input readonly type="number" formControlName="articleNumber">
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox-container">
+              <label class="checkbox-label">{{'direct-line' | transloco}}</label>
+              <input class="checkbox-input" type="checkbox" formControlName="directline" onclick="return false;"
+                onkeydown="return false;">
+            </div>
+          </div>
+
+          @if (getFormGroup($index).get('directline')!.value) {
+          <div class="form-group">
+            <label>{{'pallet-amount' | transloco}}</label>
+            <input readonly type="number" formControlName="palletAmount">
+          </div>
+          }
+          @else {
+          <div class="form-group"></div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </form>
+
+  <div class="form-row">
+    <div class="form-group">
+      <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
+    </div>
+    <div class="form-group">
+      <button class="save-button" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
+        transloco}}</button>
+    </div>
+  </div>
+</div>

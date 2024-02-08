@@ -17,6 +17,6 @@ export interface ArticleDto {
     isDirectLine: boolean;
     isFastLine: boolean;
     pallets: number;
-    csInquiryId: number;
+    csinquiryId: number;
 }
 

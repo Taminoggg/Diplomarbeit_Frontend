@@ -41,27 +41,29 @@ export class ChatForOrderComponent implements OnInit {
           if (message.attachmentId !== 1) {
             this.filesService.filesIdGet(message.attachmentId)
               .subscribe(x => {
-                const fileDto: FileByteDto = {
-                  fileName: x.fileName,
-                  fileContent: x.fileContent,
-                  fileType: x.fileType
-                };
-
-                const binaryData = atob(fileDto.fileContent);
-
-                const arrayBuffer = new ArrayBuffer(binaryData.length);
-                const view = new Uint8Array(arrayBuffer);
-                for (let i = 0; i < binaryData.length; i++) {
-                  view[i] = binaryData.charCodeAt(i);
+                if(x !== null){
+                  const fileDto: FileByteDto = {
+                    fileName: x.fileName,
+                    fileContent: x.fileContent,
+                    fileType: x.fileType
+                  };
+  
+                  const binaryData = atob(fileDto.fileContent);
+  
+                  const arrayBuffer = new ArrayBuffer(binaryData.length);
+                  const view = new Uint8Array(arrayBuffer);
+                  for (let i = 0; i < binaryData.length; i++) {
+                    view[i] = binaryData.charCodeAt(i);
+                  }
+  
+                  const mimeType = this.getMimeType(fileDto.fileType);
+  
+                  const blob = new Blob([arrayBuffer], { type: mimeType });
+  
+                  const file = new File([blob], fileDto.fileName);
+  
+                  this.fileForMessage.set(message.id, file);
                 }
-
-                const mimeType = this.getMimeType(fileDto.fileType);
-
-                const blob = new Blob([arrayBuffer], { type: mimeType });
-
-                const file = new File([blob], fileDto.fileName);
-
-                this.fileForMessage.set(message.id, file);
               });
           };
         })
@@ -69,8 +71,9 @@ export class ChatForOrderComponent implements OnInit {
   }
 
   fileForMessageExsits(id: number): boolean {
+    
     let file = this.fileForMessage.get(id);
-
+    console.log(this.fileForMessage.get(id));
     if (file !== undefined) {
       return true;
     }
@@ -154,7 +157,7 @@ export class ChatForOrderComponent implements OnInit {
       });
 
     this.messageContent.set('');
-    this.fileToUpload = null;
+    this.removeFile();
   }
 
   handleFileInput(event: Event): void {

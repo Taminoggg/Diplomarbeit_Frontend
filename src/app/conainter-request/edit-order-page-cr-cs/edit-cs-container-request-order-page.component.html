@@ -1,6 +1,7 @@
 <div class="form-container">
   <div class="form-row">
     <button class="back-button" (click)="containerRequestPage()">{{'back' | transloco}}</button>
+    <button class="save-button" (click)="generatePDF()">{{'generatePDF' | transloco}}</button>
   </div>
 
   <div id="contentToConvert" class="form-content">
@@ -9,7 +10,7 @@
         <label>{{'status' | transloco}}</label>
         <input [ngSignal]="status" type="text">
         @if(!isStatusValid()){
-        <label class="error-message">{{'error-message-status' | transloco}}</label>
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
         }
       </div>
 
@@ -17,7 +18,7 @@
         <label>{{'customer' | transloco}}</label>
         <input [ngSignal]="customerName" type="text">
         @if(!isCustomerValid()){
-        <label class="error-message">{{'error-message-customer' | transloco}}</label>
+        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
         }
       </div>
 
@@ -25,7 +26,7 @@
         <label>{{'created-by' | transloco}}</label>
         <input [ngSignal]="createdBy" type="text">
         @if(!isCreatedByValid()){
-        <label class="error-message">{{'error-message-created-by' | transloco}}</label>
+        <label class="error-message">{{'error-message-name-string' | transloco}}</label>
         }
       </div>
 
@@ -33,7 +34,7 @@
         <label>{{'amount' | transloco}}</label>
         <input min="1" max="100" [ngSignal]="amount" type="number">
         @if(!isAmountValid()){
-        <label class="error-message">{{'error-message-amount' | transloco}}</label>
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
         }
       </div>
     </div>
@@ -42,7 +43,7 @@
       <div class="form-group">
         <label>{{'checklist' | transloco}}</label>
         <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
-          @for (currChecklist of allCheckliststs(); track $index) {
+          @for (currChecklist of allChecklists(); track $index) {
           <option value="{{currChecklist.id}}">{{currChecklist.checklistname}}</option>
           }
         </select>
@@ -52,7 +53,7 @@
         <label>{{'loading-plattform' | transloco}}</label>
         <input [ngSignal]="loadingPlattform" type="text">
         @if(!isLoadingPlattfromValid()){
-        <label class="error-message">{{'error-message-loading-plattform' | transloco}}</label>
+        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
         }
       </div>
 
@@ -60,7 +61,7 @@
         <label>{{'ab-nr' | transloco}}</label>
         <input [ngSignal]="abnumber" type="number">
         @if(!isAbNumberValid()){
-        <label class="error-message">{{'error-message-ab-number' | transloco}}</label>
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
         }
       </div>
 
@@ -68,7 +69,7 @@
         <label>{{'gross-weight-in-kg' | transloco}}</label>
         <input [ngSignal]="grossWeightInKg" type="number">
         @if(!isGrossWeightInKgValid()){
-        <label class="error-message">{{'error-message-gross-weight' | transloco}}</label>
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
         }
       </div>
     </div>
@@ -78,7 +79,7 @@
         <label>{{'container-size-a' | transloco}}</label>
         <input min="1" [ngSignal]="containersizeA" type="number">
         @if(!isContainerSizeAValid()){
-        <label class="error-message">{{'error-message-container-size' | transloco}}</label>
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
         }
       </div>
 
@@ -86,7 +87,7 @@
         <label>{{'container-size-b' | transloco}}</label>
         <input min="1" [ngSignal]="containersizeB" type="number">
         @if(!isContainerSizeBValid()){
-        <label class="error-message">{{'error-message-container-size' | transloco}}</label>
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
         }
       </div>
 
@@ -94,13 +95,16 @@
         <label>{{'container-size-hc' | transloco}}</label>
         <input min="1" [ngSignal]="containersizeHc" type="number">
         @if(!isContainerSizeHcValid()){
-        <label class="error-message">{{'error-message-container-size' | transloco}}</label>
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
         }
       </div>
 
       <div class="form-group">
         <label>{{'incoterm' | transloco}}</label>
         <input [ngSignal]="incoterm" type="text">
+        @if(!isIncotermValid()){
+          <label class="error-message">{{'error-message-any-string' | transloco}}</label>
+          }
       </div>
     </div>
 
@@ -123,7 +127,7 @@
         <label>{{'ready-to-load' | transloco}}</label>
         <input [ngSignal]="readyToLoad" type="text">
         @if(!isReadyToLoadValid()){
-        <label class="error-message">{{'error-message-ready-to-load' | transloco}}</label>
+        <label class="error-message">{{'error-message-date' | transloco}}</label>
         }
       </div>
 
@@ -142,17 +146,15 @@
               <label>{{'article-number' | transloco}}</label>
               <input (change)="setAreArticleNumbersValid()" min="1" type="number" formControlName="articleNumber">
               @if (getFormGroup($index).get('articleNumber')!.value < 1) { <label class="error-message">
-                {{'error-message-article-number' | transloco}}</label>
+                {{'error-message-number' | transloco}}</label>
                 }
             </div>
 
             <div class="form-group">
               <div class="checkbox-container">
                 <label class="checkbox-label">{{'direct-line' | transloco}}</label>
-                <input class="checkbox-input" (change)="setAreArticleNumbersValid()" type="checkbox"
-                  formControlName="directline">
+                <input class="checkbox-input" (change)="setAreArticleNumbersValid()" type="checkbox" formControlName="directline">
               </div>
-
             </div>
 
             @if (getFormGroup($index).get('directline')!.value) {
@@ -160,7 +162,7 @@
               <label>{{'pallet-amount' | transloco}}</label>
               <input (change)="setAreArticleNumbersValid()" min="1" type="number" formControlName="palletAmount">
               @if (getFormGroup($index).get('palletAmount')!.value < 1) { <label class="error-message">
-                {{'error-message-pallet-amount' | transloco}}</label>
+                {{'error-message-number' | transloco}}</label>
                 }
             </div>
             }
@@ -176,12 +178,19 @@
         </div>
         }
       </div>
-      <button class="add-article-button" (click)="addArticle()">{{'add-article' | transloco}}</button>
+
+      <button class="add-article-button" (click)="addArticle(1,1,false,false,1)">{{'add-article' |
+        transloco}}</button>
     </form>
   </div>
+
   <div class="form-row">
     <div class="form-group">
       <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
+    </div>
+    <div class="form-group">
+      <button class="save-button" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
+        transloco}}</button>
     </div>
   </div>
 </div>

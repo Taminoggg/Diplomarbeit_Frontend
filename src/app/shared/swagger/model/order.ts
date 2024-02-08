@@ -21,7 +21,7 @@ export interface Order {
     customerName?: string | null;
     createdBy?: string | null;
     approvedByCs?: boolean;
-    approvedByTs?: boolean;
+    approvedByTl?: boolean;
     amount?: number;
     lastUpdated?: string;
     checklistId?: number;
