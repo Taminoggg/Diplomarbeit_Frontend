@@ -107,6 +107,14 @@
                 </div>
               </div>
 
+              <div class="form-group">
+                <div class="checkbox-container">
+                  <label class="checkbox-label">{{'fast-line' | transloco}}</label>
+                  <input class="checkbox-input" type="checkbox" formControlName="fastline" onclick="return false;"
+                    onkeydown="return false;">
+                </div>
+              </div>
+
               @if (getFormGroup($index).get('directline')!.value) {
               <div class="form-group">
                 <label>{{'pallet-amount' | transloco}}</label>

@@ -1,8 +1,14 @@
 <div class="overviewBox">
-  <h1>{{ (htmlContent === "containerRequestCS" ? 'container-page-header-cs' : (htmlContent === "containerRequestTL" ?
-    'container-page-header-tl' : 'shippment-page-header')) | transloco }}</h1>
+  <h1>{{
+    (htmlContent === "containerRequestCS" ? 'container-page-header-cs' :
+    (htmlContent === "containerRequestTL" ? 'container-page-header-tl' :
+    (htmlContent === "productionPlanningCS" ? 'shippment-page-header-cs' : 'shippment-page-header-tl')))
+    | transloco }}
+  </h1>
   @if (htmlContent === 'containerRequestCS') {
-  <button (click)="navigateToPage('/new-container-order-page')"><h2>{{'new' | transloco}}</h2></button>
+  <button (click)="navigateToPage('/new-container-order-page')">
+    <h2>{{'new' | transloco}}</h2>
+  </button>
   }
 </div>
 
@@ -61,12 +67,12 @@
         {{currOrder[prop]}}
       </td>
       }@else {
-        @if (currOrder[prop]) {
-          <td>{{'yes' | transloco}}</td>
-        }@else {
-          <td>{{'no' | transloco}}</td>
-        }
-      
+      @if (currOrder[prop]) {
+      <td>{{'yes' | transloco}}</td>
+      }@else {
+      <td>{{'no' | transloco}}</td>
+      }
+
       }
       }
       <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>

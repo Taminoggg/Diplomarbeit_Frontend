@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { ValidationService } from '../../validation.service';
+import { ValidationService } from '../../shared/validation.service';
 
 @Component({
   selector: 'app-new-order-page',

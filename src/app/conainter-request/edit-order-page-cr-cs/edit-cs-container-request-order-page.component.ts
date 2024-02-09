@@ -7,7 +7,7 @@ import { TranslocoModule } from '@ngneat/transloco';
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ValidationService } from '../../validation.service';
+import { ValidationService } from '../../shared/validation.service';
 
 @Component({
   selector: 'app-edit-order-page',
@@ -149,12 +149,12 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id: number) {
+  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastline: boolean, id: number) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber, Validators.required],
       palletAmount: [palletAmount, Validators.required],
       directline: [directLine],
-      fastLine: [fastLine],
+      fastline: [fastline],
       id: [id]
     });
 
@@ -181,14 +181,25 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.router.navigateByUrl('/container-request-page/containerRequestCS');
   }
 
-  setAreArticleNumbersValid() {
+  setAreArticleNumbersValid(index: number, btnName:string) {
+    if (index >= 0) {
+      console.log('inside the if1');
+      if (!!this.getFormGroup(index).get('directline')!.value && !!this.getFormGroup(index).get('fastline')!.value) {
+        if(btnName === "directline"){
+          this.getFormGroup(index).get('fastline')!.setValue(false);
+        }else if(btnName === "fastline"){
+          this.getFormGroup(index).get('directline')!.setValue(false);
+        }
+      }
+    }
+
     for (let i = 0; i < this.articlesFormArray.length; i++) {
       if (this.getFormGroup(i).get('articleNumber')!.value < 1) {
         this.areArticleNumbersValid.set(false);
         return;
       }
 
-      if (this.getFormGroup(i).get('directline')!.value === true && this.getFormGroup(i).get('palletAmount')!.value < 1) {
+      if ((this.getFormGroup(i).get('directline')!.value === true || this.getFormGroup(i).get('fastline')!.value === true) && this.getFormGroup(i).get('palletAmount')!.value < 1) {
         this.areArticleNumbersValid.set(false);
         return;
       }
@@ -214,13 +225,13 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     }
   }
 
-  saveOrder(): void {
+  prepareSaveOrder() {
     console.log(this.additonalInformation());
 
     let order: EditOrderDto;
     if (this.additonalInformation() === '') {
       console.log(1);
-       order = {
+      order = {
         customerName: this.customerName(),
         status: this.status(),
         createdBy: this.createdBy(),
@@ -230,7 +241,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
         approvedByTl: this.isApprovedByTl(),
         approvedByCs: this.isApprovedByCs()
       };
-    }else{
+    } else {
       console.log(2);
       order = {
         customerName: this.customerName(),
@@ -245,7 +256,11 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       };
     }
 
-    console.log(order);
+    return order;
+  }
+
+  saveOrder(): void {
+    let order = this.prepareSaveOrder();
 
     this.orderService.ordersPut(order)
       .subscribe(x => {
@@ -253,7 +268,23 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
         this.saveArticlesToDB();
         this.containerRequestPage();
       });
+  }
 
+  publish() {
+    let order = this.prepareSaveOrder();
+
+    this.orderService.ordersPut(order)
+      .subscribe(x => {
+        this.saveCsInquery();
+        this.saveArticlesToDB();
+        let editOrder: EditApproveOrderDto = {
+          id: this.currOrder().id,
+          approve: true
+        };
+
+        this.orderService.ordersApprovedByCsPut(editOrder)
+          .subscribe(x => this.containerRequestPage());
+      });
   }
 
   saveArticlesToDB() {
@@ -263,7 +294,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
 
           let article: AddArticleDto = {
             isDirectLine: this.getFormGroup(i).get('directline')!.value,
-            isFastLine: this.getFormGroup(i).get('fastLine')!.value,
+            isFastLine: this.getFormGroup(i).get('fastline')!.value,
             pallets: this.getFormGroup(i).get('palletAmount')!.value,
             articleNumber: this.getFormGroup(i).get('articleNumber')!.value,
             csInquiryId: this.currCsInquiry().id
@@ -294,18 +325,6 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
 
     this.csinquiriesService.csinquiriesPut(editedCsInquery)
       .subscribe(x => console.log('RETURN VALUE OF CSINQUERY SAVE: ' + x.id + x.abnumber + x.freeDetention + x.readyToLoad));
-  }
-
-  publish() {
-    let editOrder: EditApproveOrderDto = {
-      id: this.currOrder().id,
-      approve: true
-    };
-
-    this.orderService.ordersApprovedByCsPut(editOrder)
-      .subscribe(x => console.log('approved'));
-
-    this.saveOrder();
   }
 
   setOrderSignals() {

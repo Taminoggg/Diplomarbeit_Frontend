@@ -34,7 +34,8 @@
     "save": "Speichern",
     "factory": "Werk",
     "plant": "Anlage",
-    "shippment-page-header": "Übersicht aktive Lieferzeit und Lieferwerkanfragen",
+    "shippment-page-header-cs": "Übersicht aktive Lieferzeit und Lieferwerkanfragen (CS)",
+    "shippment-page-header-tl": "Übersicht aktive Lieferzeit und Lieferwerkanfragen (TL)",
     "inquiry-number": "Anfrage Nummer",
     "accepting-port": "Ankunftshafen",
     "expected-retrieve-week": "Erwartete Ankunftswoche",
@@ -74,5 +75,8 @@
     "error-message-number": "Wert muss größer 0 sein.",
     "error-message-date": "Datumsformat: 'dd.MM.yyyy' erwartet.",
     "additional-text": "Zusatztext",
-    "save-and-publish": "Speichern and Freigeben"
+    "save-and-publish": "Speichern and Freigeben",
+    "step-number": "Schrittnummer",
+    "step-name": "Schrittname",
+    "step-description": "Schritt Beschreibung"
 }

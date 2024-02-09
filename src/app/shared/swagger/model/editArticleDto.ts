@@ -11,16 +11,11 @@
  */
 
 
-export interface ArticleDto { 
+export interface EditArticleDto { 
     id: number;
-    articleNumber: number;
-    isDirectLine: boolean;
-    isFastLine: boolean;
-    pallets: number;
-    csinquiryId: number;
-    minHeigthRequired?: number | null;
-    desiredDeliveryDate?: string | null;
-    inquiryForFixedOrder?: boolean | null;
-    inquiryForQuotation?: boolean | null;
+    minHeigthRequired: number;
+    desiredDeliveryDate: string;
+    inquiryForFixedOrder: boolean;
+    inquiryForQuotation: boolean;
 }
 

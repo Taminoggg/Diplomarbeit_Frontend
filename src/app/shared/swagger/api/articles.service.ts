@@ -22,6 +22,8 @@ import { Observable }                                        from 'rxjs';
 import { AddArticleDto } from '../model/addArticleDto';
 // @ts-ignore
 import { ArticleDto } from '../model/articleDto';
+// @ts-ignore
+import { EditArticleDto } from '../model/editArticleDto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -402,14 +404,14 @@ export class ArticlesService {
     }
 
     /**
-     * @param articleDto 
+     * @param editArticleDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public articlesPut(articleDto?: ArticleDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<ArticleDto>;
-    public articlesPut(articleDto?: ArticleDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<ArticleDto>>;
-    public articlesPut(articleDto?: ArticleDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<ArticleDto>>;
-    public articlesPut(articleDto?: ArticleDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public articlesPut(editArticleDto?: EditArticleDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<ArticleDto>;
+    public articlesPut(editArticleDto?: EditArticleDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<ArticleDto>>;
+    public articlesPut(editArticleDto?: EditArticleDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<ArticleDto>>;
+    public articlesPut(editArticleDto?: EditArticleDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -459,7 +461,7 @@ export class ArticlesService {
         return this.httpClient.request<ArticleDto>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: articleDto,
+                body: editArticleDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

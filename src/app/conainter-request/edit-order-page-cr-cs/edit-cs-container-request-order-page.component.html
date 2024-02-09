@@ -144,7 +144,7 @@
           <div class="form-row">
             <div class="form-group">
               <label>{{'article-number' | transloco}}</label>
-              <input (change)="setAreArticleNumbersValid()" min="1" type="number" formControlName="articleNumber">
+              <input (change)="setAreArticleNumbersValid(-1, '')" min="1" type="number" formControlName="articleNumber">
               @if (getFormGroup($index).get('articleNumber')!.value < 1) { <label class="error-message">
                 {{'error-message-number' | transloco}}</label>
                 }
@@ -153,14 +153,21 @@
             <div class="form-group">
               <div class="checkbox-container">
                 <label class="checkbox-label">{{'direct-line' | transloco}}</label>
-                <input class="checkbox-input" (change)="setAreArticleNumbersValid()" type="checkbox" formControlName="directline">
+                <input class="checkbox-input" (change)="setAreArticleNumbersValid($index, 'directline')" type="checkbox" formControlName="directline">
               </div>
             </div>
 
-            @if (getFormGroup($index).get('directline')!.value) {
+            <div class="form-group">
+              <div class="checkbox-container">
+                <label class="checkbox-label">{{'fast-line' | transloco}}</label>
+                <input class="checkbox-input" (change)="setAreArticleNumbersValid($index, 'fastline')" type="checkbox" formControlName="fastline">
+              </div>
+            </div>
+
+            @if (getFormGroup($index).get('directline')!.value || getFormGroup($index).get('fastline')!.value) {
             <div class="form-group">
               <label>{{'pallet-amount' | transloco}}</label>
-              <input (change)="setAreArticleNumbersValid()" min="1" type="number" formControlName="palletAmount">
+              <input (change)="setAreArticleNumbersValid(-1, '')" min="1" type="number" formControlName="palletAmount">
               @if (getFormGroup($index).get('palletAmount')!.value < 1) { <label class="error-message">
                 {{'error-message-number' | transloco}}</label>
                 }

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
-import { ValidationService } from '../../validation.service';
+import { ValidationService } from '../../shared/validation.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -178,7 +178,10 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
             });
 
           this.articlesService.articlesCsInquiryIdGet(this.currOrder().csid)
-            .subscribe(x => x.forEach(x => this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id)));
+            .subscribe(x => x.forEach(x => {
+              this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id);
+              console.log('adding Article');
+            }));
 
           this.csinquiriesService.csinquiriesIdGet(this.csId())
             .subscribe(x => {
@@ -219,18 +222,19 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       this.isBoatValid()
     );
   });
-  
+
 
   get articlesFormArray() {
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id: number) {
+
+  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastline: boolean, id: number) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber, Validators.required],
       palletAmount: [palletAmount, Validators.required],
       directline: [directLine],
-      fastLine: [fastLine],
+      fastline: [fastline],
       id: [id]
     });
 
@@ -268,7 +272,9 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     }
   }
 
-  saveOrder(): void {
+  prepareSaveOrder() {
+    console.log(this.additonalInformation());
+
     let order: EditOrderDto;
     if (this.additonalInformation() === '') {
       order = {
@@ -295,7 +301,11 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       };
     }
 
-    console.log(order);
+    return order;
+  }
+
+  saveOrder(): void {
+    let order = this.prepareSaveOrder();
 
     this.orderService.ordersPut(order)
       .subscribe(x => {
@@ -333,15 +343,19 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   publish() {
-    let editOrder: EditApproveOrderDto = {
-      id: this.currOrder().id,
-      approve: true
-    };
+    let order = this.prepareSaveOrder();
 
-    this.orderService.ordersApprovedByTlPut(editOrder)
-      .subscribe(x => console.log('approved'));
+    this.orderService.ordersPut(order)
+      .subscribe(x => {
+        this.saveTlInquery();
+        let editOrder: EditApproveOrderDto = {
+          id: this.currOrder().id,
+          approve: true
+        };
 
-    this.saveOrder();
+        this.orderService.ordersApprovedByTlPut(editOrder)
+          .subscribe(x => this.containerRequestPage());
+      });
   }
 
   setOrderSignals(): void {

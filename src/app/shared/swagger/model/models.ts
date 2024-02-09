@@ -13,6 +13,7 @@ export * from './checklistDto';
 export * from './csinquiry';
 export * from './csinquiryDto';
 export * from './editApproveOrderDto';
+export * from './editArticleDto';
 export * from './editCsinquiryDto';
 export * from './editOrderDto';
 export * from './editStepDto';

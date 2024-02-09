@@ -3,14 +3,19 @@
   <nav>
     <p-dropdown [options]="languagesList" [(ngModel)]="selectedLanguage" (ngModelChange)="changeLanguage($event)">
       <ng-template let-item pTemplate="selectedItem">
-        <img *ngIf="item && item.imgUrl" [src]="item.imgUrl" style="width: 40px;" />
+        @if(item && item.imgUrl){
+          <img [src]="item.imgUrl" style="width: 40px;" />
+        }
       </ng-template>
       <ng-template let-item pTemplate="item">
-        <img class="dropdownImg" *ngIf="item && item.imgUrl" [src]="item.imgUrl" />
+        @if(item && item.imgUrl){
+        <img class="dropdownImg" [src]="item.imgUrl" />
+        }
       </ng-template>
     </p-dropdown>
   </nav>
 </header>
+<button routerLink="admin-page">Admin</button>
 <div>
   <router-outlet></router-outlet>
 </div>

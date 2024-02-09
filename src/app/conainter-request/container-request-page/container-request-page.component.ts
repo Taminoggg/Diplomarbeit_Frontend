@@ -106,14 +106,40 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         'lastUpdated',
         'id', // TODO
       ];
+    }else if(this.htmlContent === "productionPlanningTL"){
+      this.tableHeaders = [
+        { label: 'order', value: 'id' },
+        { label: 'customer', value: 'customerName' },
+        { label: 'created-by', value: 'createdBy' },
+        { label: 'article', value: 'article' },
+        { label: 'status', value: 'status' },
+        { label: 'amount', value: 'amount' },
+        { label: 'approved', value: 'approvedByTl' },
+        { label: 'factory', value: 'factory' },
+        { label: 'last-updated', value: 'lastUpdated' },
+        { label: 'plant', value: 'plant' },
+        { label: 'checklist', value: '' },
+        { label: 'edit', value: '' },
+        { label: 'chat', value: '' }
+      ];
+
+      this.orderProperties = [
+        'id',
+        'customerName',
+        'createdBy',
+        'id', // TODO
+        'status',
+        'amount',
+        'approvedByTl',
+        'id', // TODO
+        'lastUpdated',
+        'id', // TODO
+      ];
     }
   }
 
   ngOnInit(): void {
     this.getFilteredOrders('none', '');
-    this.tableHeaders.forEach(header => {
-      header.label = this.translocoService.translate(header.label);
-    });
   }
 
   translocoService = inject(TranslocoService);

@@ -6,7 +6,7 @@ import { ApiModule, BASE_PATH } from './shared/swagger';
 import { provideHttpClient } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { TranslocoHttpLoader } from './transloco-loader';
+import { TranslocoHttpLoader } from './shared/transloco-loader';
 import { provideTransloco } from '@ngneat/transloco';
 
 export const appConfig: ApplicationConfig = {
@@ -20,7 +20,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(), provideHttpClient(), provideTransloco({
       config: {
         availableLangs: ['en', 'de', 'pl'],
-        defaultLang: 'de',
         reRenderOnLangChange: true,
         prodMode: !isDevMode(),
       },

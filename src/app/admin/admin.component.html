@@ -1,0 +1,47 @@
+<table>
+    <tr>
+        <td>Name</td>
+    </tr>
+    @for (checklist of allChecklists(); track $index) {
+    <tr>
+        @if (selectedChecklistId == checklist.id) {
+        <td class="selected" (click)="editChecklist(checklist.id)">{{checklist.checklistname}}</td>
+        }@else {
+        <td (click)="editChecklist(checklist.id)">{{checklist.checklistname}}</td>
+        }
+    </tr>
+    }
+</table>
+<hr>
+<label>Checklist name</label>
+<input type="text" [ngSignal]="checklistName">
+<br>
+<button (click)="postChecklist()">Add checklist</button>
+
+@if (selectedChecklistId !== -1) {
+<table>
+    <tr>
+        <td>{{'step-number' | transloco}}</td>
+        <td>{{'step-name' | transloco}}</td>
+        <td>{{'step-description' | transloco}}</td>
+    </tr>
+    @for (step of allStepsForChecklist(); track $index) {
+    <tr>
+        <td>{{step.stepNumber}}</td>
+        <td>{{step.stepName}}</td>
+        <td>{{step.stepDescription}}</td>
+    </tr>
+    }
+</table>
+<br>
+<label>{{'step-number' | transloco}}</label>
+<input [ngSignal]="stepNumber" type="number" min="1">
+<br>
+<label>{{'step-name' | transloco}}</label>
+<input [ngSignal]="stepName" type="text">
+<br>
+<label>{{'step-description' | transloco}}</label>
+<input [ngSignal]="stepDescription" type="text">
+<br>
+<button (click)="postStep()">Add step</button>
+}

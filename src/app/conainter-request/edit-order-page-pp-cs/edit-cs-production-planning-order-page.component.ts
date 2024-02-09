@@ -1,12 +1,12 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditArticleDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
-import { ValidationService } from '../../validation.service';
+import { ValidationService } from '../../shared/validation.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -133,8 +133,6 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
 
   isStatusValid = computed(() => this.validationService.isAnyInputValid(this.status()));
   isInquiryNumberValid = computed(() => this.validationService.isNumberValid(this.inquiryNumber()));
-  
-
 
   myForm!: FormGroup;
 
@@ -165,7 +163,14 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
             });
 
           this.articlesService.articlesCsInquiryIdGet(this.currOrder().csid)
-            .subscribe(x => x.forEach(x => this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id)));
+            .subscribe(x => x.forEach(x => {
+              if (x.minHeigthRequired !== null && x.minHeigthRequired !== undefined && x.desiredDeliveryDate !== null && x.desiredDeliveryDate !== undefined && x.inquiryForFixedOrder !== null && x.inquiryForFixedOrder !== undefined && x.inquiryForQuotation !== null && x.inquiryForQuotation !== undefined) {
+                this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation);
+              } else {
+                console.log('null');
+                this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, 1, '', false, false);
+              }
+            }));
 
           this.csinquiriesService.csinquiriesIdGet(this.csId())
             .subscribe(x => {
@@ -191,13 +196,17 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id: number) {
+  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id: number, minHeigthRequired: number, desiredDeliveryDate: string, inquiryForFixedOrder: boolean, inquiryForQuotation: boolean) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber, Validators.required],
       palletAmount: [palletAmount, Validators.required],
       directline: [directLine],
       fastLine: [fastLine],
-      id: [id]
+      id: [id],
+      minHeigthRequired: [minHeigthRequired],
+      desiredDeliveryDate: [desiredDeliveryDate],
+      inquiryForFixedOrder: [inquiryForFixedOrder],
+      inquiryForQuotation: [inquiryForQuotation]
     });
 
     this.articlesFormArray.push(articleGroup);
@@ -235,79 +244,29 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   }
 
   saveOrder(): void {
-    let order: EditOrderDto;
-    if (this.additonalInformation() === '') {
-       order = {
-        customerName: this.customerName(),
-        status: this.status(),
-        createdBy: this.createdBy(),
-        amount: this.amount(),
-        checklistId: this.checklistId(),
-        id: this.id,
-        approvedByTl: this.isApprovedByTl(),
-        approvedByCs: this.isApprovedByCs()
-      };
-    }else{
-      order = {
-        customerName: this.customerName(),
-        status: this.status(),
-        createdBy: this.createdBy(),
-        amount: this.amount(),
-        checklistId: this.checklistId(),
-        id: this.id,
-        approvedByTl: this.isApprovedByTl(),
-        approvedByCs: this.isApprovedByCs(),
-        additionalInformation: this.additonalInformation()
-      };
-    }
+    for (let i = 0; i < this.articlesFormArray.length; i++) {
 
-    console.log(order);
+      let article: EditArticleDto = {
+        id: this.getFormGroup(i).get('id')!.value,
+        minHeigthRequired: this.getFormGroup(i).get('minHeigthRequired')!.value,
+        desiredDeliveryDate: this.getFormGroup(i).get('desiredDeliveryDate')!.value,
+        inquiryForFixedOrder: this.getFormGroup(i).get('inquiryForFixedOrder')!.value,
+        inquiryForQuotation: this.getFormGroup(i).get('inquiryForQuotation')!.value
+      };
 
-    this.orderService.ordersPut(order)
-      .subscribe(x => {
-        this.saveTlInquery();
-        this.containerRequestPage();
+      this.articlesService.articlesPut(article).subscribe(x => {
+        console.log(x);
+        console.log(x.desiredDeliveryDate);
+        console.log(x.minHeigthRequired);
+        console.log(x.inquiryForFixedOrder);
+        console.log(typeof (x.inquiryForQuotation));
+
       });
-  }
-
-  saveTlInquery() {
-    let editedTlInquiry: EditTlInqueryDto =
-    {
-      id: this.currTlInquiry().id,
-      inquiryNumber: this.inquiryNumber(),
-      sped: this.sped(),
-      country: this.country(),
-      acceptingPort: this.acceptingPort(),
-      expectedRetrieveWeek: this.expectedRetrieveWeek(),
-      weightInKg: this.weightInKg(),
-      invoiceOn: this.invoiceOn(),
-      retrieveDate: this.retrieveDate(),
-      isContainer40: this.isContainer40(),
-      isContainerHc: this.isContainerHc(),
-      retrieveLocation: this.retrieveLocation(),
-      debtCapitalGeneralForerunEur: this.debtCapitalGeneralForerunEur(),
-      debtCapitalMainDol: this.debtCapitalMainDol(),
-      debtCapitalTrailingDol: this.debtCapitalTrailingDol(),
-      portOfDeparture: this.portOfDeparture(),
-      ets: this.ets(),
-      eta: this.eta(),
-      boat: this.boat()
     }
-
-    this.tlinquiriesService.tlinquiriesPut(editedTlInquiry)
-      .subscribe(x => this.containerRequestPage());
   }
 
   publish() {
-    let editOrder: EditApproveOrderDto = {
-      id: this.currOrder().id,
-      approve: true
-    };
 
-    this.orderService.ordersApprovedByTlPut(editOrder)
-      .subscribe(x => console.log('approved'));
-
-    this.saveOrder();
   }
 
   setOrderSignals(): void {

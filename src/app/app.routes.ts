@@ -6,6 +6,7 @@ import { EditCsContainerRequestOrderPageComponent } from './conainter-request/ed
 import { ChatForOrderComponent } from './chat-for-order/chat-for-order.component';
 import { EditTlContainerRequestOrderPageComponent } from './conainter-request/edit-order-page-cr-tl/edit-tl-container-request-order-page.component';
 import { EditCsProductionPlanningOrderPageComponent } from './conainter-request/edit-order-page-pp-cs/edit-cs-production-planning-order-page.component';
+import { AdminComponent } from './admin/admin.component';
 
 
 export const routes: Routes = [
@@ -16,5 +17,6 @@ export const routes: Routes = [
   { path: 'edit-tl-container-order-page/:id', component: EditTlContainerRequestOrderPageComponent },
   { path: 'edit-cs-production-planning-order-page/:id', component: EditCsProductionPlanningOrderPageComponent },
   { path: 'function-overview-age', component: FunctionOverviewPageComponent },
+  { path: 'admin-page', component: AdminComponent },
   { path: 'chat-for-order/:id', component: ChatForOrderComponent },
 ];

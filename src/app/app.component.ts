@@ -13,9 +13,10 @@ import { DropdownModule } from 'primeng/dropdown';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'DAFrontend';
   router = inject(Router);
+  translocoService = inject(TranslocoService);
   selectedLanguage = {
     imgUrl: '/assets/images/de.jpeg',
     code: 'de',
@@ -27,7 +28,14 @@ export class AppComponent {
     this.router.navigateByUrl('/function-overview-age');
   }
 
-  constructor(private translocoService: TranslocoService) { }
+  ngOnInit(): void {
+    this.translocoService.setActiveLang(localStorage.getItem('language') ?? 'de');
+    this.languagesList.forEach(language => {
+      if(language.code === this.translocoService.getActiveLang()){
+        this.selectedLanguage = language;
+      }
+    });
+  }
 
   public languagesList: Array<
     Record<'imgUrl' | 'code' | 'name' | 'shorthand', string>
@@ -55,6 +63,6 @@ export class AppComponent {
   changeLanguage(selectedLanguage: string): void {
     let currLang = JSON.stringify(selectedLanguage).split(',')[1].split(':')[1].split('"')[1]
     this.translocoService.setActiveLang(currLang);
-    console.log('currlang: ' + currLang);
+    localStorage.setItem('language', currLang);
   }
 }
