@@ -32,8 +32,10 @@ model/csinquiry.ts
 model/csinquiryDto.ts
 model/editApproveOrderDto.ts
 model/editArticleDto.ts
+model/editCheckStepDto.ts
 model/editCsinquiryDto.ts
 model/editOrderDto.ts
+model/editPPArticleDto.ts
 model/editStepDto.ts
 model/editTlInqueryDto.ts
 model/fileByteDto.ts

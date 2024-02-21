@@ -16,8 +16,12 @@ export interface OrderDto {
     status: string;
     customerName: string;
     createdBy: string;
-    approvedByCs: boolean;
-    approvedByTl: boolean;
+    approvedByCrCs: boolean;
+    approvedByPpCs: boolean;
+    approvedByCrTl: boolean;
+    approvedByCsTime: string;
+    approvedByTlTime: string;
+    approvedByPpCsTime: string;
     amount: number;
     additionalInformation: string;
     lastUpdated: string;

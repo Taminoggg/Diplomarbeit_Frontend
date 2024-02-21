@@ -17,7 +17,7 @@ export interface Csinquiry {
     id?: number;
     container?: string | null;
     abnumber?: number;
-    bruttoWeightInKg?: number;
+    grossWeightInKg?: number;
     incoterm?: string | null;
     containersizeA?: number;
     containersizeB?: number;

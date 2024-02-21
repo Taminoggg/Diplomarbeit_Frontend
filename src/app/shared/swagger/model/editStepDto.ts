@@ -12,10 +12,9 @@
 
 
 export interface EditStepDto { 
-    id?: number;
-    stepNumber?: number;
-    stepDescription?: string | null;
-    stepName?: string | null;
-    checked?: boolean;
+    id: number;
+    stepNumber: number;
+    stepDescription: string;
+    stepName: string;
 }
 

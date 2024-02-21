@@ -62,9 +62,13 @@
     @for (currOrder of dataService.allOrders(); track $index) {
     <tr>
       @for (prop of orderProperties; track $index) {
-      @if (prop !== 'approvedByCs' && prop !== 'approvedByTl') {
+      @if (prop !== 'approvedByCrCs' && prop !== 'approvedByCrTl' && prop !== 'approvedByPpCs') {
       <td>
-        {{currOrder[prop]}}
+        @if (currOrder[prop].toString().length > 30) {
+          {{currOrder[prop].toString().substring(0, 30)}}...
+        }@else {
+          {{currOrder[prop]}}
+        }
       </td>
       }@else {
       @if (currOrder[prop]) {

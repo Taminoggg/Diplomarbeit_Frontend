@@ -1,6 +1,5 @@
 .form-container {
   margin: 20px;
-  position: absolute;
 }
 
 .form-content {
@@ -40,24 +39,19 @@ select {
 
 .checkbox-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-bottom: 10px;
+}
 
-  .checkbox-label {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
+.checkbox-input {
+  margin-right: 10px;
+}
 
-  .checkbox-input {
-    align-self: stretch;
-  }
+.checkbox-label {
+  margin: 0;
 }
 
 .save-button,
-.back-button,
-.add-article-button,
-.remove-article-button{
+.back-button {
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
@@ -75,52 +69,38 @@ select {
 }
 
 .save-button {
-  background-color: #4caf50;
+  background-color: #4CAF50;
   color: white;
 
   &:hover {
     background-color: #45a049;
   }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 }
 
-.remove-article-button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: red;
-  color: white;
-  margin-top: 10px;
-
-  &:hover {
-    background-color: darkred;
-  }
+.note {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
 }
 
-.add-article-button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: blue;
-  color: white;
-  margin-top: 10px;
+.checkbox-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 10px;
 
-  &:hover {
-    background-color: darkblue;
+  .checkbox-label {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+
+  .checkbox-input {
+    align-self: stretch;
   }
 }
 
-.error-message {
-  position: absolute;
-  color: red;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: -10px;
+.note {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
 }

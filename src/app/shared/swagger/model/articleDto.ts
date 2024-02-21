@@ -18,9 +18,16 @@ export interface ArticleDto {
     isFastLine: boolean;
     pallets: number;
     csinquiryId: number;
-    minHeigthRequired?: number | null;
-    desiredDeliveryDate?: string | null;
-    inquiryForFixedOrder?: boolean | null;
-    inquiryForQuotation?: boolean | null;
+    minHeigthRequired: number;
+    desiredDeliveryDate: string;
+    inquiryForFixedOrder: boolean;
+    inquiryForQuotation: boolean;
+    deliveryDate: string;
+    shortText: string;
+    factory: string;
+    nozzle: string;
+    productionOrder: string;
+    plannedOrder: string;
+    plant: string;
 }
 

@@ -34,8 +34,9 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       status: 'Test',
       customerName: 'Test',
       createdBy: 'Test',
-      approvedByCs: false,
-      approvedByTl: false,
+      approvedByCrCs: false,
+      approvedByCrTl: false,
+      approvedByPpCs: false,
       amount: 1,
       lastUpdated: 'Test',
       checklistId: 1,
@@ -45,7 +46,10 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       country: 'Test',
       abNumber: 1,
       readyToLoad: 'Test',
-      additionalInformation: ''
+      additionalInformation: '',
+      approvedByCsTime: '',
+      approvedByTlTime: '',
+      approvedByPpCsTime: ''
     });
 
   allChecklists = signal<ChecklistDto[]>([]);
@@ -126,7 +130,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.checklistService.checklistsGet()
+    this.checklistService.checklistsGeneratedByAdminGet()
       .subscribe(x => this.allChecklists.set(x));
 
     this.orderService.ordersIdGet(this.id)
@@ -282,7 +286,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
           approve: true
         };
 
-        this.orderService.ordersApprovedByCsPut(editOrder)
+        this.orderService.ordersApprovedByCrCsPut(editOrder)
           .subscribe(x => this.containerRequestPage());
       });
   }
@@ -334,8 +338,8 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.status.set(this.currOrder().status);
     this.amount.set(this.currOrder().amount);
     this.checklistId.set(this.currOrder().checklistId);
-    this.isApprovedByCs.set(this.currOrder().approvedByCs);
-    this.isApprovedByTl.set(this.currOrder().approvedByTl);
+    this.isApprovedByCs.set(this.currOrder().approvedByCrCs);
+    this.isApprovedByTl.set(this.currOrder().approvedByCrTl);
     let additonalInformation = this.currOrder().additionalInformation
     if (additonalInformation != null && additonalInformation != undefined) {
       this.additonalInformation.set(additonalInformation);

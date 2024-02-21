@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditApproveOrderDto, AddArticleDto, AddCsinquiryDto, AddOrderDto, AddTlinquiryDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { EditApproveOrderDto, AddArticleDto, AddCsinquiryDto, AddOrderDto, AddTlinquiryDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, OrdersService, TlinquiriesService, TlinquiryDto, AddChecklistDto, StepsService, AddStepDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -17,8 +17,11 @@ import { ValidationService } from '../../shared/validation.service';
 })
 export class NewContainerOrderPageComponent implements OnInit {
   ngOnInit(): void {
-    this.checklistService.checklistsGet()
-      .subscribe(x => this.allCheckliststs.set(x));
+    this.checklistService.checklistsGeneratedByAdminGet()
+      .subscribe(x => {
+        this.allCheckliststs.set(x);
+        this.checklistId.set(this.allCheckliststs().first().id);
+      } );
 
     this.myForm = this.fb.group({
       articles: this.fb.array([])
@@ -32,6 +35,7 @@ export class NewContainerOrderPageComponent implements OnInit {
   router = inject(Router);
   fb = inject(FormBuilder);
   orderService = inject(OrdersService);
+  stepsService = inject(StepsService);
   validationService = inject(ValidationService);
   checklistService = inject(ChecklistsService);
   csInquiryService = inject(CsinquiriesService);
@@ -208,36 +212,67 @@ export class NewContainerOrderPageComponent implements OnInit {
         this.tlInquiryService.tlinquiriesPost(tlInquiry)
           .subscribe(tlInquiryObj => {
             let order: AddOrderDto;
-            if(this.additonalInformation() === ''){
-              order = {
-                customerName: this.customerName(),
-                status: this.status(),
-                createdBy: this.createdBy(),
-                amount: this.amount(),
-                checklistId: this.checklistId(),
-                csid: csInquiryObj.id,
-                tlid: tlInquiryObj.id
-              };
-            }else{
-              order = {
-                customerName: this.customerName(),
-                status: this.status(),
-                createdBy: this.createdBy(),
-                amount: this.amount(),
-                checklistId: this.checklistId(),
-                csid: csInquiryObj.id,
-                tlid: tlInquiryObj.id,
-                additionalInformation: this.additonalInformation()
-              };
+
+            let checklistDto:AddChecklistDto = {
+              id: this.checklistId(),
+              generatedByAdmin: false,
+              checklistname: this.allCheckliststs().single(x => x.id == this.checklistId()).checklistname
             }
 
-            console.log('Posting order');
+            this.checklistService.checklistsPost(checklistDto)
+            .subscribe(currChecklist => {
+              if(this.additonalInformation() === ''){
+                order = {
+                  customerName: this.customerName(),
+                  status: this.status(),
+                  createdBy: this.createdBy(),
+                  amount: this.amount(),
+                  checklistId: currChecklist.id,
+                  csid: csInquiryObj.id,
+                  tlid: tlInquiryObj.id
+                };
+              }else{
+                order = {
+                  customerName: this.customerName(),
+                  status: this.status(),
+                  createdBy: this.createdBy(),
+                  amount: this.amount(),
+                  checklistId: this.checklistId(),
+                  csid: csInquiryObj.id,
+                  tlid: tlInquiryObj.id,
+                  additionalInformation: this.additonalInformation()
+                };
+              }
+  
+              console.log('Posting order');
 
-            this.orderService.ordersPost(order)
-              .subscribe(x => {
-                this.orderId.set(x.id);
-                this.containerRequestPage();
-              });
+              console.log('Checklist:');
+              console.log(currChecklist.checklistname);
+              console.log(currChecklist.id);
+
+              this.stepsService.stepsIdGet(currChecklist.id)
+              .subscribe(x => x.forEach(x => console.log(x)));
+
+              this.stepsService.stepsIdGet(this.checklistId())
+              .subscribe(checklistArray => checklistArray.forEach(step => {
+                let addStepDto:AddStepDto = {
+                  stepNumber:step.stepNumber!,
+                  stepName: step.stepName!,
+                  stepDescription: step.stepDescription!,
+                  checklistId: currChecklist.id
+                };
+                console.log('Step to add to checklist:');
+                console.log(addStepDto);
+                this.stepsService.stepsPost(addStepDto)
+                .subscribe(() => console.log('new steps posted'));
+              }));
+  
+              this.orderService.ordersPost(order)
+                .subscribe(x => {
+                  this.orderId.set(x.id);
+                  this.containerRequestPage();
+                });
+            });
           });
       });
   }

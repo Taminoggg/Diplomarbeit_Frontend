@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditArticleDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditArticleDto, EditOrderDto, EditPPArticleDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -13,10 +13,10 @@ import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Va
   selector: 'app-edit-order-page',
   standalone: true,
   imports: [CommonModule, NgSignalDirective, TranslocoModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './edit-cs-production-planning-order-page.component.html',
-  styleUrl: './edit-cs-production-planning-order-page.component.scss'
+  templateUrl: './edit-pp-production-planning-order-page.component.html',
+  styleUrl: './edit-pp-production-planning-order-page.component.scss'
 })
-export class EditCsProductionPlanningOrderPageComponent implements OnChanges, OnInit {
+export class EditPPProductionPlanningOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
 
   articlesService = inject(ArticlesService);
@@ -128,10 +128,10 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
           this.articlesService.articlesCsInquiryIdGet(this.currOrder().csid)
             .subscribe(x => x.forEach(x => {
               if (x.minHeigthRequired !== 0 && x.desiredDeliveryDate !== null) {
-                this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation);
+                this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
               } else {
                 console.log('null');
-                this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, 1, '', false, false);
+                this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, 1, '', false, false, '', '', '', '', '', '', '');
               }
             }));
 
@@ -151,17 +151,24 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id: number, minHeigthRequired: number, desiredDeliveryDate: string, inquiryForFixedOrder: boolean, inquiryForQuotation: boolean) {
+  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id: number, minHeigthRequired: number, desiredDeliveryDate: string, inquiryForFixedOrder: boolean, inquiryForQuotation: boolean, deliveryDate: string, shortText: string, factory: string, nozzle: string, productionOrder: string, plannedOrder: string, plant: string) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber, Validators.required],
       palletAmount: [palletAmount, Validators.required],
-      directline: [directLine],
+      directLine: [directLine],
       fastLine: [fastLine],
       id: [id],
       minHeigthRequired: [minHeigthRequired],
       desiredDeliveryDate: [desiredDeliveryDate],
       inquiryForFixedOrder: [inquiryForFixedOrder],
-      inquiryForQuotation: [inquiryForQuotation]
+      inquiryForQuotation: [inquiryForQuotation],
+      deliveryDate: [deliveryDate],
+      shortText: [shortText],
+      factory: [factory],
+      nozzle: [nozzle],
+      productionOrder: [productionOrder],
+      plannedOrder: [plannedOrder],
+      plant: [plant]
     });
 
     this.articlesFormArray.push(articleGroup);
@@ -197,19 +204,23 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   saveOrder(): void {
     console.log(this.articlesFormArray.length);
     for (let i = 0; i < this.articlesFormArray.length; i++) {
-      let article: EditArticleDto = {
+      console.log(this.getFormGroup(i).get('plant')!.value);
+      let article: EditPPArticleDto = {
         id: this.getFormGroup(i).get('id')!.value,
-        minHeigthRequired: this.getFormGroup(i).get('minHeigthRequired')!.value,
-        desiredDeliveryDate: this.getFormGroup(i).get('desiredDeliveryDate')!.value,
-        inquiryForFixedOrder: this.getFormGroup(i).get('inquiryForFixedOrder')!.value,
-        inquiryForQuotation: this.getFormGroup(i).get('inquiryForQuotation')!.value
+        deliveryDate: this.getFormGroup(i).get('deliveryDate')!.value,
+        plannedOrder: this.getFormGroup(i).get('plannedOrder')!.value,
+        productionOrder: this.getFormGroup(i).get('productionOrder')!.value,
+        shortText: this.getFormGroup(i).get('shortText')!.value,
+        factory: this.getFormGroup(i).get('factory')!.value,
+        nozzle: this.getFormGroup(i).get('nozzle')!.value,
+        plant: this.getFormGroup(i).get('plant')!.value,
       };
 
       console.log('edited articles: ');
       if (i + 1 !== this.articlesFormArray.length) {
-        this.articlesService.articlesPut(article).subscribe(x => console.log(x));
+        this.articlesService.articlesProductionPlanningPut(article).subscribe(x => console.log(x));
       } else {
-        this.articlesService.articlesPut(article).subscribe(x => this.navigateToOverview());
+        this.articlesService.articlesProductionPlanningPut(article).subscribe(x => this.navigateToOverview());
       }
     }
   }
@@ -225,7 +236,7 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   }
 
   navigateToOverview(): void {
-    this.router.navigateByUrl('/container-request-page/productionPlanningCS');
+    this.router.navigateByUrl('/container-request-page/productionPlanningPP');
   }
 
   setOrderSignals(): void {

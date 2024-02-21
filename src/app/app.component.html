@@ -9,13 +9,14 @@
       </ng-template>
       <ng-template let-item pTemplate="item">
         @if(item && item.imgUrl){
-        <img class="dropdownImg" [src]="item.imgUrl" />
+            <img class="dropdownImg" [src]="item.imgUrl" />
         }
       </ng-template>
     </p-dropdown>
   </nav>
 </header>
 <button routerLink="admin-page">Admin</button>
+<button routerLink="dashboard-page">Dashboard</button>
 <div>
   <router-outlet></router-outlet>
 </div>

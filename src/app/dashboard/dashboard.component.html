@@ -1,1 +1,5 @@
-<p>dashboard works!</p>
+@for (order of dataService.allOrders(); track $index) {
+    <label>{{order.id}}</label>
+    <label>{{getMessagesCountForOrder(order.id)}}</label>
+    <br>
+}

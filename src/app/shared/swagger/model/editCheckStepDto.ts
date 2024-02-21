@@ -11,12 +11,8 @@
  */
 
 
-export interface StepDto { 
+export interface EditCheckStepDto { 
     id: number;
-    stepNumber: number;
-    checklistId: number;
-    stepDescription: string;
-    stepName: string;
     isCompleted: boolean;
 }
 

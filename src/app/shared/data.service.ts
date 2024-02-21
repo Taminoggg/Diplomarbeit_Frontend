@@ -4,7 +4,7 @@ import { CsinquiriesService, OrderDto, OrdersService, TlinquiriesService } from 
 @Injectable({
   providedIn: 'root'
 })
-export class DataServiceService {
+export class DataService {
   orderService = inject(OrdersService);
   csinquiryService = inject(CsinquiriesService);
   tlinquiryService = inject(TlinquiriesService);
@@ -189,10 +189,10 @@ export class DataServiceService {
 
     console.log('filtering orders');
     console.log(this.allOrders());
-    if (filteredBy === "containerRequestTL") {
-      this.allOrders.set(this.allOrders().filter(x => x.approvedByCs === true));
-    }else if(filteredBy === "productionPlanningCS"){
-      this.allOrders.set(this.allOrders().filter(x => x.approvedByTl === true));
+    if (filteredBy === "containerRequestTL" || filteredBy === "productionPlanningCS") {
+      this.allOrders.set(this.allOrders().filter(x => x.approvedByCrCs === true));
+    }else if(filteredBy === "productionPlanningPP"){
+      this.allOrders.set(this.allOrders().filter(x => x.approvedByPpCs === true));
     }
     console.log(this.allOrders());
   }

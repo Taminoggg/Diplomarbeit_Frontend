@@ -11,12 +11,14 @@
  */
 
 
-export interface StepDto { 
+export interface EditPPArticleDto { 
     id: number;
-    stepNumber: number;
-    checklistId: number;
-    stepDescription: string;
-    stepName: string;
-    isCompleted: boolean;
+    shortText: string;
+    deliveryDate: string;
+    nozzle: string;
+    factory: string;
+    productionOrder: string;
+    plannedOrder: string;
+    plant: string;
 }
 

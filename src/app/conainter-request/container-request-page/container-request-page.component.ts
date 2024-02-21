@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DataServiceService } from '../../shared/data-service.service';
+import { DataService } from '../../shared/data.service';
 import { MatIconModule } from '@angular/material/icon'
 import { Router } from '@angular/router';
 import { MatDialogModule } from '@angular/material/dialog'
@@ -9,7 +9,6 @@ import { CsinquiriesService, CsinquiryDto, OrderDto } from '../../shared/swagger
 import { ChecklistPopUpComponent } from '../../checklist-pop-up/checklist-pop-up.component';
 import { TranslocoModule } from '@ngneat/transloco';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
-import { TranslocoService } from '@ngneat/transloco';
 
 @Component({
   selector: 'app-container-request-page',
@@ -19,6 +18,8 @@ import { TranslocoService } from '@ngneat/transloco';
   styleUrls: ['./container-request-page.component.scss']
 })
 export class ContainerRequestPageComponent implements OnInit, OnChanges {
+  @Input() htmlContent = 'containerRequestTL'
+
   ngOnChanges(changes: SimpleChanges): void {
     if (this.htmlContent === "containerRequestCS") {
       this.tableHeaders = [
@@ -27,7 +28,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'created-by', value: 'createdBy' },
         { label: 'ab-nr', value: 'abNumber' },
         { label: 'status', value: 'status' },
-        { label: 'approved', value: 'approvedByCs' },
+        { label: 'approved', value: 'approvedByCrCs' },
         { label: 'amount', value: 'amount' },
         { label: 'country', value: 'country' },
         { label: 'ready-to-load', value: 'readyToLoad' },
@@ -44,7 +45,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         'createdBy',
         'abNumber',
         'status',
-        'approvedByCs',
+        'approvedByCrCs',
         'amount',
         'country',
         'readyToLoad',
@@ -59,7 +60,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'customer', value: 'customerName' },
         { label: 'created-by', value: 'createdBy' },
         { label: 'status', value: 'status' },
-        { label: 'approved', value: 'approvedByTl' },
+        { label: 'approved', value: 'approvedByCrTl' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'sped', value: 'sped' },
         { label: 'checklist', value: '' },
@@ -73,7 +74,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         'customerName',
         'createdBy',
         'status',
-        'approvedByTl',
+        'approvedByCrTl',
         'lastUpdated',
         'sped',
       ];
@@ -85,7 +86,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'article', value: 'article' },
         { label: 'status', value: 'status' },
         { label: 'amount', value: 'amount' },
-        { label: 'approved', value: 'approvedByTl' },
+        { label: 'approved', value: 'approvedByPpCs' },
         { label: 'factory', value: 'factory' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'plant', value: 'plant' },
@@ -101,12 +102,12 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         'id', // TODO
         'status',
         'amount',
-        'approvedByTl',
+        'approvedByPpCs',
         'id', // TODO
         'lastUpdated',
         'id', // TODO
       ];
-    }else if(this.htmlContent === "productionPlanningTL"){
+    } else if (this.htmlContent === "productionPlanningPP") {
       this.tableHeaders = [
         { label: 'order', value: 'id' },
         { label: 'customer', value: 'customerName' },
@@ -114,7 +115,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'article', value: 'article' },
         { label: 'status', value: 'status' },
         { label: 'amount', value: 'amount' },
-        { label: 'approved', value: 'approvedByTl' },
+        { label: 'approved', value: 'approvedByCrCs' },
         { label: 'factory', value: 'factory' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'plant', value: 'plant' },
@@ -130,7 +131,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         'id', // TODO
         'status',
         'amount',
-        'approvedByTl',
+        'approvedByPpCs',
         'id', // TODO
         'lastUpdated',
         'id', // TODO
@@ -141,11 +142,6 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.getFilteredOrders('none', '');
   }
-
-  translocoService = inject(TranslocoService);
-
-  @Input() htmlContent = 'containerRequestTL'
-
 
   tableHeaders: { label: string; value: string }[] = [
     { label: 'order', value: 'id' },
@@ -165,27 +161,22 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   ];
 
   orderProperties: (keyof OrderDto)[] = [];
-
   selectedFilter = signal<string>('customername');
   filterValue = signal<string>('');
-  dataService = inject(DataServiceService);
+  dataService = inject(DataService);
   router = inject(Router);
   csinquiryService = inject(CsinquiriesService);
   dialogRef = inject(MatDialog);
   csinquiry = signal<CsinquiryDto | undefined>(undefined);
   showApprovedByTl = signal(false);
-
   filterCsByApproved = signal(false);
 
   setSelectedFilter(value: string) {
     this.getFilteredOrders('none', '');
 
     this.selectedFilter.set(value);
-    if (this.selectedFilter() === "approvedByCs") {
-      this.getFilteredOrders(this.selectedFilter(), "false");
-    } else if (this.selectedFilter() === "approvedByTl") {
-      this.getFilteredOrders(this.selectedFilter(), "false");
-    }
+    this.getFilteredOrders(this.selectedFilter(), "false");
+
     this.filterValue.set('');
   }
 
@@ -230,6 +221,9 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
       case 'productionPlanningCS':
         editPagePath = '/edit-cs-production-planning-order-page/' + orderId;
         break;
+        case 'productionPlanningPP':
+          editPagePath = '/edit-pp-production-planning-order-page/' + orderId;
+          break;
       default:
         editPagePath = '';
         break;

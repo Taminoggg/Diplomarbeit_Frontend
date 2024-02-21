@@ -5,9 +5,9 @@
     @for (checklist of allChecklists(); track $index) {
     <tr>
         @if (selectedChecklistId == checklist.id) {
-        <td class="selected" (click)="editChecklist(checklist.id)">{{checklist.checklistname}}</td>
+        <td class="selected" (click)="showStepsForChecklist(checklist.id)">{{checklist.checklistname}}</td>
         }@else {
-        <td (click)="editChecklist(checklist.id)">{{checklist.checklistname}}</td>
+        <td (click)="showStepsForChecklist(checklist.id)">{{checklist.checklistname}}</td>
         }
     </tr>
     }
@@ -30,6 +30,7 @@
         <td>{{step.stepNumber}}</td>
         <td>{{step.stepName}}</td>
         <td>{{step.stepDescription}}</td>
+        <button (click)="editStep(step.id)">Edit</button>
     </tr>
     }
 </table>

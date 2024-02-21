@@ -4,7 +4,7 @@
     "created-by": "Created by",
     "customer": "Customer",
     "ab-nr": "AB-Nr.",
-    "status": "Stauts",
+    "status": "Status",
     "article": "Article",
     "approved": "Approved",
     "approved-by-tl": "Approved by Tl",
@@ -73,5 +73,13 @@
     "error-message-number": "Has to be greater than 0.",
     "error-message-date": "Dateformat: 'dd.MM.yyyy' excepted.",
     "additional-text": "Additional text",
-    "save-and-publish": "Save and Publish"
+    "save-and-publish": "Save and Publish",
+    "containerRequestCSHeader": "Container Request CS",
+    "containerRequestTLHeader": "Container Request TL",
+    "containerProductionPlanningCSHeader": "Inquiry Delivery Time and Delivery Location CS",
+    "containerProductionPlanningTLHeader": "Inquiry Delivery Time and Delivery Location TL",
+    "containerRequestDescription": "Workflow Between Customer Service and Transportation Logistics",
+    "containerProductionPlanningDescription": "Workflow Between Customer Service and Production Planning",
+    "container-page-header-cs": "Overview active container requests (CS)",
+    "container-page-header-tl": "Overview active container requests (TL)"
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { AddChecklistDto, AddStepDto, ChecklistDto, ChecklistsService, StepDto, StepsService } from '../shared/swagger';
 import { NgSignalDirective } from '../shared/ngSignal.directive';
 import { TranslocoModule } from '@ngneat/transloco';
+import { EditStepDto } from '../shared/swagger/model/editStepDto';
 
 @Component({
   selector: 'app-admin',
@@ -12,24 +13,23 @@ import { TranslocoModule } from '@ngneat/transloco';
 })
 export class AdminComponent implements OnInit {
   ngOnInit(): void {
-    this.checklistService.checklistsGet()
+    this.checklistService.checklistsGeneratedByAdminGet()
       .subscribe(x => this.allChecklists.set(x));
   }
 
-  
+
   checklistService = inject(ChecklistsService);
   stepService = inject(StepsService);
-
 
   allChecklists = signal<ChecklistDto[]>([]);
   allStepsForChecklist = signal<StepDto[]>([]);
   selectedChecklistId: number = -1;
   checklistName = signal('');
   stepNumber = signal(1);
-  stepName = signal('');
-  stepDescription = signal('');
+  stepName = signal('Name1');
+  stepDescription = signal('Desc1');
 
-  editChecklist(id: number) {
+  showStepsForChecklist(id: number) {
     if (this.selectedChecklistId === id) {
       this.selectedChecklistId = -1;
       this.allStepsForChecklist.set([]);
@@ -40,27 +40,36 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  postStep(){
-    console.log(this.stepNumber());
-    console.log(this.selectedChecklistId);
-    console.log(this.stepDescription());
-    console.log(this.stepName());
+  editStep(id:number) {
+    let editStepDto: EditStepDto = {
+      id: id,
+      stepNumber: this.stepNumber(),
+      stepDescription: this.stepDescription(),
+      stepName: this.stepName()
+    };
 
+    this.stepService.stepsPut(editStepDto)
+    .subscribe(x => this.stepService.stepsIdGet(this.selectedChecklistId)
+      .subscribe(x => this.allStepsForChecklist.set(x)));
+  }
+
+  postStep() {
     let stepDto: AddStepDto = {
       stepNumber: this.stepNumber(),
       checklistId: this.selectedChecklistId,
       stepDescription: this.stepDescription(),
       stepName: this.stepName()
     };
-    
+
     this.stepService.stepsPost(stepDto)
-    .subscribe(x => this.stepService.stepsIdGet(this.selectedChecklistId)
-    .subscribe(x => this.allStepsForChecklist.set(x)));
+      .subscribe(x => this.stepService.stepsIdGet(this.selectedChecklistId)
+        .subscribe(x => this.allStepsForChecklist.set(x)));
   }
 
   postChecklist() {
     let checklistDto: AddChecklistDto = {
-      checklistname: this.checklistName()
+      checklistname: this.checklistName(),
+      generatedByAdmin: true
     }
 
     this.checklistService.checklistsPost(checklistDto)

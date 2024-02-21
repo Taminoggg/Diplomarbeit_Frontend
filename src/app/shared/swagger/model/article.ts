@@ -16,14 +16,21 @@ export interface Article {
     id?: number;
     articleNumber?: number;
     isDirectLine?: boolean;
-    minHeigthRequired?: number | null;
+    minHeigthRequired?: number;
     desiredDeliveryDate?: string | null;
-    inquiryForFixedOrder?: boolean | null;
-    inquiryForQuotation?: boolean | null;
+    deliveryDate?: string | null;
+    shortText?: string | null;
+    factory?: string | null;
+    nozzle?: string | null;
+    productionOrder?: string | null;
+    plannedOrder?: string | null;
+    inquiryForFixedOrder?: boolean;
+    inquiryForQuotation?: boolean;
     additionalInformation?: string | null;
     isFastLine?: boolean;
     pallets?: number;
     csinquiryId?: number;
+    plant?: string | null;
     csinquiry?: Csinquiry;
 }
 

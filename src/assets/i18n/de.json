@@ -35,7 +35,7 @@
     "factory": "Werk",
     "plant": "Anlage",
     "shippment-page-header-cs": "Übersicht aktive Lieferzeit und Lieferwerkanfragen (CS)",
-    "shippment-page-header-tl": "Übersicht aktive Lieferzeit und Lieferwerkanfragen (TL)",
+    "shippment-page-header-tl": "Übersicht aktive Lieferzeit und Lieferwerkanfragen (PP)",
     "inquiry-number": "Anfrage Nummer",
     "accepting-port": "Ankunftshafen",
     "expected-retrieve-week": "Erwartete Ankunftswoche",
@@ -78,5 +78,15 @@
     "save-and-publish": "Speichern and Freigeben",
     "step-number": "Schrittnummer",
     "step-name": "Schrittname",
-    "step-description": "Schritt Beschreibung"
+    "step-description": "Schritt Beschreibung",
+    "containerRequestCSHeader": "Container Anfrage CS",
+    "containerRequestTLHeader": "Container Anfrage TL",
+    "containerProductionPlanningCSHeader": "Anfrage Lieferzeit und Lieferwerk CS",
+    "containerProductionPlanningTLHeader": "Anfrage Lieferzeit und Lieferwerk PP",
+    "containerRequestDescription": "Workflow zwischen Customer Service und Transportlogistik",
+    "containerProductionPlanningDescription": "Workflow zwischen Customer Service und Produktionsplanung",
+    "desiredDeliveryDate": "Wunschliefertermin",
+    "inquiryForQuotation": "Anfrage für Angebot",
+    "inquiryForFixedOrder": "Anfrage für fixen Auftrag",
+    "minHeigthRequired": "Mindestgröße freigegeben?"
 }

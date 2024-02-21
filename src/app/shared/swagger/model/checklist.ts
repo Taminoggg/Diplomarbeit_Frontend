@@ -16,6 +16,7 @@ import { StepChecklist } from './stepChecklist';
 export interface Checklist { 
     id?: number;
     checklistname?: string | null;
+    generatedByAdmin?: boolean;
     readonly orders?: Array<Order> | null;
     readonly stepChecklists?: Array<StepChecklist> | null;
 }

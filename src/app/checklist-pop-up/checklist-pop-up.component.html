@@ -1,12 +1,21 @@
 <div id="box">
-    <div id="header">
-        <h3>{{'checklist' | transloco}}</h3>
-    </div>
-    <div id="content">
-        @for (currStep of steps(); track $index) {
-            <label>{{currStep.stepName}} <input type="checkbox"></label>
-            <hr>
+  <div id="header">
+    <h3>{{'checklist' | transloco}}</h3>
+  </div>
+  <div id="content">
+    <form [formGroup]="myForm">
+      <div formArrayName="steps">
+        @for (step of stepsFormArray.controls; track $index) {
+        <div [formGroup]="getFormGroup($index)">
+          <div class="checkbox-container">
+            <label class="checkbox-label">{{this.getFormGroup($index).get('stepname')!.value}}</label>
+            <input class="checkbox-input" type="checkbox" formControlName="isCompleted">
+          </div>
+          <label class="step-description">{{this.getFormGroup($index).get('stepdescription')!.value}}</label>
+        </div>
         }
-        <button (click)="saveChecklist()">{{'save' | transloco}}</button>
-    </div>
+      </div>
+    </form>
+    <button (click)="saveChecklist()">{{'save' | transloco}}</button>
+  </div>
 </div>

@@ -14,5 +14,6 @@
 export interface ChecklistDto { 
     id: number;
     checklistname: string;
+    generatedByAdmin: boolean;
 }
 

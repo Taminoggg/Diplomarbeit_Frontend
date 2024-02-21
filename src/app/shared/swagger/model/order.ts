@@ -20,8 +20,12 @@ export interface Order {
     status?: string | null;
     customerName?: string | null;
     createdBy?: string | null;
-    approvedByCs?: boolean;
-    approvedByTl?: boolean;
+    approvedByCrCs?: boolean;
+    approvedByCrTl?: boolean;
+    approvedByPpCs?: boolean;
+    approvedByCrCsTime?: string | null;
+    approvedByCrTlTime?: string | null;
+    approvedByPpCsTime?: string | null;
     amount?: number;
     lastUpdated?: string;
     checklistId?: number;
