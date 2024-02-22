@@ -85,8 +85,14 @@
     "containerProductionPlanningTLHeader": "Anfrage Lieferzeit und Lieferwerk PP",
     "containerRequestDescription": "Workflow zwischen Customer Service und Transportlogistik",
     "containerProductionPlanningDescription": "Workflow zwischen Customer Service und Produktionsplanung",
-    "desiredDeliveryDate": "Wunschliefertermin",
-    "inquiryForQuotation": "Anfrage für Angebot",
-    "inquiryForFixedOrder": "Anfrage für fixen Auftrag",
-    "minHeigthRequired": "Mindestgröße freigegeben?"
+    "desired-delivery-date": "Wunschliefertermin",
+    "inquiry-for-quotation": "Anfrage für Angebot",
+    "inquiry-for-fixed-order": "Anfrage für fixen Auftrag",
+    "min-heigth-required": "Mindestgröße freigegeben?",
+    "delivery-date": "Liefertermin",
+    "short-text": "Kurztext",
+    "nozzle": "Düse",
+    "production-order": "Fertigungauftrag",
+    "planned-order": "Planauftrag",
+    "edited-by-cs": "Von CS bearbeitet."
 }

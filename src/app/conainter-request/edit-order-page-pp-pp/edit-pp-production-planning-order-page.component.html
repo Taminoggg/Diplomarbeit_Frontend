@@ -69,66 +69,58 @@
                 <input readonly type="text" formControlName="desiredDeliveryDate">
               </div>
             </div>
+
+            <label class="note">{{'edited-by-cs' | transloco}}</label>
+            <hr>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>{{'delivery-date' | transloco}}</label>
+                <input type="text" formControlName="deliveryDate">
+              </div>
+
+              <div class="form-group">
+                <label>{{'short-text' | transloco}}</label>
+                <input type="text" formControlName="shortText">
+              </div>
+
+              <div class="form-group">
+                <label>{{'factory' | transloco}}</label>
+                <input type="text" formControlName="factory">
+              </div>
+
+              <div class="form-group">
+                <label>{{'nozzle' | transloco}}</label>
+                <input type="text" formControlName="nozzle">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>{{'production-order' | transloco}}</label>
+                <input type="text" formControlName="productionOrder">
+              </div>
+
+              <div class="form-group">
+                <label>{{'planned-order' | transloco}}</label>
+                <input type="text" formControlName="plannedOrder">
+              </div>
+
+              <div class="form-group">
+                <label>{{'plant' | transloco}}</label>
+                <input type="text" formControlName="plant">
+              </div>
+
+              <div class="form-group">
+                <label>{{'additional-text' | transloco}}</label>
+                <input type="text">
+              </div>
+            </div>
           </div>
           }
         </div>
       </form>
     </div>
-
-    <label class="note">Edited by CS</label>
-    <hr>
-
-    <form [formGroup]="myForm">
-      <div formArrayName="articles">
-        @for (articleGroup of articlesFormArray.controls; track $index) {
-        <div [formGroup]="getFormGroup($index)">
-          <div class="form-row">
-            <div class="form-group">
-              <label>Liefertermin</label>
-              <input type="text" formControlName="deliveryDate">
-            </div>
-
-            <div class="form-group">
-              <label>Kurztext</label>
-              <input type="text" formControlName="shortText">
-            </div>
-
-            <div class="form-group">
-              <label>{{'factory' | transloco}}</label>
-              <input type="text" formControlName="factory">
-            </div>
-
-            <div class="form-group">
-              <label>Düse</label>
-              <input type="text" formControlName="nozzle">
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Fertigungauftrag</label>
-              <input type="text" formControlName="productionOrder">
-            </div>
-
-            <div class="form-group">
-              <label>Planauftrag</label>
-              <input type="text" formControlName="plannedOrder">
-            </div>
-
-            <div class="form-group">
-              <label>{{'plant' | transloco}}</label>
-              <input type="text" formControlName="plant">
-            </div>
-
-            <div class="form-group">
-              <label>Zusatztext</label>
-              <input type="text">
-            </div>
-          </div>
-        </div>
-        }
-      </div>
-    </form>
 
     <div class="form-row">
       <div class="form-group">

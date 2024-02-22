@@ -1,5 +1,23 @@
-@for (order of dataService.allOrders(); track $index) {
-    <label>{{order.id}}</label>
-    <label>{{getMessagesCountForOrder(order.id)}}</label>
-    <br>
-}
+<table>
+    <tr>
+        <th>Id</th>
+        <th>messagesfororder</th>
+        <th>timeToApproveTl</th>
+        <th>timeToApprovePpCs</th>
+    </tr>
+
+    @for (order of dataService.allOrders(); track $index) {
+    <tr>
+        <td>{{order.id}}</td>
+        <td>{{getMessagesCountForOrder(order.id)}}</td>
+        <td>{{getTimeForApprovedByTl(order.id)}}</td>
+        <td>{{getTimeForApprovedByPpCs(order.id)}}</td>
+    </tr>
+    }
+    <tr>
+        <td>-</td>
+        <td>{{getAvgMessagesPerOrder()}}</td>
+        <td>{{getAvgTimeToGetApprovedByTl()}}</td>
+        <td>{{getAvgTimeToGetApprovedByPpCs()}}</td>
+    </tr>
+</table>

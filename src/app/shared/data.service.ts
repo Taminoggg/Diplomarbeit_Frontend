@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { CsinquiriesService, OrderDto, OrdersService, TlinquiriesService } from './swagger';
+import { ArticlesService, CsinquiriesService, OrderDto, OrdersService, TlinquiriesService } from './swagger';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +8,12 @@ export class DataService {
   orderService = inject(OrdersService);
   csinquiryService = inject(CsinquiriesService);
   tlinquiryService = inject(TlinquiriesService);
+  articleService = inject(ArticlesService);
   allOrders = signal<OrderDto[]>([]);
   lastSortedBy = signal('');
+  articlesForOrder = new Map<number, number[]>();
+  factoriesForOrder = new Map<number, string[]>();
+  plantsForOrder = new Map<number, string[]>();
   orderIds: number[] = [];
 
   getOrdersOrderedBy(orderString: string): void {
@@ -195,5 +199,8 @@ export class DataService {
       this.allOrders.set(this.allOrders().filter(x => x.approvedByPpCs === true));
     }
     console.log(this.allOrders());
+    this.allOrders().forEach(order => this.articleService.articlesCsInquiryIdGet(order.csid).subscribe(x => this.articlesForOrder.set(order.id, x.map(x => x.articleNumber))));
+    this.allOrders().forEach(order => this.articleService.articlesCsInquiryIdGet(order.csid).subscribe(x => this.plantsForOrder.set(order.id, x.map(x => x.plant))));
+    this.allOrders().forEach(order => this.articleService.articlesCsInquiryIdGet(order.csid).subscribe(x => this.factoriesForOrder.set(order.id, x.map(x => x.factory))));
   }
 }

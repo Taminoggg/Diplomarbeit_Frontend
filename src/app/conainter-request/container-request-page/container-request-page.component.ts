@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { Router } from '@angular/router';
 import { MatDialogModule } from '@angular/material/dialog'
 import { MatDialog } from '@angular/material/dialog';
-import { CsinquiriesService, CsinquiryDto, OrderDto } from '../../shared/swagger';
+import { ArticleDto, ArticlesService, CsinquiriesService, CsinquiryDto, OrderDto } from '../../shared/swagger';
 import { ChecklistPopUpComponent } from '../../checklist-pop-up/checklist-pop-up.component';
 import { TranslocoModule } from '@ngneat/transloco';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
@@ -19,6 +19,8 @@ import { NgSignalDirective } from '../../shared/ngSignal.directive';
 })
 export class ContainerRequestPageComponent implements OnInit, OnChanges {
   @Input() htmlContent = 'containerRequestTL'
+
+  articleService = inject(ArticlesService);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.htmlContent === "containerRequestCS") {
@@ -99,13 +101,13 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         'id',
         'customerName',
         'createdBy',
-        'id', // TODO
+        'articleNumbers', 
         'status',
         'amount',
         'approvedByPpCs',
-        'id', // TODO
+        'factory',
         'lastUpdated',
-        'id', // TODO
+        'plant', 
       ];
     } else if (this.htmlContent === "productionPlanningPP") {
       this.tableHeaders = [
@@ -128,13 +130,13 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         'id',
         'customerName',
         'createdBy',
-        'id', // TODO
+        'articleNumbers', 
         'status',
         'amount',
         'approvedByPpCs',
-        'id', // TODO
+        'factory',
         'lastUpdated',
-        'id', // TODO
+        'plant', 
       ];
     }
   }
@@ -160,7 +162,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     { label: 'chat', value: '' }
   ];
 
-  orderProperties: (keyof OrderDto)[] = [];
+  orderProperties: (keyof OrderDto | 'articleNumbers' | 'factory' | 'plant')[] = [];
   selectedFilter = signal<string>('customername');
   filterValue = signal<string>('');
   dataService = inject(DataService);
@@ -178,6 +180,27 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     this.getFilteredOrders(this.selectedFilter(), "false");
 
     this.filterValue.set('');
+  }
+
+  getArticlesForOrder(orderId:number):number[]{
+    if (this.dataService.articlesForOrder.get(orderId)?.length ?? 0 > 0) {
+      return this.dataService.articlesForOrder.get(orderId)!.distinct();
+    }
+    return [];
+  }
+
+  getFactoriesForOrder(orderId:number):string[]{
+    if (this.dataService.factoriesForOrder.get(orderId)?.length ?? 0 > 0) {
+      return this.dataService.factoriesForOrder.get(orderId)!.distinct();
+    }
+    return [];
+  }
+
+  getPlantsForOrder(orderId:number):string[]{
+    if (this.dataService.plantsForOrder.get(orderId)?.length ?? 0 > 0) {
+      return this.dataService.plantsForOrder.get(orderId)!.distinct();
+    }
+    return [];
   }
 
   getFilteredOrders(filter: string, filterString: string) {
@@ -221,9 +244,9 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
       case 'productionPlanningCS':
         editPagePath = '/edit-cs-production-planning-order-page/' + orderId;
         break;
-        case 'productionPlanningPP':
-          editPagePath = '/edit-pp-production-planning-order-page/' + orderId;
-          break;
+      case 'productionPlanningPP':
+        editPagePath = '/edit-pp-production-planning-order-page/' + orderId;
+        break;
       default:
         editPagePath = '';
         break;

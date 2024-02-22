@@ -27,7 +27,7 @@
               <div class="form-group">
                 <div class="checkbox-container">
                   <label class="checkbox-label">{{'fast-line' | transloco}}</label>
-                  <input class="checkbox-input" type="checkbox" formControlName="fasttline" onclick="return false;"
+                  <input class="checkbox-input" type="checkbox" formControlName="fastLine" onclick="return false;"
                     onkeydown="return false;">
                 </div>
               </div>
@@ -42,48 +42,40 @@
               <div class="form-group"></div>
               }
             </div>
+
+            <label class="note">{{'edited-by-cs' | transloco}}</label>
+            <hr>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>{{'min-heigth-required' | transloco}}</label>
+                <input type="number" formControlName="minHeigthRequired">
+              </div>
+  
+              <div class="form-group">
+                <div class="checkbox-container">
+                  <label class="checkbox-label">{{'inquiry-for-fixed-order' | transloco}}</label>
+                  <input class="checkbox-input" type="checkbox" formControlName="inquiryForFixedOrder">
+                </div>
+              </div>
+  
+              <div class="form-group">
+                <div class="checkbox-container">
+                  <label class="checkbox-label">{{'inquiry-for-quotation' | transloco}}</label>
+                  <input class="checkbox-input" type="checkbox" formControlName="inquiryForQuotation">
+                </div>
+              </div>
+  
+              <div class="form-group">
+                <label>{{'desired-delivery-date' | transloco}}</label>
+                <input type="text" formControlName="desiredDeliveryDate">
+              </div>
+            </div>
           </div>
           }
         </div>
       </form>
     </div>
-
-    <label class="note">Edited by CS</label>
-    <hr>
-
-    <form [formGroup]="myForm">
-      <div formArrayName="articles">
-        @for (articleGroup of articlesFormArray.controls; track $index) {
-        <div [formGroup]="getFormGroup($index)">
-          <div class="form-row">
-            <div class="form-group">
-              <label>{{'minHeigthRequired' | transloco}}</label>
-              <input type="number" formControlName="minHeigthRequired">
-            </div>
-
-            <div class="form-group">
-              <div class="checkbox-container">
-                <label class="checkbox-label">{{'inquiryForFixedOrder' | transloco}}</label>
-                <input class="checkbox-input" type="checkbox" formControlName="inquiryForFixedOrder">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="checkbox-container">
-                <label class="checkbox-label">{{'inquiryForQuotation' | transloco}}</label>
-                <input class="checkbox-input" type="checkbox" formControlName="inquiryForQuotation">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>{{'desiredDeliveryDate' | transloco}}</label>
-              <input type="text" formControlName="desiredDeliveryDate">
-            </div>
-          </div>
-        </div>
-        }
-      </div>
-    </form>
 
     <div class="form-row">
       <div class="form-group">

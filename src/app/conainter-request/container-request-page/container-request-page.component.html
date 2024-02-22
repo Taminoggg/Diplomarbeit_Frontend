@@ -64,10 +64,18 @@
       @for (prop of orderProperties; track $index) {
       @if (prop !== 'approvedByCrCs' && prop !== 'approvedByCrTl' && prop !== 'approvedByPpCs') {
       <td>
-        @if (currOrder[prop].toString().length > 30) {
-          {{currOrder[prop].toString().substring(0, 30)}}...
+        @if (prop === 'articleNumbers') {
+          <label>{{getArticlesForOrder(currOrder.id)}}</label>
+        }@else if(prop === 'factory') {
+          	<label>{{getFactoriesForOrder(currOrder.id)}}</label>
+        }@else if(prop === 'plant'){
+          <label>{{getPlantsForOrder(currOrder.id)}}</label>
         }@else {
-          {{currOrder[prop]}}
+          @if (currOrder[prop].toString().length > 30) {
+            {{currOrder[prop].toString().substring(0, 30)}}...
+            }@else {
+            {{currOrder[prop]}}
+            }
         }
       </td>
       }@else {
