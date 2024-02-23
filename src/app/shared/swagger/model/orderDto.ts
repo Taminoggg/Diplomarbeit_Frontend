@@ -18,10 +18,12 @@ export interface OrderDto {
     createdBy: string;
     approvedByCrCs: boolean;
     approvedByPpCs: boolean;
+    approvedByPpPp: boolean;
     approvedByCrTl: boolean;
     approvedByCsTime: string;
     approvedByTlTime: string;
     approvedByPpCsTime: string;
+    approvedByPpPpTime: string;
     amount: number;
     additionalInformation: string;
     lastUpdated: string;

@@ -1,37 +1,55 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { DataService } from '../shared/data.service';
-import { ChecklistsService, MessageConversationsService } from '../shared/swagger';
+import { FilesService, MessageConversationsService } from '../shared/swagger';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
+  messagesForOrder = new BehaviorSubject<Map<number, number>>(new Map<number, number>());
+  filesForOrder = new BehaviorSubject<Map<number, number>>(new Map<number, number>());
+  timeToGetApprovedByTl = new BehaviorSubject<Map<number, string>>(new Map<number, string>());
+  timeToGetApprovedByPpCs = new BehaviorSubject<Map<number, string>>(new Map<number, string>());
+  timeToGetApprovedByPpPp = new BehaviorSubject<Map<number, string>>(new Map<number, string>());
+
+  dataService = inject(DataService);
+  messageConversationService = inject(MessageConversationsService);
+  fileService = inject(FilesService);
+
   ngOnInit(): void {
     this.dataService.refreshPage('none', '', '');
 
     this.dataService.allOrders().forEach(order => {
       this.messageConversationService.messageConversationsConversationIdGet(order.id)
-        .subscribe(x => this.messagesForOrder.set(order.id, x.count()));
+        .subscribe(x => {
+          const currentMessages = this.messagesForOrder.value;
+          currentMessages.set(order.id, x.length);
+          this.messagesForOrder.next(currentMessages);
+          this.filesForOrder.next(this.filesForOrder.value.set(order.id, 0));
+          x.forEach(x => {
+            if (x.attachmentId !== 0) {
+              this.fileService.filesIdGet(x.attachmentId).subscribe(_ => {
+                const currentFiles = this.filesForOrder.value;
+                currentFiles.set(order.id, currentFiles.get(order.id)! + 1);
+                this.filesForOrder.next(currentFiles);
+              });
+            }
+          });
+        });
     });
 
     this.dataService.allOrders().forEach(order => {
-      this.timeToGetApprovedByTl.set(order.id, this.calculateDayDiff(order.approvedByCsTime, order.approvedByTlTime, order.id));
-      this.timeToGetApprovedByPPCs.set(order.id, this.calculateDayDiff(order.approvedByCsTime, order.approvedByPpCsTime, order.id));
+      this.timeToGetApprovedByTl.next(this.timeToGetApprovedByTl.value.set(order.id, this.calculateDayDiff(order.approvedByCsTime, order.approvedByTlTime)));
+      this.timeToGetApprovedByPpCs.next(this.timeToGetApprovedByPpCs.value.set(order.id, this.calculateDayDiff(order.approvedByCsTime, order.approvedByPpCsTime)));
+      this.timeToGetApprovedByPpPp.next(this.timeToGetApprovedByPpPp.value.set(order.id, this.calculateDayDiff(order.approvedByPpCsTime, order.approvedByPpPpTime)));
     });
   }
 
-  dataService = inject(DataService);
-  messageConversationService = inject(MessageConversationsService);
-
-  messagesForOrder = new Map<number, number>;
-  timeToGetApprovedByTl = new Map<number, string>
-  timeToGetApprovedByPPCs = new Map<number, string>
-
-  calculateDayDiff(time1:string, time2:string, orderId:number):string{
+  calculateDayDiff(time1: string, time2: string): string {
     if (time1.length > 0 && time2.length > 0) {
       const [t1Day, t1Month, t1Year] = time1.split(".");
       const [t2Day, t2Month, t2Year] = time2.split(".");
@@ -46,23 +64,36 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  getMessagesCountForOrder(id: number) {
-    return this.messagesForOrder.get(id);
+  getCountForOrder(id: number, mapString:string): number {
+    if (mapString == "messages") {
+      return this.messagesForOrder.value.get(id) ?? 0;
+    } else if (mapString == "files") {
+      return this.filesForOrder.value.get(id) ?? 0;
+    } 
+    return 0;
   }
 
-  getTimeForApprovedByTl(id: number) {
-    return this.timeToGetApprovedByTl.get(id);
+  getTimeForApprovedBy(id: number, mapString: string): string {
+    if (mapString == "tl") {
+      return this.timeToGetApprovedByTl.value.get(id) ?? '';
+    } else if (mapString == "ppCs") {
+      return this.timeToGetApprovedByPpCs.value.get(id) ?? '';
+    } else if (mapString == "ppPp") {
+      return this.timeToGetApprovedByPpPp.value.get(id) ?? '';
+    }
+    return '';
   }
 
-  getTimeForApprovedByPpCs(id: number) {
-    return this.timeToGetApprovedByPPCs.get(id);
-  }
-
-  getAvgMessagesPerOrder(): number {
+  getAvgForOrder(mapString:string): number {
     let totalMessages = 0;
     let totalOrders = 0;
-
-    for (const [order, messagesCount] of this.messagesForOrder.entries()) {
+    let map = new Map<number, number>();
+    if (mapString == "messages") {
+      map = this.messagesForOrder.value;
+    } else if (mapString == "files") {
+      map = this.filesForOrder.value;
+    } 
+    for (const [order, messagesCount] of map.entries()) {
       totalOrders++;
       totalMessages += messagesCount;
     }
@@ -72,33 +103,27 @@ export class DashboardComponent implements OnInit {
     return Number(avg.toFixed(2));
   }
 
-  getAvgTimeToGetApprovedByTl(): number {
+  getAvgTimeToGetApprovedBy(mapString: string): number {
     let totalDays = 0;
     let totalOrders = 0;
-    for (const value of this.timeToGetApprovedByTl.values()) {
+    let map = new Map<number, string>();
+    if (mapString == "tl") {
+      map = this.timeToGetApprovedByTl.value;
+    } else if (mapString == "ppCs") {
+      map = this.timeToGetApprovedByPpCs.value;
+    } else if (mapString == "ppPp") {
+      map = this.timeToGetApprovedByPpPp.value;
+    }
+    for (const value of map.values()) {
       if (value !== 'Not approved yet.') {
         totalOrders++;
         totalDays += parseFloat(value);
       }
     }
 
+    if (totalOrders === 0) return 0;
     const avg = totalDays / totalOrders;
 
-    return Number(avg.toFixed(2)); 
-  }
-
-  getAvgTimeToGetApprovedByPpCs(): number {
-    let totalDays = 0;
-    let totalOrders = 0;
-    for (const value of this.timeToGetApprovedByPPCs.values()) {
-      if (value !== 'Not approved yet.') {
-        totalOrders++;
-        totalDays += parseFloat(value);
-      }
-    }
-
-    const avg = totalDays / totalOrders;
-
-    return Number(avg.toFixed(2)); 
+    return Number(avg.toFixed(2));
   }
 }

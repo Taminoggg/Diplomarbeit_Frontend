@@ -117,7 +117,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'article', value: 'article' },
         { label: 'status', value: 'status' },
         { label: 'amount', value: 'amount' },
-        { label: 'approved', value: 'approvedByCrCs' },
+        { label: 'approved', value: 'approvedByPpPp' },
         { label: 'factory', value: 'factory' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'plant', value: 'plant' },
@@ -133,7 +133,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         'articleNumbers', 
         'status',
         'amount',
-        'approvedByPpCs',
+        'approvedByPpPp',
         'factory',
         'lastUpdated',
         'plant', 
@@ -177,7 +177,9 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     this.getFilteredOrders('none', '');
 
     this.selectedFilter.set(value);
-    this.getFilteredOrders(this.selectedFilter(), "false");
+    if(this.selectedFilter() === 'approvedByPp' || this.selectedFilter() === 'approvedByCs'|| this.selectedFilter() === 'approvedByTl' || this.selectedFilter() === 'approvedByPpCs'){
+      this.getFilteredOrders(this.selectedFilter(), "false");
+    }
 
     this.filterValue.set('');
   }

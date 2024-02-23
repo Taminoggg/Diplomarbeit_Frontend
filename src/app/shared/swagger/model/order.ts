@@ -23,9 +23,11 @@ export interface Order {
     approvedByCrCs?: boolean;
     approvedByCrTl?: boolean;
     approvedByPpCs?: boolean;
+    approvedByPpPp?: boolean;
     approvedByCrCsTime?: string | null;
     approvedByCrTlTime?: string | null;
     approvedByPpCsTime?: string | null;
+    approvedByPpPpTime?: string | null;
     amount?: number;
     lastUpdated?: string;
     checklistId?: number;

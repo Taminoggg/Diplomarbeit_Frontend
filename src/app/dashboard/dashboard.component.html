@@ -1,23 +1,29 @@
 <table>
     <tr>
         <th>Id</th>
-        <th>messagesfororder</th>
+        <th>messagesFororder</th>
+        <th>filesForOrder</th>
         <th>timeToApproveTl</th>
         <th>timeToApprovePpCs</th>
+        <th>timeToApprovePpPp</th>
     </tr>
 
     @for (order of dataService.allOrders(); track $index) {
     <tr>
         <td>{{order.id}}</td>
-        <td>{{getMessagesCountForOrder(order.id)}}</td>
-        <td>{{getTimeForApprovedByTl(order.id)}}</td>
-        <td>{{getTimeForApprovedByPpCs(order.id)}}</td>
+        <td>{{getCountForOrder(order.id, 'messages')}}</td>
+        <td>{{getCountForOrder(order.id, 'files')}}</td>
+        <td>{{getTimeForApprovedBy(order.id, 'tl')}}</td>
+        <td>{{getTimeForApprovedBy(order.id, 'ppCs')}}</td>
+        <td>{{getTimeForApprovedBy(order.id, 'ppPp')}}</td>
     </tr>
     }
     <tr>
-        <td>-</td>
-        <td>{{getAvgMessagesPerOrder()}}</td>
-        <td>{{getAvgTimeToGetApprovedByTl()}}</td>
-        <td>{{getAvgTimeToGetApprovedByPpCs()}}</td>
+        <td>AVG</td>
+        <td>{{getAvgForOrder('messages')}}</td>
+        <td>{{getAvgForOrder('files')}}</td>
+        <td>{{getAvgTimeToGetApprovedBy('tl')}}</td>
+        <td>{{getAvgTimeToGetApprovedBy('ppCs')}}</td>
+        <td>{{getAvgTimeToGetApprovedBy('ppPp')}}</td>
     </tr>
 </table>

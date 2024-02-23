@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ContainerToolFunctionComponent } from "../container-tool-function/container-tool-function.component";
 import { Router } from '@angular/router';
+import { DataService } from '../shared/data.service';
 
 @Component({
     selector: 'app-function-overview-page',
@@ -10,11 +11,16 @@ import { Router } from '@angular/router';
     styleUrls: ['./function-overview-page.component.scss'],
     imports: [CommonModule, ContainerToolFunctionComponent]
 })
-export class FunctionOverviewPageComponent {
+export class FunctionOverviewPageComponent implements OnInit {
     router = inject(Router);
+    dataService = inject(DataService);
 
     goToUrl() {
         this.router.ngOnDestroy();
         window.location.href = 'http://www.teufelberger.com/';
+    }
+
+    ngOnInit(): void {
+        this.dataService.refreshPage('none', '', '');
     }
 }

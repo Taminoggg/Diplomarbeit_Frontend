@@ -37,6 +37,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       approvedByCrCs: false,
       approvedByCrTl: false,
       approvedByPpCs: false,
+      approvedByPpPp: false,
       amount: 0,
       lastUpdated: 'Test',
       checklistId: 1,
@@ -49,7 +50,8 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       additionalInformation: '',
       approvedByCsTime: '',
       approvedByTlTime: '',
-      approvedByPpCsTime: ''
+      approvedByPpCsTime: '',
+      approvedByPpPpTime: ''
     });
   allChecklists = signal<ChecklistDto[]>([]);
   currCsInquiry = signal<CsinquiryDto>({

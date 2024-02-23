@@ -19,38 +19,47 @@
     <option value="createdBy">{{'created-by' | transloco}}</option>
     <option value="status">{{'status' | transloco}}</option>
     <option value="lastUpdated">{{'last-updated' | transloco}}</option>
-    <option *ngIf="htmlContent !== 'productionPlanningCS'" value="approvedByCs">{{'approved' | transloco}}</option>
-    <option *ngIf="htmlContent !== 'containerRequestTL' && htmlContent !== 'productionPlanningCS'" value="approvedByTl">
-      {{'approved-by-tl' | transloco}}</option>
+    @if (htmlContent === 'containerRequestCS') {
+    <option value="approvedByCs">{{'approved-by-cs' | transloco}}</option>
+    }
+    @if (htmlContent === 'containerRequestCS' || htmlContent === 'containerRequestTL') {
+    <option value="approvedByTl">{{'approved-by-tl' | transloco}}</option>
+    }
+    @if (htmlContent === 'productionPlanningCS') {
+    <option value="approvedByPpCs">{{'approved-by-cs' | transloco}}</option>
+    }
+    @if (htmlContent === 'productionPlanningPP' || htmlContent === 'productionPlanningCS') {
+    <option value="approvedByPp">{{'approved-by-pp' | transloco}}</option>
+    }
     <option value="amount">{{'amount' | transloco}}</option>
     <option value="country">{{'country' | transloco}}</option>
     <option value="sped">{{'sped' | transloco}}</option>
   </select>
   <div>
-    <div
-      *ngIf="selectedFilter() === 'customername' || selectedFilter() === 'createdBy' || selectedFilter() === 'country' || selectedFilter() === 'sped'">
-      <div>
-        <input (change)="filterOrders()" [ngSignal]="filterValue" type="text"
-          placeholder="{{'search-placeholder' | transloco}}">
-      </div>
+    @if (selectedFilter() === 'customername' || selectedFilter() === 'createdBy' || selectedFilter() === 'country' ||
+    selectedFilter() === 'sped') {
+    <div>
+      <input (change)="filterOrders()" [ngSignal]="filterValue" type="text"
+        placeholder="{{'search-placeholder' | transloco}}">
     </div>
-    <div *ngIf="selectedFilter() === 'amount' || selectedFilter() === 'status'">
-      <div>
-        <input (change)="filterOrders()" [ngSignal]="filterValue"
-          type="{{selectedFilter() === 'amount' ? 'number' : 'text'}}">
-      </div>
+    }
+    @if (selectedFilter() === 'amount' || selectedFilter() === 'status') {
+    <div>
+      <input (change)="filterOrders()" [ngSignal]="filterValue"
+        type="{{selectedFilter() === 'amount' ? 'number' : 'text'}}">
     </div>
-    <div
-      *ngIf="selectedFilter() === 'approvedByCs' || (htmlContent !== 'containerRequestTL' && selectedFilter() === 'approvedByTl')">
-      <div>
-        <input (change)="filterOrders()" [ngSignal]="filterValue" type="checkbox">
-      </div>
+    }
+    @if (selectedFilter() === 'approvedByCs' ||  selectedFilter() ===
+    'approvedByTl' || selectedFilter() === 'approvedByPp' || selectedFilter() === 'approvedByPpCs') {
+    <div>
+      <input (change)="filterOrders()" [ngSignal]="filterValue" type="checkbox">
     </div>
-    <div *ngIf="selectedFilter() === 'lastUpdated'">
-      <div>
-        <input (change)="filterOrders()" [ngSignal]="filterValue" type="date">
-      </div>
+    }
+    @if (selectedFilter() === 'lastUpdated') {
+    <div>
+      <input (change)="filterOrders()" [ngSignal]="filterValue" type="date">
     </div>
+    }
   </div>
 </div>
 
@@ -62,20 +71,21 @@
     @for (currOrder of dataService.allOrders(); track $index) {
     <tr>
       @for (prop of orderProperties; track $index) {
-      @if (prop !== 'approvedByCrCs' && prop !== 'approvedByCrTl' && prop !== 'approvedByPpCs') {
+      @if (prop !== 'approvedByCrCs' && prop !== 'approvedByCrTl' && prop !== 'approvedByPpCs' && prop !==
+      'approvedByPpPp') {
       <td>
         @if (prop === 'articleNumbers') {
-          <label>{{getArticlesForOrder(currOrder.id)}}</label>
+        <label>{{getArticlesForOrder(currOrder.id)}}</label>
         }@else if(prop === 'factory') {
-          	<label>{{getFactoriesForOrder(currOrder.id)}}</label>
+        <label>{{getFactoriesForOrder(currOrder.id)}}</label>
         }@else if(prop === 'plant'){
-          <label>{{getPlantsForOrder(currOrder.id)}}</label>
+        <label>{{getPlantsForOrder(currOrder.id)}}</label>
         }@else {
-          @if (currOrder[prop].toString().length > 30) {
-            {{currOrder[prop].toString().substring(0, 30)}}...
-            }@else {
-            {{currOrder[prop]}}
-            }
+        @if (currOrder[prop].toString().length > 30) {
+        {{currOrder[prop].toString().substring(0, 30)}}...
+        }@else {
+        {{currOrder[prop]}}
+        }
         }
       </td>
       }@else {
@@ -84,7 +94,6 @@
       }@else {
       <td>{{'no' | transloco}}</td>
       }
-
       }
       }
       <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>

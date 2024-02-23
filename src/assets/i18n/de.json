@@ -7,7 +7,8 @@
     "status": "Status",
     "article": "Artikel",
     "approved": "Freigegeben",
-    "approved-by-tl": "von Tl freigegeben",
+    "approved-by-cs": "Von CS Freigegeben",
+    "approved-by-tl": "von TL freigegeben",
     "amount": "Menge",
     "country": "Land",
     "port-of-arrival": "Ankunftshafen",
@@ -94,5 +95,6 @@
     "nozzle": "Düse",
     "production-order": "Fertigungauftrag",
     "planned-order": "Planauftrag",
-    "edited-by-cs": "Von CS bearbeitet."
+    "edited-by-cs": "Von CS bearbeitet.",
+    "approved-by-pp": "Von PP freigegeben"
 }

@@ -149,6 +149,20 @@ export class DataService {
             this.getDetilsForOrder(x, filteredBy);
           });
         break;
+      case "approvedByPp":
+        console.log('case approvedByPp ' + JSON.parse(value));
+        this.orderService.ordersApprovedByPpGet(JSON.parse(value))
+          .subscribe(x => {
+            this.getDetilsForOrder(x, filteredBy);
+          });
+        break;
+      case "approvedByPpCs":
+        console.log('case approvedByPpCs ' + JSON.parse(value));
+        this.orderService.ordersApprovedByPpCsGet(JSON.parse(value))
+          .subscribe(x => {
+            this.getDetilsForOrder(x, filteredBy);
+          });
+        break;
       case "amount":
         console.log('case amount');
         this.orderService.ordersAmountGet(parseInt(value))
@@ -195,7 +209,7 @@ export class DataService {
     console.log(this.allOrders());
     if (filteredBy === "containerRequestTL" || filteredBy === "productionPlanningCS") {
       this.allOrders.set(this.allOrders().filter(x => x.approvedByCrCs === true));
-    }else if(filteredBy === "productionPlanningPP"){
+    } else if (filteredBy === "productionPlanningPP") {
       this.allOrders.set(this.allOrders().filter(x => x.approvedByPpCs === true));
     }
     console.log(this.allOrders());

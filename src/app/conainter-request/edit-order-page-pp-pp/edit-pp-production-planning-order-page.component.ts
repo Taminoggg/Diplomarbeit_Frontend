@@ -37,9 +37,11 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
       approvedByCrCs: false,
       approvedByCrTl: false,
       approvedByPpCs: false,
+      approvedByPpPp: false,
       approvedByCsTime: '',
       approvedByTlTime: '',
       approvedByPpCsTime: '',
+      approvedByPpPpTime: '',
       amount: 0,
       lastUpdated: 'Test',
       checklistId: 1,
@@ -231,7 +233,7 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
       approve: true
     };
 
-    this.orderService.ordersApprovedByPpCsPut(editOrder)
+    this.orderService.ordersApprovedByPpPpPut(editOrder)
       .subscribe(x => this.saveOrder());
   }
 
