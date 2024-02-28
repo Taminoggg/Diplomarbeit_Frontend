@@ -104,9 +104,21 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   currChecklistname = signal('');
   additonalInformation = signal('');
 
+  areArticlesValid = signal<boolean>(true);
   isStatusValid = computed(() => this.validationService.isAnyInputValid(this.status()));
+  isAllValid = computed(() => this.isStatusValid() && this.areArticlesValid());
 
   myForm!: FormGroup;
+
+  setAreArticlesValid() {
+    for (let i = 0; i < this.articlesFormArray.length; i++) {
+      if (!(this.getFormGroup(i).get('minHeigthRequired')!.value > 0) || !this.validationService.isDateValid(this.getFormGroup(i).get('desiredDeliveryDate')!.value)) {
+        this.areArticlesValid.set(false);
+        return;
+      }
+    }
+    this.areArticlesValid.set(true);
+  }
 
   ngOnInit(): void {
     this.myForm = this.fb.group({
@@ -142,12 +154,11 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
               if (x.checklistname !== null && x.checklistname !== undefined) {
                 this.currChecklistname.set(x.checklistname);
               }
+              this.setAreArticlesValid();
             });
         }
       });
   }
-
-  isAllValid = computed(() => true);
 
   get articlesFormArray() {
     return this.myForm.get('articles') as FormArray;

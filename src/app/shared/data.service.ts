@@ -1,10 +1,12 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { ArticlesService, CsinquiriesService, OrderDto, OrdersService, TlinquiriesService } from './swagger';
+import { HttpBackend, HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
+  http = inject(HttpClient);
   orderService = inject(OrdersService);
   csinquiryService = inject(CsinquiriesService);
   tlinquiryService = inject(TlinquiriesService);
@@ -15,6 +17,7 @@ export class DataService {
   factoriesForOrder = new Map<number, string[]>();
   plantsForOrder = new Map<number, string[]>();
   orderIds: number[] = [];
+  tableHeaders: { label: string; value: (keyof OrderDto | 'articleNumbers' | 'factory' | 'plant' | 'assignment' | 'create' | 'chat') }[] = [];
 
   getOrdersOrderedBy(orderString: string): void {
     switch (orderString) {

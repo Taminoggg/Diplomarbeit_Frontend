@@ -49,7 +49,7 @@
         type="{{selectedFilter() === 'amount' ? 'number' : 'text'}}">
     </div>
     }
-    @if (selectedFilter() === 'approvedByCs' ||  selectedFilter() ===
+    @if (selectedFilter() === 'approvedByCs' || selectedFilter() ===
     'approvedByTl' || selectedFilter() === 'approvedByPp' || selectedFilter() === 'approvedByPpCs') {
     <div>
       <input (change)="filterOrders()" [ngSignal]="filterValue" type="checkbox">
@@ -61,44 +61,54 @@
     </div>
     }
   </div>
+  <button class="settings-button" (click)="settingsPage()">
+    <mat-icon>settings</mat-icon>
+  </button>
 </div>
 
 <div class="orderBox">
   <table>
     <tr>
-      <th *ngFor="let header of tableHeaders" (click)="orderOrders(header.value)">{{header.label | transloco}}</th>
+      <th *ngFor="let header of dataService.tableHeaders" (click)="orderOrders(header.value)">{{header.label |
+        transloco}}</th>
     </tr>
     @for (currOrder of dataService.allOrders(); track $index) {
     <tr>
-      @for (prop of orderProperties; track $index) {
-      @if (prop !== 'approvedByCrCs' && prop !== 'approvedByCrTl' && prop !== 'approvedByPpCs' && prop !==
+      @for (prop of dataService.tableHeaders; track $index) {
+      @if (prop.value !== 'approvedByCrCs' && prop.value !== 'approvedByCrTl' && prop.value !== 'approvedByPpCs' &&
+      prop.value !==
       'approvedByPpPp') {
+      @if(prop.value === 'chat'){
+      <td (click)="navigateToPage('/chat-for-order/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
+      }@else if (prop.value === 'assignment') {
+      <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
+      }@else if (prop.value === 'create') {
+      <td (click)="navigateToEditPage(currOrder.id)"><mat-icon>create</mat-icon></td>
+      }@else {
       <td>
-        @if (prop === 'articleNumbers') {
+        @if (prop.value === 'articleNumbers') {
         <label>{{getArticlesForOrder(currOrder.id)}}</label>
-        }@else if(prop === 'factory') {
+        }@else if(prop.value === 'factory') {
         <label>{{getFactoriesForOrder(currOrder.id)}}</label>
-        }@else if(prop === 'plant'){
+        }@else if(prop.value === 'plant'){
         <label>{{getPlantsForOrder(currOrder.id)}}</label>
         }@else {
-        @if (currOrder[prop].toString().length > 30) {
-        {{currOrder[prop].toString().substring(0, 30)}}...
+        @if (currOrder[prop.value].toString().length > 30) {
+        {{currOrder[prop.value].toString().substring(0, 30)}}...
         }@else {
-        {{currOrder[prop]}}
+        {{currOrder[prop.value]}}
         }
         }
       </td>
+      }
       }@else {
-      @if (currOrder[prop]) {
+      @if (currOrder[prop.value]) {
       <td>{{'yes' | transloco}}</td>
       }@else {
       <td>{{'no' | transloco}}</td>
       }
       }
       }
-      <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
-      <td (click)="navigateToEditPage(currOrder.id)"><mat-icon>create</mat-icon></td>
-      <td (click)="navigateToPage('/chat-for-order/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
     </tr>
     }
   </table>

@@ -103,8 +103,8 @@
         <label>{{'incoterm' | transloco}}</label>
         <input [ngSignal]="incoterm" type="text">
         @if(!isIncotermValid()){
-          <label class="error-message">{{'error-message-any-string' | transloco}}</label>
-          }
+        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
+        }
       </div>
     </div>
 
@@ -153,14 +153,16 @@
             <div class="form-group">
               <div class="checkbox-container">
                 <label class="checkbox-label">{{'direct-line' | transloco}}</label>
-                <input class="checkbox-input" (change)="setAreArticleNumbersValid($index, 'directline')" type="checkbox" formControlName="directline">
+                <input class="checkbox-input" (change)="setAreArticleNumbersValid($index, 'directline')" type="checkbox"
+                  formControlName="directline">
               </div>
             </div>
 
             <div class="form-group">
               <div class="checkbox-container">
                 <label class="checkbox-label">{{'fast-line' | transloco}}</label>
-                <input class="checkbox-input" (change)="setAreArticleNumbersValid($index, 'fastline')" type="checkbox" formControlName="fastline">
+                <input class="checkbox-input" (change)="setAreArticleNumbersValid($index, 'fastline')" type="checkbox"
+                  formControlName="fastline">
               </div>
             </div>
 

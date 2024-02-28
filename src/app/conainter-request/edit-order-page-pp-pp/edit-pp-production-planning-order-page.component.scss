@@ -104,3 +104,11 @@ select {
   text-align: center;
   margin-top: 15px;
 }
+
+.error-message {
+  position: absolute;
+  color: red;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: -10px;
+}

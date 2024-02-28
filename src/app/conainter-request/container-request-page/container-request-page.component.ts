@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { Router } from '@angular/router';
 import { MatDialogModule } from '@angular/material/dialog'
 import { MatDialog } from '@angular/material/dialog';
-import { ArticleDto, ArticlesService, CsinquiriesService, CsinquiryDto, OrderDto } from '../../shared/swagger';
+import { ArticlesService, CsinquiriesService, CsinquiryDto, OrderDto } from '../../shared/swagger';
 import { ChecklistPopUpComponent } from '../../checklist-pop-up/checklist-pop-up.component';
 import { TranslocoModule } from '@ngneat/transloco';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
@@ -23,8 +23,15 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   articleService = inject(ArticlesService);
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.htmlContent === "containerRequestCS") {
-      this.tableHeaders = [
+    const tableConfig = localStorage.getItem(this.htmlContent + 'tableConfig');
+
+    if (tableConfig) {   
+      this.dataService.tableHeaders = JSON.parse(tableConfig);
+      console.log(this.dataService.tableHeaders);
+      return;
+    }
+    else if (this.htmlContent === "containerRequestCS") {
+      this.dataService.tableHeaders = [
         { label: 'order', value: 'id' },
         { label: 'customer', value: 'customerName' },
         { label: 'created-by', value: 'createdBy' },
@@ -36,27 +43,12 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'ready-to-load', value: 'readyToLoad' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'sped', value: 'sped' },
-        { label: 'checklist', value: '' },
-        { label: 'edit', value: '' },
-        { label: 'chat', value: '' }
+        { label: 'checklist', value: 'assignment' },
+        { label: 'edit', value: 'create' },
+        { label: 'chat', value: 'chat' }
       ];
-
-      this.orderProperties = [
-        'id',
-        'customerName',
-        'createdBy',
-        'abNumber',
-        'status',
-        'approvedByCrCs',
-        'amount',
-        'country',
-        'readyToLoad',
-        'lastUpdated',
-        'sped'
-      ];
-
     } else if (this.htmlContent === "containerRequestTL") {
-      this.tableHeaders = [
+      this.dataService.tableHeaders = [
         { label: 'ab-nr', value: 'abNumber' },
         { label: 'ready-to-load', value: 'readyToLoad' },
         { label: 'customer', value: 'customerName' },
@@ -65,104 +57,50 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'approved', value: 'approvedByCrTl' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'sped', value: 'sped' },
-        { label: 'checklist', value: '' },
-        { label: 'edit', value: '' },
-        { label: 'chat', value: '' }
-      ];
-
-      this.orderProperties = [
-        'abNumber',
-        'readyToLoad',
-        'customerName',
-        'createdBy',
-        'status',
-        'approvedByCrTl',
-        'lastUpdated',
-        'sped',
+        { label: 'checklist', value: 'assignment' },
+        { label: 'edit', value: 'create' },
+        { label: 'chat', value: 'chat' }
       ];
     } else if (this.htmlContent === "productionPlanningCS") {
-      this.tableHeaders = [
+      this.dataService.tableHeaders = [
         { label: 'order', value: 'id' },
         { label: 'customer', value: 'customerName' },
         { label: 'created-by', value: 'createdBy' },
-        { label: 'article', value: 'article' },
+        { label: 'article', value: 'articleNumbers' },
         { label: 'status', value: 'status' },
         { label: 'amount', value: 'amount' },
         { label: 'approved', value: 'approvedByPpCs' },
         { label: 'factory', value: 'factory' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'plant', value: 'plant' },
-        { label: 'checklist', value: '' },
-        { label: 'edit', value: '' },
-        { label: 'chat', value: '' }
-      ];
-
-      this.orderProperties = [
-        'id',
-        'customerName',
-        'createdBy',
-        'articleNumbers', 
-        'status',
-        'amount',
-        'approvedByPpCs',
-        'factory',
-        'lastUpdated',
-        'plant', 
+        { label: 'checklist', value: 'assignment' },
+        { label: 'edit', value: 'create' },
+        { label: 'chat', value: 'chat' }
       ];
     } else if (this.htmlContent === "productionPlanningPP") {
-      this.tableHeaders = [
+      this.dataService.tableHeaders = [
         { label: 'order', value: 'id' },
         { label: 'customer', value: 'customerName' },
         { label: 'created-by', value: 'createdBy' },
-        { label: 'article', value: 'article' },
+        { label: 'article', value: 'articleNumbers' },
         { label: 'status', value: 'status' },
         { label: 'amount', value: 'amount' },
         { label: 'approved', value: 'approvedByPpPp' },
         { label: 'factory', value: 'factory' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'plant', value: 'plant' },
-        { label: 'checklist', value: '' },
-        { label: 'edit', value: '' },
-        { label: 'chat', value: '' }
-      ];
-
-      this.orderProperties = [
-        'id',
-        'customerName',
-        'createdBy',
-        'articleNumbers', 
-        'status',
-        'amount',
-        'approvedByPpPp',
-        'factory',
-        'lastUpdated',
-        'plant', 
+        { label: 'checklist', value: 'assignment' },
+        { label: 'edit', value: 'create' },
+        { label: 'chat', value: 'chat' }
       ];
     }
+    localStorage.setItem(this.htmlContent + 'tableConfig', JSON.stringify(this.dataService.tableHeaders));
   }
 
   ngOnInit(): void {
     this.getFilteredOrders('none', '');
   }
 
-  tableHeaders: { label: string; value: string }[] = [
-    { label: 'order', value: 'id' },
-    { label: 'customer', value: 'customerName' },
-    { label: 'created-by', value: 'createdBy' },
-    { label: 'ab-nr', value: 'abNumber' },
-    { label: 'status', value: 'status' },
-    { label: 'approved', value: 'approvedByCs' },
-    { label: 'amount', value: 'amount' },
-    { label: 'country', value: 'country' },
-    { label: 'ready-to-load', value: 'readyToLoad' },
-    { label: 'last-updated', value: 'lastUpdated' },
-    { label: 'sped', value: 'sped' },
-    { label: 'checklist', value: '' },
-    { label: 'edit', value: '' },
-    { label: 'chat', value: '' }
-  ];
-
-  orderProperties: (keyof OrderDto | 'articleNumbers' | 'factory' | 'plant')[] = [];
   selectedFilter = signal<string>('customername');
   filterValue = signal<string>('');
   dataService = inject(DataService);
@@ -177,28 +115,28 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     this.getFilteredOrders('none', '');
 
     this.selectedFilter.set(value);
-    if(this.selectedFilter() === 'approvedByPp' || this.selectedFilter() === 'approvedByCs'|| this.selectedFilter() === 'approvedByTl' || this.selectedFilter() === 'approvedByPpCs'){
+    if (this.selectedFilter() === 'approvedByPp' || this.selectedFilter() === 'approvedByCs' || this.selectedFilter() === 'approvedByTl' || this.selectedFilter() === 'approvedByPpCs') {
       this.getFilteredOrders(this.selectedFilter(), "false");
     }
 
     this.filterValue.set('');
   }
 
-  getArticlesForOrder(orderId:number):number[]{
+  getArticlesForOrder(orderId: number): number[] {
     if (this.dataService.articlesForOrder.get(orderId)?.length ?? 0 > 0) {
       return this.dataService.articlesForOrder.get(orderId)!.distinct();
     }
     return [];
   }
 
-  getFactoriesForOrder(orderId:number):string[]{
+  getFactoriesForOrder(orderId: number): string[] {
     if (this.dataService.factoriesForOrder.get(orderId)?.length ?? 0 > 0) {
       return this.dataService.factoriesForOrder.get(orderId)!.distinct();
     }
     return [];
   }
 
-  getPlantsForOrder(orderId:number):string[]{
+  getPlantsForOrder(orderId: number): string[] {
     if (this.dataService.plantsForOrder.get(orderId)?.length ?? 0 > 0) {
       return this.dataService.plantsForOrder.get(orderId)!.distinct();
     }
@@ -227,6 +165,10 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         id: id
       }
     });
+  }
+
+  settingsPage(){
+    this.router.navigateByUrl('settings-page/'+this.htmlContent);
   }
 
   navigateToPage(path: string) {

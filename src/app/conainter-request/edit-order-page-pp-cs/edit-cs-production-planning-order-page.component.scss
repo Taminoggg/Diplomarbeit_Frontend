@@ -75,6 +75,11 @@ select {
   &:hover {
     background-color: #45a049;
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .note {
@@ -103,4 +108,12 @@ select {
   display: block;
   text-align: center;
   margin-top: 15px;
+}
+
+.error-message {
+  position: absolute;
+  color: red;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: -10px;
 }

@@ -96,5 +96,11 @@
     "production-order": "Fertigungauftrag",
     "planned-order": "Planauftrag",
     "edited-by-cs": "Von CS bearbeitet.",
-    "approved-by-pp": "Von PP freigegeben"
+    "approved-by-pp": "Von PP freigegeben",
+    "admin-page": "Admin Seite",
+    "dashboard-page": "Dashboard Seite",
+    "article-numbers": "Artikel Nummern",
+    "information-in-overview": "Informationen in der Übersicht",
+    "add-information-to-overview": "Informationen in die Übersicht hinzufügen",
+    "no-informations-available": "Keine Informationen verfügbar"
 }

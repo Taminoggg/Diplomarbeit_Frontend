@@ -1,19 +1,30 @@
 <div class="contentBox">
-  <app-container-tool-function [toolFunctionName]="'containerRequestCSHeader'"
-    [toolFunctionDescription]="'containerRequestDescription'"
-    [redirectRoute]="'/container-request-page/containerRequestCS'"></app-container-tool-function>
+  <div class="form-row">
+    <app-container-tool-function [toolFunctionName]="'containerRequestCSHeader'"
+      [toolFunctionDescription]="'containerRequestDescription'"
+      [redirectRoute]="'/container-request-page/containerRequestCS'"></app-container-tool-function>
 
+    <app-container-tool-function [toolFunctionName]="'containerProductionPlanningCSHeader'"
+      [toolFunctionDescription]="'containerProductionPlanningDescription'"
+      [redirectRoute]="'/container-request-page/productionPlanningCS'"></app-container-tool-function>
+
+
+    <app-container-tool-function [toolFunctionName]="'dashboard-page'" [toolFunctionDescription]="'dashboard-page'"
+      [redirectRoute]="'/dashboard-page'"></app-container-tool-function>
+  </div>
+
+  <div class="form-row">
     <app-container-tool-function [toolFunctionName]="'containerRequestTLHeader'"
-    [toolFunctionDescription]="'containerRequestDescription'"
-    [redirectRoute]="'/container-request-page/containerRequestTL'"></app-container-tool-function>
-
-  <app-container-tool-function [toolFunctionName]="'containerProductionPlanningCSHeader'"
-    [toolFunctionDescription]="'containerProductionPlanningDescription'"
-    [redirectRoute]="'/container-request-page/productionPlanningCS'"></app-container-tool-function>
+      [toolFunctionDescription]="'containerRequestDescription'"
+      [redirectRoute]="'/container-request-page/containerRequestTL'"></app-container-tool-function>
 
     <app-container-tool-function [toolFunctionName]="'containerProductionPlanningTLHeader'"
-    [toolFunctionDescription]="'containerProductionPlanningDescription'"
-    [redirectRoute]="'/container-request-page/productionPlanningPP'"></app-container-tool-function>
+      [toolFunctionDescription]="'containerProductionPlanningDescription'"
+      [redirectRoute]="'/container-request-page/productionPlanningPP'"></app-container-tool-function>
+
+    <app-container-tool-function [toolFunctionName]="'admin-page'" [toolFunctionDescription]="'admin-page'"
+      [redirectRoute]="'/admin-page'"></app-container-tool-function>
+  </div>
 </div>
 <div class="bottomBox">
   <p>&#64;2023 Copyright: <u (click)="goToUrl()">Teufelberger.com</u></p>

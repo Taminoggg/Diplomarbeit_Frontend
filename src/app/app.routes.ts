@@ -9,6 +9,7 @@ import { EditCsProductionPlanningOrderPageComponent } from './conainter-request/
 import { AdminComponent } from './admin/admin.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { EditPPProductionPlanningOrderPageComponent } from './conainter-request/edit-order-page-pp-pp/edit-pp-production-planning-order-page.component';
+import { SettingsComponent } from './settings/settings.component';
 
 
 export const routes: Routes = [
@@ -22,5 +23,6 @@ export const routes: Routes = [
   { path: 'function-overview-age', component: FunctionOverviewPageComponent },
   { path: 'admin-page', component: AdminComponent },
   { path: 'dashboard-page', component: DashboardComponent },
+  { path: 'settings-page/:htmlContent', component: SettingsComponent },
   { path: 'chat-for-order/:id', component: ChatForOrderComponent },
 ];

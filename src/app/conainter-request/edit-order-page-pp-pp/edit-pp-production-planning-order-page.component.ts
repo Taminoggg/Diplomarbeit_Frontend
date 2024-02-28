@@ -104,9 +104,21 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
   currChecklistname = signal('');
   additonalInformation = signal('');
 
+  areArticlesValid = signal<boolean>(true);
   isStatusValid = computed(() => this.validationService.isAnyInputValid(this.status()));
+  isAllValid = computed(() => this.isStatusValid() && this.areArticlesValid());
 
   myForm!: FormGroup;
+
+  setAreArticlesValid() {
+    for (let i = 0; i < this.articlesFormArray.length; i++) {
+      if (!this.validationService.isAnyInputValid(this.getFormGroup(i).get('shortText')!.value) || !this.validationService.isDateValid(this.getFormGroup(i).get('deliveryDate')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('factory')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('nozzle')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('productionOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plannedOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plant')!.value)) {
+        this.areArticlesValid.set(false);
+        return;
+      }
+    }
+    this.areArticlesValid.set(true);
+  }
 
   ngOnInit(): void {
     this.myForm = this.fb.group({
@@ -141,13 +153,12 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
             .subscribe(x => {
               if (x.checklistname !== null && x.checklistname !== undefined) {
                 this.currChecklistname.set(x.checklistname);
+                this.setAreArticlesValid();
               }
             });
         }
       });
   }
-
-  isAllValid = computed(() => true);
 
   get articlesFormArray() {
     return this.myForm.get('articles') as FormArray;

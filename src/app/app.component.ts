@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.translocoService.setActiveLang(localStorage.getItem('language') ?? 'de');
+    console.log(this.translocoService.getActiveLang());
     this.languagesList.forEach(language => {
       if(language.code === this.translocoService.getActiveLang()){
         this.selectedLanguage = language;

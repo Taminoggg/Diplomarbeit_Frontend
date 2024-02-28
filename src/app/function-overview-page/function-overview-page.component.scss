@@ -17,3 +17,15 @@
     width: 100%;
     justify-content: center;
 }
+
+.form-row {
+    display: flex;
+    /* Use flexbox */
+    flex-direction: column;
+    /* Arrange items in a column */
+}
+
+.form-row>app-container-tool-function {
+    margin-bottom: 10px;
+    /* Add margin between items for vertical spacing */
+}

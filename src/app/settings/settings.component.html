@@ -1,0 +1,50 @@
+<div class="form-container">
+    <button class="back-button" (click)="containerRequestPage()">{{'back' | transloco}}</button>
+
+    <div class="form-row">
+        <div class="from-group">
+            <label>{{'information-in-overview' | transloco}}</label>
+            <div class="border">
+                @for (header of dataService.tableHeaders; track $index) {
+                <div class="added-information">
+                    <label class="information-name">{{ header.label | transloco }}</label>
+                    <div>
+                        @if ($index !== 0) {
+                        <button (click)="moveItemUp($index)"><mat-icon>keyboard_arrow_up</mat-icon></button>
+                        }
+                        @if ($index !== dataService.tableHeaders.length - 1) {
+                        <button (click)="moveItemDown($index)"><mat-icon>keyboard_arrow_down</mat-icon></button>
+                        }@else {
+                        <button class="hidden-button"><mat-icon>keyboard_arrow_down</mat-icon></button>
+                        }
+                        @if (!header.label.includes('approved') && !header.label.includes('chat') &&
+                        !header.label.includes('edit')
+                        &&
+                        !header.label.includes('checklist') ) {
+                        <button (click)="remove($index)"><mat-icon>remove_circle_outline</mat-icon></button>
+                        }@else {
+                        <button class="hidden-button"><mat-icon>remove_circle_outline</mat-icon></button> }
+                    </div>
+                </div>
+                }
+            </div>
+            <button class="save-button" (click)="saveTableOrder()">{{'save' | transloco}}</button>
+        </div>
+
+        <div class="from-group">
+            <label>{{'add-information-to-overview' | transloco}}</label>
+            <div class="border">
+                @if (orderDtoPropertyNamesNotInTableHeaders().length > 0) {
+                    @for (nameNotInTableHeaders of orderDtoPropertyNamesNotInTableHeaders(); track $index) {
+                <div class="added-information">
+                    <label class="information-name">{{valueMapping[nameNotInTableHeaders] | transloco}}</label>
+                    <button (click)="add(nameNotInTableHeaders)"><mat-icon>add_circle_outline</mat-icon></button>
+                </div>
+                }
+                }@else {
+                    <label>{{'no-informations-available' | transloco}}</label>
+                }
+            </div>
+        </div>
+    </div>
+</div>

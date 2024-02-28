@@ -24,6 +24,7 @@ export class ValidationService {
   }
 
   isNumberValid(number: number): boolean {
+    if(number === null) return false;
     let result = number.toString().match(this.simpleNumberPattern);
     return result !== null && result.length > 0;
   }

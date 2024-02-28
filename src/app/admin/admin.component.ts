@@ -1,13 +1,15 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { AddChecklistDto, AddStepDto, ChecklistDto, ChecklistsService, StepDto, StepsService } from '../shared/swagger';
+import { AddChecklistDto, AddStepDto, ChecklistDto, ChecklistsService, OrderDto, StepDto, StepsService } from '../shared/swagger';
 import { NgSignalDirective } from '../shared/ngSignal.directive';
 import { TranslocoModule } from '@ngneat/transloco';
 import { EditStepDto } from '../shared/swagger/model/editStepDto';
+import { DataService } from '../shared/data.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [NgSignalDirective, TranslocoModule],
+  imports: [NgSignalDirective, TranslocoModule, MatIconModule],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })
@@ -20,11 +22,13 @@ export class AdminComponent implements OnInit {
 
   checklistService = inject(ChecklistsService);
   stepService = inject(StepsService);
+  dataService = inject(DataService);
 
   allChecklists = signal<ChecklistDto[]>([]);
   allStepsForChecklist = signal<StepDto[]>([]);
   selectedChecklistId: number = -1;
   checklistName = signal('');
+  test = [1,2,4,5]
   stepNumber = signal(1);
   stepName = signal('Name1');
   stepDescription = signal('Desc1');
@@ -40,7 +44,7 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  editStep(id:number) {
+  editStep(id: number) {
     let editStepDto: EditStepDto = {
       id: id,
       stepNumber: this.stepNumber(),
@@ -49,8 +53,8 @@ export class AdminComponent implements OnInit {
     };
 
     this.stepService.stepsPut(editStepDto)
-    .subscribe(x => this.stepService.stepsIdGet(this.selectedChecklistId)
-      .subscribe(x => this.allStepsForChecklist.set(x)));
+      .subscribe(x => this.stepService.stepsIdGet(this.selectedChecklistId)
+        .subscribe(x => this.allStepsForChecklist.set(x)));
   }
 
   postStep() {
@@ -73,7 +77,7 @@ export class AdminComponent implements OnInit {
     }
 
     this.checklistService.checklistsPost(checklistDto)
-      .subscribe(x => this.checklistService.checklistsGet()
+      .subscribe(x => this.checklistService.checklistsGeneratedByAdminGet()
         .subscribe(x => this.allChecklists.set(x)));
 
     this.checklistName.set('');
