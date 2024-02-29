@@ -75,6 +75,11 @@ select {
   &:hover {
     background-color: #45a049;
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .note {

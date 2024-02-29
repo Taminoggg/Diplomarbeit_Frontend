@@ -1,7 +1,7 @@
 <div class="form-container">
   <div class="form-row">
-    <button class="back-button" (click)="containerRequestPage()">{{'back' | transloco}}</button>
-    <button class="save-button" (click)="generatePDF()">{{'generatePDF' | transloco}}</button>
+    <button class="back-button" (click)="editService.navigateToPath()">{{'back' | transloco}}</button>
+    <button class="save-button" (click)="editService.generatePDFFromContent()">{{'generatePDF' | transloco}}</button>
   </div>
 
   <div id="contentToConvert" class="form-content">
@@ -9,17 +9,17 @@
       <div class="form-row">
         <div class="form-group">
           <label>{{'customer' | transloco}}</label>
-          <input readonly [ngSignal]="customerName" type="text">
+          <input readonly [ngSignal]="editService.customerName" type="text">
         </div>
 
         <div class="form-group">
           <label>{{'created-by' | transloco}}</label>
-          <input readonly [ngSignal]="createdBy" type="text">
+          <input readonly [ngSignal]="editService.createdBy" type="text">
         </div>
 
         <div class="form-group">
           <label>{{'amount' | transloco}}</label>
-          <input readonly [ngSignal]="amount" type="number">
+          <input readonly [ngSignal]="editService.amount" type="number">
         </div>
 
         <div class="form-group">
@@ -31,7 +31,7 @@
       <div class="form-row">
         <div class="form-group">
           <label>{{'checklist' | transloco}}</label>
-          <input readonly type="text" [ngSignal]="currChecklistname">
+          <input readonly type="text" [ngSignal]="editService.currChecklistname">
         </div>
 
         <div class="form-group">
@@ -137,7 +137,7 @@
     <div class="form-row">
       <div class="form-group">
         <label>{{'status' | transloco}}</label>
-        <input type="text" [ngSignal]="status">
+        <input type="text" [ngSignal]="editService.status">
         @if(!isStatusValid()){
         <label class="error-message">{{'error-message-any-string' | transloco}}</label>
         }
@@ -296,7 +296,7 @@
 
       <div class="form-group">
         <label>{{'additional-text' | transloco}}</label>
-        <input [ngSignal]="additonalInformation" type="text">
+        <input [ngSignal]="editService.additonalInformation" type="text">
       </div>
     </div>
   </div>

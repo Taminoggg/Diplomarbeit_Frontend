@@ -8,6 +8,7 @@ import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidationService } from '../../shared/validation.service';
+import { EditService } from '../../edit.service';
 
 @Component({
   selector: 'app-edit-order-page',
@@ -26,6 +27,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   orderService = inject(OrdersService);
   checklistService = inject(ChecklistsService);
   csinquiriesService = inject(CsinquiriesService);
+  editSerivce = inject(EditService);
 
   myForm!: FormGroup;
   currOrder = signal<OrderDto>(
@@ -72,15 +74,8 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     });
 
   //OrderData
-  csId = signal(0);
-  customerName = signal('');
-  createdBy = signal('');
-  status = signal('');
-  amount = signal(0);
-  checklistId = signal(0);
   isApprovedByCs = signal(false);
   isApprovedByTl = signal(false);
-  additonalInformation = signal('');
 
   //CsData
   container = signal('');
@@ -98,12 +93,12 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   areArticleNumbersValid = signal<boolean>(true);
   isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
   isLoadingPlattfromValid = computed(() => this.validationService.isAnyInputValid(this.loadingPlattform()));
-  isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.customerName()));
-  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.createdBy()));
+  isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.editSerivce.customerName()));
+  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editSerivce.createdBy()));
   isAbNumberValid = computed(() => this.validationService.isNumberValid(this.abnumber()));
   isGrossWeightInKgValid = computed(() => this.validationService.isNumberValid(this.grossWeightInKg()));
-  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.status()));
-  isAmountValid = computed(() => this.validationService.isNumberValid(this.amount()));
+  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editSerivce.status()));
+  isAmountValid = computed(() => this.validationService.isNumberValid(this.editSerivce.amount()));
   isContainerSizeAValid = computed(() => this.validationService.isNumberValid(this.containersizeA()));
   isContainerSizeBValid = computed(() => this.validationService.isNumberValid(this.containersizeB()));
   isContainerSizeHcValid = computed(() => this.validationService.isNumberValid(this.containersizeHc()));
@@ -121,7 +116,8 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       this.isContainerSizeAValid() &&
       this.isContainerSizeBValid() &&
       this.isContainerSizeHcValid() &&
-      this.areArticleNumbersValid()
+      this.areArticleNumbersValid() &&
+      !this.isApprovedByCs()
     );
   });
 
@@ -132,6 +128,8 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.editSerivce.navigationPath = '/container-request-page/containerRequestCS';
+
     this.checklistService.checklistsGeneratedByAdminGet()
       .subscribe(x => this.allChecklists.set(x));
 
@@ -183,17 +181,13 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     console.log('Entered Articles:', articles);
   }
 
-  containerRequestPage(): void {
-    this.router.navigateByUrl('/container-request-page/containerRequestCS');
-  }
-
-  setAreArticleNumbersValid(index: number, btnName:string) {
+  setAreArticleNumbersValid(index: number, btnName: string) {
     if (index >= 0) {
       console.log('inside the if1');
       if (!!this.getFormGroup(index).get('directline')!.value && !!this.getFormGroup(index).get('fastline')!.value) {
-        if(btnName === "directline"){
+        if (btnName === "directline") {
           this.getFormGroup(index).get('fastline')!.setValue(false);
-        }else if(btnName === "fastline"){
+        } else if (btnName === "fastline") {
           this.getFormGroup(index).get('directline')!.setValue(false);
         }
       }
@@ -213,36 +207,18 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.areArticleNumbersValid.set(true);
   }
 
-  generatePDF() {
-    const data = document.getElementById('contentToConvert');
-    if (data) {
-      html2canvas(data).then((canvas) => {
-        const imgWidth = 208;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        const contentDataURL = canvas.toDataURL('image/png');
-        const pdf = new jspdf('p', 'mm', 'a4');
-
-        pdf.addImage(contentDataURL, 'PNG', 1, 0, imgWidth, imgHeight);
-        pdf.save('myPDF.pdf');
-      });
-    } else {
-      console.error("Element with ID 'contentToConvert' not found.");
-    }
-  }
-
   prepareSaveOrder() {
-    console.log(this.additonalInformation());
+    console.log(this.editSerivce.additonalInformation());
 
     let order: EditOrderDto;
-    if (this.additonalInformation() === '') {
+    if (this.editSerivce.additonalInformation() === '') {
       console.log(1);
       order = {
-        customerName: this.customerName(),
-        status: this.status(),
-        createdBy: this.createdBy(),
-        amount: this.amount(),
-        checklistId: this.checklistId(),
+        customerName: this.editSerivce.customerName(),
+        status: this.editSerivce.status(),
+        createdBy: this.editSerivce.createdBy(),
+        amount: this.editSerivce.amount(),
+        checklistId: this.editSerivce.checklistId(),
         id: this.id,
         approvedByTl: this.isApprovedByTl(),
         approvedByCs: this.isApprovedByCs()
@@ -250,15 +226,15 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     } else {
       console.log(2);
       order = {
-        customerName: this.customerName(),
-        status: this.status(),
-        createdBy: this.createdBy(),
-        amount: this.amount(),
-        checklistId: this.checklistId(),
+        customerName: this.editSerivce.customerName(),
+        status: this.editSerivce.status(),
+        createdBy: this.editSerivce.createdBy(),
+        amount: this.editSerivce.amount(),
+        checklistId: this.editSerivce.checklistId(),
         id: this.id,
         approvedByTl: this.isApprovedByTl(),
         approvedByCs: this.isApprovedByCs(),
-        additionalInformation: this.additonalInformation()
+        additionalInformation: this.editSerivce.additonalInformation()
       };
     }
 
@@ -272,7 +248,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       .subscribe(x => {
         this.saveCsInquery();
         this.saveArticlesToDB();
-        this.containerRequestPage();
+        this.editSerivce.navigateToPath();
       });
   }
 
@@ -289,7 +265,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
         };
 
         this.orderService.ordersApprovedByCrCsPut(editOrder)
-          .subscribe(x => this.containerRequestPage());
+          .subscribe(x => this.editSerivce.navigateToPath());
       });
   }
 
@@ -334,18 +310,9 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   setOrderSignals() {
-    this.csId.set(this.currOrder().csid);
-    this.customerName.set(this.currOrder().customerName);
-    this.createdBy.set(this.currOrder().createdBy);
-    this.status.set(this.currOrder().status);
-    this.amount.set(this.currOrder().amount);
-    this.checklistId.set(this.currOrder().checklistId);
+    this.editSerivce.setOrderSignals(this.currOrder());
     this.isApprovedByCs.set(this.currOrder().approvedByCrCs);
     this.isApprovedByTl.set(this.currOrder().approvedByCrTl);
-    let additonalInformation = this.currOrder().additionalInformation
-    if (additonalInformation != null && additonalInformation != undefined) {
-      this.additonalInformation.set(additonalInformation);
-    }
   }
 
   setCsInquirySignals() {

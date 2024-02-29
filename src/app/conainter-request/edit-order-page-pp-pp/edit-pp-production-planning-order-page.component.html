@@ -1,7 +1,7 @@
 <div class="form-container">
   <div class="form-row">
-    <button class="back-button" (click)="navigateToOverview()">{{'back' | transloco}}</button>
-    <button class="save-button" (click)="generatePDF()">{{'generatePDF' | transloco}}</button>
+    <button class="back-button" (click)="editService.navigateToPath()">{{'back' | transloco}}</button>
+    <button class="save-button" (click)="editService.generatePDFFromContent()">{{'generatePDF' | transloco}}</button>
   </div>
 
   <div id="contentToConvert" class="form-content">
@@ -76,7 +76,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label>{{'delivery-date' | transloco}}</label>
-                <input type="text" formControlName="deliveryDate">
+                <input (input)="setAreArticlesValid()" type="text" formControlName="deliveryDate">
                 @if (!validationService.isDateValid(getFormGroup($index).get('deliveryDate')!.value)) { <label
                   class="error-message">
                   {{'error-message-date' | transloco}}</label>
@@ -85,7 +85,7 @@
 
               <div class="form-group">
                 <label>{{'short-text' | transloco}}</label>
-                <input type="text" formControlName="shortText">
+                <input (input)="setAreArticlesValid()" type="text" formControlName="shortText">
                 @if (!validationService.isAnyInputValid(getFormGroup($index).get('shortText')!.value)) { <label
                   class="error-message">
                   {{'error-message-any-string' | transloco}}</label>
@@ -94,7 +94,7 @@
 
               <div class="form-group">
                 <label>{{'factory' | transloco}}</label>
-                <input type="text" formControlName="factory">
+                <input (input)="setAreArticlesValid()" type="text" formControlName="factory">
                 @if (!validationService.isAnyInputValid(getFormGroup($index).get('factory')!.value)) { <label
                   class="error-message">
                   {{'error-message-any-string' | transloco}}</label>
@@ -103,7 +103,7 @@
 
               <div class="form-group">
                 <label>{{'nozzle' | transloco}}</label>
-                <input type="text" formControlName="nozzle">
+                <input (input)="setAreArticlesValid()" type="text" formControlName="nozzle">
                 @if (!validationService.isAnyInputValid(getFormGroup($index).get('nozzle')!.value)) { <label
                   class="error-message">
                   {{'error-message-any-string' | transloco}}</label>
@@ -114,7 +114,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label>{{'production-order' | transloco}}</label>
-                <input type="text" formControlName="productionOrder">
+                <input (input)="setAreArticlesValid()" type="text" formControlName="productionOrder">
                 @if (!validationService.isAnyInputValid(getFormGroup($index).get('productionOrder')!.value)) { <label
                   class="error-message">
                   {{'error-message-any-string' | transloco}}</label>
@@ -123,7 +123,7 @@
 
               <div class="form-group">
                 <label>{{'planned-order' | transloco}}</label>
-                <input type="text" formControlName="plannedOrder">
+                <input (input)="setAreArticlesValid()" type="text" formControlName="plannedOrder">
                 @if (!validationService.isAnyInputValid(getFormGroup($index).get('plannedOrder')!.value)) { <label
                   class="error-message">
                   {{'error-message-any-string' | transloco}}</label>
@@ -132,7 +132,7 @@
 
               <div class="form-group">
                 <label>{{'plant' | transloco}}</label>
-                <input type="text" formControlName="plant">
+                <input (input)="setAreArticlesValid()" type="text" formControlName="plant">
                 @if (!validationService.isAnyInputValid(getFormGroup($index).get('plant')!.value)) { <label
                   class="error-message">
                   {{'error-message-any-string' | transloco}}</label>

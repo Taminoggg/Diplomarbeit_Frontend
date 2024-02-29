@@ -1,7 +1,7 @@
 <div class="form-container">
   <div class="form-row">
-    <button class="back-button" (click)="navigateToOverview()">{{'back' | transloco}}</button>
-    <button class="save-button" (click)="generatePDF()">{{'generatePDF' | transloco}}</button>
+    <button class="back-button" (click)="editService.navigateToPath()">{{'back' | transloco}}</button>
+    <button class="save-button" (click)="editService.generatePDFFromContent()">{{'generatePDF' | transloco}}</button>
   </div>
 
   <div id="contentToConvert" class="form-content">

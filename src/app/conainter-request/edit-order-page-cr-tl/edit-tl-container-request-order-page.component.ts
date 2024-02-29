@@ -4,10 +4,9 @@ import { ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, C
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
-import jspdf from 'jspdf';
-import html2canvas from 'html2canvas';
 import { ValidationService } from '../../shared/validation.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { EditService } from '../../edit.service';
 
 @Component({
   selector: 'app-edit-order-page',
@@ -27,6 +26,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   tlinquiriesService = inject(TlinquiriesService);
   csinquiriesService = inject(CsinquiriesService);
   validationService = inject(ValidationService);
+  editService = inject(EditService);
 
   currOrder = signal<OrderDto>(
     {
@@ -92,17 +92,9 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     });
 
   //OrderData
-  csId = signal(0);
-  tlId = signal(0);
-  customerName = signal('');
-  createdBy = signal('');
-  status = signal('');
-  amount = signal(0);
-  checklistId = signal(0);
   isApprovedByCs = signal(false);
   isApprovedByTl = signal(false);
   currChecklistname = signal('');
-  additonalInformation = signal('');
 
   //CsData
   container = signal('');
@@ -137,7 +129,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   eta = signal('');
   boat = signal('');
 
-  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.status()));
+  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editService.status()));
   isInquiryNumberValid = computed(() => this.validationService.isNumberValid(this.inquiryNumber()));
   isSpedValid = computed(() => this.validationService.isAnyInputValid(this.sped()));
   isCountryValid = computed(() => this.validationService.isNameStringValid(this.country()));
@@ -158,12 +150,16 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   myForm!: FormGroup;
 
   ngOnInit(): void {
+    console.log(),
+
     this.myForm = this.fb.group({
       articles: this.fb.array([])
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.editService.navigationPath = '/container-request-page/containerRequestTL';
+
     this.checklistService.checklistsGeneratedByAdminGet()
       .subscribe(x => {
         this.allChecklists.set(x);
@@ -175,7 +171,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
           this.currOrder.set(x);
           console.log(this.currOrder());
           this.setOrderSignals();
-          this.tlinquiriesService.tlinquiriesIdGet(this.tlId())
+          this.tlinquiriesService.tlinquiriesIdGet(this.editService.tlId())
             .subscribe(x => {
               if (x !== null && x !== undefined) {
                 this.currTlInquiry.set(x);
@@ -189,7 +185,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
               console.log('adding Article');
             }));
 
-          this.csinquiriesService.csinquiriesIdGet(this.csId())
+          this.csinquiriesService.csinquiriesIdGet(this.editService.csId())
             .subscribe(x => {
               if (x !== null && x !== undefined) {
                 this.currCsInquiry.set(x);
@@ -225,7 +221,8 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       this.isPortOfDepartureValid() &&
       this.isEtsValid() &&
       this.isEtaValid() &&
-      this.isBoatValid()
+      this.isBoatValid() &&
+      !this.isApprovedByTl()
     );
   });
 
@@ -256,56 +253,18 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     console.log('Entered Articles:', articles);
   }
 
-  containerRequestPage() {
-    this.router.navigateByUrl('/container-request-page/containerRequestTL');
-  }
-
-  generatePDF() {
-    const data = document.getElementById('contentToConvert');
-    if (data) {
-      html2canvas(data).then((canvas) => {
-        const imgWidth = 208;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        const contentDataURL = canvas.toDataURL('image/png');
-        const pdf = new jspdf('p', 'mm', 'a4');
-
-        pdf.addImage(contentDataURL, 'PNG', 1, 0, imgWidth, imgHeight);
-        pdf.save('myPDF.pdf');
-      });
-    } else {
-      console.error("Element with ID 'contentToConvert' not found.");
-    }
-  }
-
   prepareSaveOrder() {
-    console.log(this.additonalInformation());
-
-    let order: EditOrderDto;
-    if (this.additonalInformation() === '') {
-      order = {
-        customerName: this.customerName(),
-        status: this.status(),
-        createdBy: this.createdBy(),
-        amount: this.amount(),
-        checklistId: this.checklistId(),
-        id: this.id,
-        approvedByTl: this.isApprovedByTl(),
-        approvedByCs: this.isApprovedByCs()
-      };
-    } else {
-      order = {
-        customerName: this.customerName(),
-        status: this.status(),
-        createdBy: this.createdBy(),
-        amount: this.amount(),
-        checklistId: this.checklistId(),
-        id: this.id,
-        approvedByTl: this.isApprovedByTl(),
-        approvedByCs: this.isApprovedByCs(),
-        additionalInformation: this.additonalInformation()
-      };
-    }
+    const order: EditOrderDto = {
+      customerName: this.editService.customerName(),
+      status: this.editService.status(),
+      createdBy: this.editService.createdBy(),
+      amount: this.editService.amount(),
+      checklistId: this.editService.checklistId(),
+      id: this.id,
+      approvedByTl: this.isApprovedByTl(),
+      approvedByCs: this.isApprovedByCs(),
+      additionalInformation: this.editService.additonalInformation() === '' ? undefined : this.editService.additonalInformation()
+  };
 
     return order;
   }
@@ -314,10 +273,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     let order = this.prepareSaveOrder();
 
     this.orderService.ordersPut(order)
-      .subscribe(x => {
-        this.saveTlInquery();
-        this.containerRequestPage();
-      });
+      .subscribe(x => this.saveTlInquery());
   }
 
   saveTlInquery() {
@@ -345,7 +301,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     }
 
     this.tlinquiriesService.tlinquiriesPut(editedTlInquiry)
-      .subscribe(x => this.containerRequestPage());
+      .subscribe(x => this.editService.navigateToPath());
   }
 
   publish() {
@@ -354,30 +310,15 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.orderService.ordersPut(order)
       .subscribe(x => {
         this.saveTlInquery();
-        let editOrder: EditApproveOrderDto = {
-          id: this.currOrder().id,
-          approve: true
-        };
-
-        this.orderService.ordersApprovedByCrTlPut(editOrder)
-          .subscribe(x => this.containerRequestPage());
+        this.orderService.ordersApprovedByCrTlPut(this.editService.createEditOrder(this.currOrder().id))
+          .subscribe(x => this.editService.navigateToPath());
       });
   }
 
   setOrderSignals(): void {
-    this.csId.set(this.currOrder().csid);
-    this.tlId.set(this.currOrder().tlid);
-    this.customerName.set(this.currOrder().customerName);
-    this.createdBy.set(this.currOrder().createdBy);
-    this.status.set(this.currOrder().status);
-    this.amount.set(this.currOrder().amount);
-    this.checklistId.set(this.currOrder().checklistId);
     this.isApprovedByCs.set(this.currOrder().approvedByCrCs);
     this.isApprovedByTl.set(this.currOrder().approvedByCrTl);
-    let additonalInformation = this.currOrder().additionalInformation
-    if (additonalInformation != null && additonalInformation != undefined) {
-      this.additonalInformation.set(additonalInformation);
-    }
+    this.editService.setOrderSignals(this.currOrder());
   }
 
   setCsInquirySignals() {

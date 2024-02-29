@@ -8,6 +8,7 @@ import jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { ValidationService } from '../../shared/validation.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { EditService } from '../../edit.service';
 
 @Component({
   selector: 'app-edit-order-page',
@@ -27,6 +28,7 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   tlinquiriesService = inject(TlinquiriesService);
   csinquiriesService = inject(CsinquiriesService);
   validationService = inject(ValidationService);
+  editService = inject(EditService);
 
   currOrder = signal<OrderDto>(
     {
@@ -54,59 +56,13 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
       additionalInformation: ''
     });
   allChecklists = signal<ChecklistDto[]>([]);
-  currCsInquiry = signal<CsinquiryDto>({
-    id: 0,
-    container: '',
-    abnumber: 0,
-    grossWeightInKg: 0,
-    incoterm: '',
-    containersizeA: 0,
-    containersizeB: 0,
-    containersizeHc: 0,
-    freeDetention: false,
-    thctb: false,
-    readyToLoad: '',
-    loadingPlattform: ''
-  });
-  currTlInquiry = signal<TlinquiryDto>(
-    {
-      id: 1,
-      inquiryNumber: 1,
-      sped: 'Loading',
-      country: 'Loading',
-      acceptingPort: 'Loading',
-      expectedRetrieveWeek: '17.12.2023',
-      weightInKg: 1,
-      invoiceOn: '17.12.2023',
-      retrieveDate: '17.12.2023',
-      isContainer40: false,
-      isContainerHc: false,
-      retrieveLocation: 'Loading',
-      debtCapitalGeneralForerunEur: 1,
-      debtCapitalMainDol: 1,
-      debtCapitalTrailingDol: 1,
-      portOfDeparture: 'Loading',
-      ets: '17.12.2023',
-      eta: '17.12.2023',
-      boat: 'Loading'
-    });
 
   //OrderData
-  csId = signal(0);
-  tlId = signal(0);
-  customerName = signal('');
-  createdBy = signal('');
-  status = signal('');
-  amount = signal(0);
-  checklistId = signal(0);
-  isApprovedByCs = signal(false);
-  isApprovedByTl = signal(false);
-  currChecklistname = signal('');
-  additonalInformation = signal('');
+  isApprovedByPpCs = signal(false);
 
   areArticlesValid = signal<boolean>(true);
-  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.status()));
-  isAllValid = computed(() => this.isStatusValid() && this.areArticlesValid());
+  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editService.status()));
+  isAllValid = computed(() => this.isStatusValid() && this.areArticlesValid() && !this.isApprovedByPpCs());
 
   myForm!: FormGroup;
 
@@ -127,6 +83,8 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.editService.navigationPath = '/container-request-page/productionPlanningCS';
+
     this.checklistService.checklistsGet()
       .subscribe(x => {
         this.allChecklists.set(x);
@@ -152,7 +110,7 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
           this.checklistService.checklistsIdGet(this.currOrder().checklistId)
             .subscribe(x => {
               if (x.checklistname !== null && x.checklistname !== undefined) {
-                this.currChecklistname.set(x.checklistname);
+                this.editService.currChecklistname.set(x.checklistname);
               }
               this.setAreArticlesValid();
             });
@@ -189,24 +147,6 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
     console.log('Entered Articles:', articles);
   }
 
-  generatePDF() {
-    const data = document.getElementById('contentToConvert');
-    if (data) {
-      html2canvas(data).then((canvas) => {
-        const imgWidth = 208;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        const contentDataURL = canvas.toDataURL('image/png');
-        const pdf = new jspdf('p', 'mm', 'a4');
-
-        pdf.addImage(contentDataURL, 'PNG', 1, 0, imgWidth, imgHeight);
-        pdf.save('myPDF.pdf');
-      });
-    } else {
-      console.error("Element with ID 'contentToConvert' not found.");
-    }
-  }
-
   saveOrder(): void {
     console.log(this.articlesFormArray.length);
     for (let i = 0; i < this.articlesFormArray.length; i++) {
@@ -222,38 +162,19 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
       if (i + 1 !== this.articlesFormArray.length) {
         this.articlesService.articlesPut(article).subscribe(x => console.log(x));
       } else {
-        this.articlesService.articlesPut(article).subscribe(x => this.navigateToOverview());
+        this.articlesService.articlesPut(article).subscribe(x => this.editService.navigateToPath());
       }
     }
   }
 
   publish() {
-    let editOrder: EditApproveOrderDto = {
-      id: this.currOrder().id,
-      approve: true
-    };
-
-    this.orderService.ordersApprovedByPpCsPut(editOrder)
+    this.orderService.ordersApprovedByPpCsPut(this.editService.createEditOrder(this.currOrder().id))
       .subscribe(x => this.saveOrder());
   }
 
-  navigateToOverview(): void {
-    this.router.navigateByUrl('/container-request-page/productionPlanningCS');
-  }
-
   setOrderSignals(): void {
-    this.csId.set(this.currOrder().csid);
-    this.tlId.set(this.currOrder().tlid);
-    this.customerName.set(this.currOrder().customerName);
-    this.createdBy.set(this.currOrder().createdBy);
-    this.status.set(this.currOrder().status);
-    this.amount.set(this.currOrder().amount);
-    this.checklistId.set(this.currOrder().checklistId);
-    this.isApprovedByCs.set(this.currOrder().approvedByCrCs);
-    this.isApprovedByTl.set(this.currOrder().approvedByCrTl);
-    let additonalInformation = this.currOrder().additionalInformation
-    if (additonalInformation != null && additonalInformation != undefined) {
-      this.additonalInformation.set(additonalInformation);
-    }
+    this.editService.setOrderSignals(this.currOrder());
+    this.isApprovedByPpCs.set(this.currOrder().approvedByPpCs);
+
   }
 }

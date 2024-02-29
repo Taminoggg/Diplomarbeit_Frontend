@@ -184,6 +184,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         break;
       case 'containerRequestTL':
         editPagePath = '/edit-tl-container-order-page/' + orderId;
+        console.log(editPagePath);
         break;
       case 'productionPlanningCS':
         editPagePath = '/edit-cs-production-planning-order-page/' + orderId;

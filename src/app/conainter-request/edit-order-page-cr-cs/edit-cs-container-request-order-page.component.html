@@ -1,14 +1,14 @@
 <div class="form-container">
   <div class="form-row">
-    <button class="back-button" (click)="containerRequestPage()">{{'back' | transloco}}</button>
-    <button class="save-button" (click)="generatePDF()">{{'generatePDF' | transloco}}</button>
+    <button class="back-button" (click)="editSerivce.navigateToPath()">{{'back' | transloco}}</button>
+    <button class="save-button" (click)="editSerivce.generatePDFFromContent()">{{'generatePDF' | transloco}}</button>
   </div>
 
   <div id="contentToConvert" class="form-content">
     <div class="form-row">
       <div class="form-group">
         <label>{{'status' | transloco}}</label>
-        <input [ngSignal]="status" type="text">
+        <input [ngSignal]="editSerivce.status" type="text">
         @if(!isStatusValid()){
         <label class="error-message">{{'error-message-number' | transloco}}</label>
         }
@@ -16,7 +16,7 @@
 
       <div class="form-group">
         <label>{{'customer' | transloco}}</label>
-        <input [ngSignal]="customerName" type="text">
+        <input [ngSignal]="editSerivce.customerName" type="text">
         @if(!isCustomerValid()){
         <label class="error-message">{{'error-message-any-string' | transloco}}</label>
         }
@@ -24,7 +24,7 @@
 
       <div class="form-group">
         <label>{{'created-by' | transloco}}</label>
-        <input [ngSignal]="createdBy" type="text">
+        <input [ngSignal]="editSerivce.createdBy" type="text">
         @if(!isCreatedByValid()){
         <label class="error-message">{{'error-message-name-string' | transloco}}</label>
         }
@@ -32,7 +32,7 @@
 
       <div class="form-group">
         <label>{{'amount' | transloco}}</label>
-        <input min="1" max="100" [ngSignal]="amount" type="number">
+        <input min="1" max="100" [ngSignal]="editSerivce.amount" type="number">
         @if(!isAmountValid()){
         <label class="error-message">{{'error-message-number' | transloco}}</label>
         }
@@ -42,7 +42,7 @@
     <div class="form-row">
       <div class="form-group">
         <label>{{'checklist' | transloco}}</label>
-        <select #currChecklist (change)="checklistId.set(+currChecklist.value)">
+        <select #currChecklist (change)="editSerivce.checklistId.set(+currChecklist.value)">
           @for (currChecklist of allChecklists(); track $index) {
           <option value="{{currChecklist.id}}">{{currChecklist.checklistname}}</option>
           }
@@ -133,7 +133,7 @@
 
       <div class="form-group">
         <label>{{'additional-text' | transloco}}</label>
-        <input [ngSignal]="additonalInformation" type="text">
+        <input [ngSignal]="editSerivce.additonalInformation" type="text">
       </div>
     </div>
 
