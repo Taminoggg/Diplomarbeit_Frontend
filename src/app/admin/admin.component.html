@@ -1,48 +1,106 @@
-<table>
-    <tr>
-        <td>Name</td>
-    </tr>
-    @for (checklist of allChecklists(); track $index) {
-    <tr>
-        @if (selectedChecklistId == checklist.id) {
-        <td class="selected" (click)="showStepsForChecklist(checklist.id)">{{checklist.checklistname}}</td>
-        }@else {
-        <td (click)="showStepsForChecklist(checklist.id)">{{checklist.checklistname}}</td>
-        }
-    </tr>
-    }
-</table>
-<hr>
-<label>Checklist name</label>
-<input type="text" [ngSignal]="checklistName">
-<br>
-<button (click)="postChecklist()">Add checklist</button>
+<div class="container">
+    <table>
+        <tr>
+            <th>{{'order' | transloco}}</th>
+            <th>{{'messages-for-order' | transloco}}</th>
+            <th>{{'files-for-order' | transloco}}</th>
+            <th>{{'time-to-approve-cr-tl' | transloco}}</th>
+            <th>{{'time-to-approve-pp-cs' | transloco}}</th>
+            <th>{{'time-to-approve-pp-pp' | transloco}}</th>
+        </tr>
 
-@if (selectedChecklistId !== -1) {
-<table>
-    <tr>
-        <td>{{'step-number' | transloco}}</td>
-        <td>{{'step-name' | transloco}}</td>
-        <td>{{'step-description' | transloco}}</td>
-    </tr>
-    @for (step of allStepsForChecklist(); track $index) {
-    <tr>
-        <td>{{step.stepNumber}}</td>
-        <td>{{step.stepName}}</td>
-        <td>{{step.stepDescription}}</td>
-        <button (click)="editStep(step.id)">Edit</button>
-    </tr>
-    }
-</table>
-<br>
-<label>{{'step-number' | transloco}}</label>
-<input [ngSignal]="stepNumber" type="number" min="1">
-<br>
-<label>{{'step-name' | transloco}}</label>
-<input [ngSignal]="stepName" type="text">
-<br>
-<label>{{'step-description' | transloco}}</label>
-<input [ngSignal]="stepDescription" type="text">
-<br>
-<button (click)="postStep()">Add step</button>
-}
+        @for (order of dataService.allOrders(); track $index) {
+        <tr>
+            <td>{{order.id}}</td>
+            <td>{{getCountForOrder(order.id, 'messages')}}</td>
+            <td>{{getCountForOrder(order.id, 'files')}}</td>
+            <td>{{getTimeForApprovedBy(order.id, 'tl')}}</td>
+            <td>{{getTimeForApprovedBy(order.id, 'ppCs')}}</td>
+            <td>{{getTimeForApprovedBy(order.id, 'ppPp')}}</td>
+        </tr>
+        }
+        <tr>
+            <td>{{'avg' | transloco}}</td>
+            <td>{{getAvgForOrder('messages')}}</td>
+            <td>{{getAvgForOrder('files')}}</td>
+            <td>{{getAvgTimeToGetApprovedBy('tl')}}</td>
+            <td>{{getAvgTimeToGetApprovedBy('ppCs')}}</td>
+            <td>{{getAvgTimeToGetApprovedBy('ppPp')}}</td>
+        </tr>
+    </table>
+
+    <div class="table-row">
+        <div class="table-group">
+            <table>
+                <tr>
+                    <td>{{'checklist-name' | transloco}}</td>
+                </tr>
+                @for (checklist of allChecklists(); track $index) {
+                <tr>
+                    @if (selectedChecklistId() == checklist.id) {
+                    <td class="selected" (click)="showStepsForChecklist(checklist.id)">{{checklist.checklistname}}</td>
+                    }@else {
+                    <td (click)="showStepsForChecklist(checklist.id)">{{checklist.checklistname}}</td>
+                    }
+                </tr>
+                }
+            </table>
+            <hr>
+            <label>{{'checklist-name' | transloco}}</label>
+            <input type="text" [ngSignal]="checklistName">
+            <br>
+            <button (click)="postChecklist()">{{'add-checklist' | transloco}}</button>
+        </div>
+        <div class="table-group">
+            @if (selectedChecklistId() !== -1) {
+            <table>
+                <tr>
+                    <td>{{'step-number' | transloco}}</td>
+                    <td>{{'step-name' | transloco}}</td>
+                    <td>{{'step-description' | transloco}}</td>
+                </tr>
+                @for (step of allStepsForChecklist(); track $index) {
+                <tr>
+                    @if (selectedStepId() === step.id) {
+                    <td class="selected" (click)="setSelectedStep(step.id)">{{step.stepNumber}}</td>
+                    <td class="selected" (click)="setSelectedStep(step.id)">{{step.stepName}}</td>
+                    <td class="selected" (click)="setSelectedStep(step.id)">{{step.stepDescription}}</td>
+                    }@else{
+                    <td (click)="setSelectedStep(step.id)">{{step.stepNumber}}</td>
+                    <td (click)="setSelectedStep(step.id)">{{step.stepName}}</td>
+                    <td (click)="setSelectedStep(step.id)">{{step.stepDescription}}</td>
+                    }
+                </tr>
+                }
+            </table>
+
+            <br>
+            <div class="row">
+                <div class="group">
+                    <label>{{'step-number' | transloco}}</label>
+                    <input [ngSignal]="stepNumber" type="number" min="1">
+                </div>
+            </div>
+            <div class="row">
+                <div class="group">
+                    <label>{{'step-name' | transloco}}</label>
+                    <input [ngSignal]="stepName" type="text">
+                </div>
+            </div>
+            <div class="row">
+                <div class="group">
+                    <label>{{'step-description' | transloco}}</label>
+                    <input [ngSignal]="stepDescription" type="text">
+                </div>
+            </div>
+            <div class="row">
+                <div class="group">
+                    <button (click)="postStep()">{{'add-step' | transloco}}</button>
+                    <button [disabled]="selectedStepId() === -1" (click)="editStep()">{{'edit' | transloco}}</button>
+                </div>
+            </div>
+
+            }
+        </div>
+    </div>
+</div>

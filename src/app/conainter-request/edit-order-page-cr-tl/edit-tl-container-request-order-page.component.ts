@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -152,9 +152,9 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   ngOnInit(): void {
     console.log(),
 
-    this.myForm = this.fb.group({
-      articles: this.fb.array([])
-    });
+      this.myForm = this.fb.group({
+        articles: this.fb.array([])
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -264,7 +264,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       approvedByTl: this.isApprovedByTl(),
       approvedByCs: this.isApprovedByCs(),
       additionalInformation: this.editService.additonalInformation() === '' ? undefined : this.editService.additonalInformation()
-  };
+    };
 
     return order;
   }
@@ -273,7 +273,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     let order = this.prepareSaveOrder();
 
     this.orderService.ordersPut(order)
-      .subscribe(x => this.saveTlInquery());
+      .subscribe(_ => this.saveTlInquery());
   }
 
   saveTlInquery() {
@@ -301,14 +301,14 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     }
 
     this.tlinquiriesService.tlinquiriesPut(editedTlInquiry)
-      .subscribe(x => this.editService.navigateToPath());
+      .subscribe(_ => this.editService.navigateToPath());
   }
 
   publish() {
     let order = this.prepareSaveOrder();
 
     this.orderService.ordersPut(order)
-      .subscribe(x => {
+      .subscribe(_ => {
         this.saveTlInquery();
         this.orderService.ordersApprovedByCrTlPut(this.editService.createEditOrder(this.currOrder().id))
           .subscribe(x => this.editService.navigateToPath());

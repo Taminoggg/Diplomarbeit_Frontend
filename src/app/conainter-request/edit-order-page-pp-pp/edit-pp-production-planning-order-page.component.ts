@@ -1,11 +1,8 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditArticleDto, EditOrderDto, EditPPArticleDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { ArticlesService, ChecklistDto, ChecklistsService, EditPPArticleDto, OrderDto, OrdersService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
-import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
-import jspdf from 'jspdf';
-import html2canvas from 'html2canvas';
 import { ValidationService } from '../../shared/validation.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditService } from '../../edit.service';
@@ -80,11 +77,6 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
   ngOnChanges(changes: SimpleChanges): void {
     this.editService.navigationPath = '/container-request-page/productionPlanningPP';
 
-    this.checklistService.checklistsGet()
-      .subscribe(x => {
-        this.allChecklists.set(x);
-      });
-
     this.orderService.ordersIdGet(this.id)
       .subscribe(x => {
         if (x !== null && x !== undefined) {
@@ -96,14 +88,6 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
             .subscribe(x => x.forEach(x => {
               this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
             }));
-
-          this.checklistService.checklistsIdGet(this.currOrder().checklistId)
-            .subscribe(x => {
-              if (x.checklistname !== null && x.checklistname !== undefined) {
-                this.editService.currChecklistname.set(x.checklistname);
-                this.setAreArticlesValid();
-              }
-            });
         }
       });
   }

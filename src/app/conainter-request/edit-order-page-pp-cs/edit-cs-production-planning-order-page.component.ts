@@ -1,11 +1,9 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditArticleDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { ArticlesService, ChecklistDto, ChecklistsService, EditArticleDto, OrderDto, OrdersService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
-import jspdf from 'jspdf';
-import html2canvas from 'html2canvas';
 import { ValidationService } from '../../shared/validation.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditService } from '../../edit.service';
@@ -25,8 +23,6 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   router = inject(Router);
   orderService = inject(OrdersService);
   checklistService = inject(ChecklistsService);
-  tlinquiriesService = inject(TlinquiriesService);
-  csinquiriesService = inject(CsinquiriesService);
   validationService = inject(ValidationService);
   editService = inject(EditService);
 
@@ -85,11 +81,6 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   ngOnChanges(changes: SimpleChanges): void {
     this.editService.navigationPath = '/container-request-page/productionPlanningCS';
 
-    this.checklistService.checklistsGet()
-      .subscribe(x => {
-        this.allChecklists.set(x);
-      });
-
     this.orderService.ordersIdGet(this.id)
       .subscribe(x => {
         if (x !== null && x !== undefined) {
@@ -106,14 +97,6 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
                 this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, 1, '', false, false);
               }
             }));
-
-          this.checklistService.checklistsIdGet(this.currOrder().checklistId)
-            .subscribe(x => {
-              if (x.checklistname !== null && x.checklistname !== undefined) {
-                this.editService.currChecklistname.set(x.checklistname);
-              }
-              this.setAreArticlesValid();
-            });
         }
       });
   }
@@ -175,6 +158,5 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   setOrderSignals(): void {
     this.editService.setOrderSignals(this.currOrder());
     this.isApprovedByPpCs.set(this.currOrder().approvedByPpCs);
-
   }
 }

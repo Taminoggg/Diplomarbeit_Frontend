@@ -102,5 +102,14 @@
     "article-numbers": "Artikel Nummern",
     "information-in-overview": "Informationen in der Übersicht",
     "add-information-to-overview": "Informationen in die Übersicht hinzufügen",
-    "no-informations-available": "Keine Informationen verfügbar"
+    "no-informations-available": "Keine Informationen verfügbar",
+    "checklist-name": "Name der Checklist",
+    "add-step": "Schritt hinzufügen",
+    "add-checklist": "Checklist hinzufügen",
+    "messages-for-order": "Nachrichten pro Bestellung",
+    "files-for-order": "Dateien pro Bestellung",
+    "time-to-approve-cr-tl": "Zeit zur Genehmigung durch CR/TL",
+    "time-to-approve-pp-cs": "Zeit zur Genehmigung durch PP/CS",
+    "time-to-approve-pp-pp": "Zeit zur Genehmigung durch PP/PP",
+    "avg": "Durchschnitt"
 }

@@ -2,13 +2,15 @@ import { Injectable, inject, signal } from '@angular/core';
 import html2canvas from 'html2canvas';
 import jspdf from 'jspdf';
 import { Router } from '@angular/router';
-import { OrderDto, EditApproveOrderDto } from './shared/swagger';
+import { OrderDto, EditApproveOrderDto, ChecklistsService, OrdersService } from './shared/swagger';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EditService {
   router = inject(Router);
+  checklistService = inject(ChecklistsService);
+  orderService = inject(OrdersService);
 
   csId = signal(0);
   tlId = signal(0);
@@ -18,7 +20,6 @@ export class EditService {
   amount = signal(0);
   checklistId = signal(0);
   isApprovedByPpPp = signal(false);
-  currChecklistname = signal('');
   additonalInformation = signal('');
   navigationPath = '';
 
@@ -65,6 +66,5 @@ export class EditService {
     };
     return editOrder;
   }
-
 }
 

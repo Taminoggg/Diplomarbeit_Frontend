@@ -7,7 +7,6 @@ import { ChatForOrderComponent } from './chat-for-order/chat-for-order.component
 import { EditTlContainerRequestOrderPageComponent } from './conainter-request/edit-order-page-cr-tl/edit-tl-container-request-order-page.component';
 import { EditCsProductionPlanningOrderPageComponent } from './conainter-request/edit-order-page-pp-cs/edit-cs-production-planning-order-page.component';
 import { AdminComponent } from './admin/admin.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { EditPPProductionPlanningOrderPageComponent } from './conainter-request/edit-order-page-pp-pp/edit-pp-production-planning-order-page.component';
 import { SettingsComponent } from './settings/settings.component';
 
@@ -22,7 +21,6 @@ export const routes: Routes = [
   { path: 'edit-pp-production-planning-order-page/:id', component: EditPPProductionPlanningOrderPageComponent },
   { path: 'function-overview-age', component: FunctionOverviewPageComponent },
   { path: 'admin-page', component: AdminComponent },
-  { path: 'dashboard-page', component: DashboardComponent },
   { path: 'settings-page/:htmlContent', component: SettingsComponent },
   { path: 'chat-for-order/:id', component: ChatForOrderComponent },
 ];

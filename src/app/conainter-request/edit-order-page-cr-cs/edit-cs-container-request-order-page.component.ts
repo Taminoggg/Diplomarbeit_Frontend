@@ -1,11 +1,9 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddArticleDto, ArticleDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { AddArticleDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
-import jspdf from 'jspdf';
-import html2canvas from 'html2canvas';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidationService } from '../../shared/validation.service';
 import { EditService } from '../../edit.service';
@@ -27,7 +25,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   orderService = inject(OrdersService);
   checklistService = inject(ChecklistsService);
   csinquiriesService = inject(CsinquiriesService);
-  editSerivce = inject(EditService);
+  editService = inject(EditService);
 
   myForm!: FormGroup;
   currOrder = signal<OrderDto>(
@@ -93,12 +91,12 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   areArticleNumbersValid = signal<boolean>(true);
   isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
   isLoadingPlattfromValid = computed(() => this.validationService.isAnyInputValid(this.loadingPlattform()));
-  isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.editSerivce.customerName()));
-  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editSerivce.createdBy()));
+  isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.editService.customerName()));
+  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdBy()));
   isAbNumberValid = computed(() => this.validationService.isNumberValid(this.abnumber()));
   isGrossWeightInKgValid = computed(() => this.validationService.isNumberValid(this.grossWeightInKg()));
-  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editSerivce.status()));
-  isAmountValid = computed(() => this.validationService.isNumberValid(this.editSerivce.amount()));
+  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editService.status()));
+  isAmountValid = computed(() => this.validationService.isNumberValid(this.editService.amount()));
   isContainerSizeAValid = computed(() => this.validationService.isNumberValid(this.containersizeA()));
   isContainerSizeBValid = computed(() => this.validationService.isNumberValid(this.containersizeB()));
   isContainerSizeHcValid = computed(() => this.validationService.isNumberValid(this.containersizeHc()));
@@ -128,7 +126,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.editSerivce.navigationPath = '/container-request-page/containerRequestCS';
+    this.editService.navigationPath = '/container-request-page/containerRequestCS';
 
     this.checklistService.checklistsGeneratedByAdminGet()
       .subscribe(x => this.allChecklists.set(x));
@@ -208,35 +206,17 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   prepareSaveOrder() {
-    console.log(this.editSerivce.additonalInformation());
-
-    let order: EditOrderDto;
-    if (this.editSerivce.additonalInformation() === '') {
-      console.log(1);
-      order = {
-        customerName: this.editSerivce.customerName(),
-        status: this.editSerivce.status(),
-        createdBy: this.editSerivce.createdBy(),
-        amount: this.editSerivce.amount(),
-        checklistId: this.editSerivce.checklistId(),
-        id: this.id,
-        approvedByTl: this.isApprovedByTl(),
-        approvedByCs: this.isApprovedByCs()
-      };
-    } else {
-      console.log(2);
-      order = {
-        customerName: this.editSerivce.customerName(),
-        status: this.editSerivce.status(),
-        createdBy: this.editSerivce.createdBy(),
-        amount: this.editSerivce.amount(),
-        checklistId: this.editSerivce.checklistId(),
-        id: this.id,
-        approvedByTl: this.isApprovedByTl(),
-        approvedByCs: this.isApprovedByCs(),
-        additionalInformation: this.editSerivce.additonalInformation()
-      };
-    }
+    const order: EditOrderDto = {
+      customerName: this.editService.customerName(),
+      status: this.editService.status(),
+      createdBy: this.editService.createdBy(),
+      amount: this.editService.amount(),
+      checklistId: this.editService.checklistId(),
+      id: this.id,
+      approvedByTl: this.isApprovedByTl(),
+      approvedByCs: this.isApprovedByCs(),
+      additionalInformation: this.editService.additonalInformation() === '' ? null : this.editService.additonalInformation()
+  };
 
     return order;
   }
@@ -248,7 +228,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       .subscribe(x => {
         this.saveCsInquery();
         this.saveArticlesToDB();
-        this.editSerivce.navigateToPath();
+        this.editService.navigateToPath();
       });
   }
 
@@ -265,7 +245,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
         };
 
         this.orderService.ordersApprovedByCrCsPut(editOrder)
-          .subscribe(x => this.editSerivce.navigateToPath());
+          .subscribe(x => this.editService.navigateToPath());
       });
   }
 
@@ -310,7 +290,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   setOrderSignals() {
-    this.editSerivce.setOrderSignals(this.currOrder());
+    this.editService.setOrderSignals(this.currOrder());
     this.isApprovedByCs.set(this.currOrder().approvedByCrCs);
     this.isApprovedByTl.set(this.currOrder().approvedByCrTl);
   }
