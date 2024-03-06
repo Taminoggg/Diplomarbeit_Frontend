@@ -11,21 +11,12 @@
  */
 
 
-export interface OrderDto { 
+export interface EditPpCrArticleDto { 
     id: number;
-    status: string;
-    customerName: string;
-    createdBy: string;
-    amount: number;
-    additionalInformation: string;
-    lastUpdated: string;
-    checklistId: number;
-    sped: string;
-    country: string;
-    readyToLoad: string;
-    abNumber: number;
-    csid: number;
-    tlid: number;
-    ppId: number;
+    minHeigthRequired: number;
+    desiredDeliveryDate: string;
+    inquiryForFixedOrder: boolean;
+    inquiryForQuotation: boolean;
+    articleNumber: number;
 }
 

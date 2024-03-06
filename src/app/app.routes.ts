@@ -9,6 +9,7 @@ import { EditCsProductionPlanningOrderPageComponent } from './conainter-request/
 import { AdminComponent } from './admin/admin.component';
 import { EditPPProductionPlanningOrderPageComponent } from './conainter-request/edit-order-page-pp-pp/edit-pp-production-planning-order-page.component';
 import { SettingsComponent } from './settings/settings.component';
+import { NewProductionPlanningOrderPageComponent } from './conainter-request/new-order-page-pp/new-production-planning-order-page.component';
 
 
 export const routes: Routes = [
@@ -23,4 +24,5 @@ export const routes: Routes = [
   { path: 'admin-page', component: AdminComponent },
   { path: 'settings-page/:htmlContent', component: SettingsComponent },
   { path: 'chat-for-order/:id', component: ChatForOrderComponent },
+  { path: 'new-production-planning-page', component: NewProductionPlanningOrderPageComponent },
 ];

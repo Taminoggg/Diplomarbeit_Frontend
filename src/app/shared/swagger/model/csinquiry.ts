@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 import { Order } from './order';
-import { Article } from './article';
+import { ArticleCR } from './articleCR';
 
 
 export interface Csinquiry { 
@@ -26,7 +26,11 @@ export interface Csinquiry {
     thctb?: boolean;
     readyToLoad?: string;
     loadingPlattform?: string | null;
-    readonly articles?: Array<Article> | null;
+    approvedByCrCs?: boolean;
+    approvedByCrCsTime?: string | null;
+    isDirectLine?: boolean;
+    isFastLine?: boolean;
+    readonly articles?: Array<ArticleCR> | null;
     readonly orders?: Array<Order> | null;
 }
 

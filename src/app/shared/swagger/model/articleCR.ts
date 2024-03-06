@@ -9,17 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Csinquiry } from './csinquiry';
 
 
-export interface AddOrderDto { 
-    status: string;
-    customerName: string;
-    additionalInformation?: string | null;
-    createdBy: string;
-    amount: number;
-    checklistId?: number | null;
-    csId?: number | null;
-    tlId?: number | null;
-    ppId?: number | null;
+export interface ArticleCR { 
+    id?: number;
+    articleNumber?: number;
+    pallets?: number;
+    csinquiryId?: number;
+    csinquiry?: Csinquiry;
 }
 

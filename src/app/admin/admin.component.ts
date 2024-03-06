@@ -41,9 +41,9 @@ export class AdminComponent implements OnInit {
     });
 
     this.dataService.allOrders().forEach(order => {
-      this.timeToGetApprovedByTl.next(this.timeToGetApprovedByTl.value.set(order.id, this.calculateDayDiff(order.approvedByCsTime, order.approvedByTlTime)));
-      this.timeToGetApprovedByPpCs.next(this.timeToGetApprovedByPpCs.value.set(order.id, this.calculateDayDiff(order.approvedByCsTime, order.approvedByPpCsTime)));
-      this.timeToGetApprovedByPpPp.next(this.timeToGetApprovedByPpPp.value.set(order.id, this.calculateDayDiff(order.approvedByPpCsTime, order.approvedByPpPpTime)));
+      //this.timeToGetApprovedByTl.next(this.timeToGetApprovedByTl.value.set(order.id, this.calculateDayDiff(order.approvedByCsTime, order.approvedByTlTime)));
+      //this.timeToGetApprovedByPpCs.next(this.timeToGetApprovedByPpCs.value.set(order.id, this.calculateDayDiff(order.approvedByCsTime, order.approvedByPpCsTime)));
+      //this.timeToGetApprovedByPpPp.next(this.timeToGetApprovedByPpPp.value.set(order.id, this.calculateDayDiff(order.approvedByPpCsTime, order.approvedByPpPpTime)));
     });
   }
 

@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { ArticlesCRService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -18,7 +18,7 @@ import { EditService } from '../../edit.service';
 export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
 
-  articlesService = inject(ArticlesService);
+  articlesCRService = inject(ArticlesCRService);
   fb = inject(FormBuilder);
   router = inject(Router);
   orderService = inject(OrdersService);
@@ -34,24 +34,17 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       status: 'Test',
       customerName: 'Test',
       createdBy: 'Test',
-      approvedByCrCs: false,
-      approvedByCrTl: false,
-      approvedByPpCs: false,
-      approvedByPpPp: false,
       amount: 0,
       lastUpdated: 'Test',
       checklistId: 1,
       csid: 1,
       tlid: 1,
+      ppId: 1,
       readyToLoad: 'Test',
       abNumber: 1,
       country: 'Test',
       sped: 'Test',
-      additionalInformation: '',
-      approvedByCsTime: '',
-      approvedByTlTime: '',
-      approvedByPpCsTime: '',
-      approvedByPpPpTime: ''
+      additionalInformation: ''
     });
   allChecklists = signal<ChecklistDto[]>([]);
   currCsInquiry = signal<CsinquiryDto>({
@@ -66,7 +59,11 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     freeDetention: false,
     thctb: false,
     readyToLoad: '',
-    loadingPlattform: ''
+    loadingPlattform: '',
+    approvedByCrCs: false,
+    approvedByCrCsTime: "",
+    isFastLine: false,
+    isDirectLine: false
   });
   currTlInquiry = signal<TlinquiryDto>(
     {
@@ -88,7 +85,9 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       portOfDeparture: 'Loading',
       ets: '17.12.2023',
       eta: '17.12.2023',
-      boat: 'Loading'
+      boat: 'Loading',
+      approvedByCrTl: false,
+      approvedByCrTlTime: ""
     });
 
   //OrderData
@@ -179,9 +178,9 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
               }
             });
 
-          this.articlesService.articlesCsInquiryIdGet(this.currOrder().csid)
+          this.articlesCRService.articlesCRCsInquiryIdGet(this.currOrder().csid)
             .subscribe(x => x.forEach(x => {
-              this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id);
+              this.addArticle(x.articleNumber, x.pallets, x.id);
               console.log('adding Article');
             }));
 
@@ -232,12 +231,10 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
 
-  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastline: boolean, id: number) {
+  addArticle(articleNumber: number, palletAmount: number, id: number) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber, Validators.required],
       palletAmount: [palletAmount, Validators.required],
-      directline: [directLine],
-      fastline: [fastline],
       id: [id]
     });
 
@@ -261,8 +258,6 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       amount: this.editService.amount(),
       checklistId: this.editService.checklistId(),
       id: this.id,
-      approvedByTl: this.isApprovedByTl(),
-      approvedByCs: this.isApprovedByCs(),
       additionalInformation: this.editService.additonalInformation() === '' ? undefined : this.editService.additonalInformation()
     };
 
@@ -310,14 +305,12 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.orderService.ordersPut(order)
       .subscribe(_ => {
         this.saveTlInquery();
-        this.orderService.ordersApprovedByCrTlPut(this.editService.createEditOrder(this.currOrder().id))
+        this.tlinquiriesService.tlinquiriesApproveCrTlPut(this.editService.createEditOrder(this.currOrder().id))
           .subscribe(x => this.editService.navigateToPath());
       });
   }
 
   setOrderSignals(): void {
-    this.isApprovedByCs.set(this.currOrder().approvedByCrCs);
-    this.isApprovedByTl.set(this.currOrder().approvedByCrTl);
     this.editService.setOrderSignals(this.currOrder());
   }
 

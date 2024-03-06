@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import html2canvas from 'html2canvas';
 import jspdf from 'jspdf';
 import { Router } from '@angular/router';
-import { OrderDto, EditApproveOrderDto, ChecklistsService, OrdersService } from './shared/swagger';
+import { OrderDto, EditApproveDto, ChecklistsService, OrdersService } from './shared/swagger';
 
 @Injectable({
   providedIn: 'root'
@@ -59,8 +59,8 @@ export class EditService {
     }
   }
 
-  createEditOrder(id: number): EditApproveOrderDto {
-    let editOrder: EditApproveOrderDto = {
+  createEditOrder(id: number): EditApproveDto {
+    let editOrder: EditApproveDto = {
       id: id,
       approve: true
     };

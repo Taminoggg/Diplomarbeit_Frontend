@@ -24,5 +24,7 @@ export interface EditCsinquiryDto {
     thctb: boolean;
     readyToLoad: string;
     loadingPlattform: string;
+    isFastLine: boolean;
+    isDirectLine: boolean;
 }
 

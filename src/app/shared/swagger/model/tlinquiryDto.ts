@@ -31,5 +31,7 @@ export interface TlinquiryDto {
     ets: string;
     eta: string;
     boat: string;
+    approvedByCrTl: boolean;
+    approvedByCrTlTime: string;
 }
 

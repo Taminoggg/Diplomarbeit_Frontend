@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { Router } from '@angular/router';
 import { MatDialogModule } from '@angular/material/dialog'
 import { MatDialog } from '@angular/material/dialog';
-import { ArticlesService, CsinquiriesService, CsinquiryDto, OrderDto } from '../../shared/swagger';
+import { CsinquiriesService, CsinquiryDto } from '../../shared/swagger';
 import { ChecklistPopUpComponent } from '../../checklist-pop-up/checklist-pop-up.component';
 import { TranslocoModule } from '@ngneat/transloco';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
@@ -19,8 +19,6 @@ import { NgSignalDirective } from '../../shared/ngSignal.directive';
 })
 export class ContainerRequestPageComponent implements OnInit, OnChanges {
   @Input() htmlContent = 'containerRequestTL'
-
-  articleService = inject(ArticlesService);
 
   ngOnChanges(changes: SimpleChanges): void {
     const tableConfig = localStorage.getItem(this.htmlContent + 'tableConfig');
@@ -57,7 +55,6 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'approved', value: 'approvedByCrTl' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'sped', value: 'sped' },
-        { label: 'checklist', value: 'assignment' },
         { label: 'edit', value: 'create' },
         { label: 'chat', value: 'chat' }
       ];
@@ -73,7 +70,6 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'factory', value: 'factory' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'plant', value: 'plant' },
-        { label: 'checklist', value: 'assignment' },
         { label: 'edit', value: 'create' },
         { label: 'chat', value: 'chat' }
       ];
@@ -89,7 +85,6 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'factory', value: 'factory' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'plant', value: 'plant' },
-        { label: 'checklist', value: 'assignment' },
         { label: 'edit', value: 'create' },
         { label: 'chat', value: 'chat' }
       ];
@@ -98,7 +93,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.getFilteredOrders('none', '');
+    this.dataService.refreshPage('none', '', this.htmlContent);
   }
 
   selectedFilter = signal<string>('customername');
@@ -112,11 +107,11 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   filterCsByApproved = signal(false);
 
   setSelectedFilter(value: string) {
-    this.getFilteredOrders('none', '');
+    this.dataService.refreshPage(this.selectedFilter(), this.filterValue(), this.htmlContent);
 
     this.selectedFilter.set(value);
     if (this.selectedFilter() === 'approvedByPp' || this.selectedFilter() === 'approvedByCs' || this.selectedFilter() === 'approvedByTl' || this.selectedFilter() === 'approvedByPpCs') {
-      this.getFilteredOrders(this.selectedFilter(), "false");
+      this.dataService.refreshPage(this.selectedFilter(), 'false', this.htmlContent);
     }
 
     this.filterValue.set('');
@@ -143,20 +138,12 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     return [];
   }
 
-  getFilteredOrders(filter: string, filterString: string) {
-    if (this.htmlContent !== "containerRequestCS") {
-      this.dataService.refreshPage(filter, filterString, this.htmlContent);
-    } else {
-      this.dataService.refreshPage(filter, filterString, '');
-    }
-  }
-
   orderOrders(orderString: string): void {
     this.dataService.getOrdersOrderedBy(orderString);
   }
 
   filterOrders() {
-    this.getFilteredOrders(this.selectedFilter(), this.filterValue());
+    this.dataService.refreshPage(this.selectedFilter(), this.filterValue(), this.htmlContent);
   }
 
   openDialog(id: number) {

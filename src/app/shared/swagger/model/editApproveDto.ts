@@ -11,21 +11,8 @@
  */
 
 
-export interface OrderDto { 
+export interface EditApproveDto { 
     id: number;
-    status: string;
-    customerName: string;
-    createdBy: string;
-    amount: number;
-    additionalInformation: string;
-    lastUpdated: string;
-    checklistId: number;
-    sped: string;
-    country: string;
-    readyToLoad: string;
-    abNumber: number;
-    csid: number;
-    tlid: number;
-    ppId: number;
+    approve: boolean;
 }
 

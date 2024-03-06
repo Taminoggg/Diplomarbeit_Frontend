@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditApproveOrderDto, AddArticleDto, AddCsinquiryDto, AddOrderDto, AddTlinquiryDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, OrdersService, TlinquiriesService, TlinquiryDto, AddChecklistDto, StepsService, AddStepDto } from '../../shared/swagger';
+import { AddArticleCRDto, AddCsinquiryDto, AddOrderDto, AddTlinquiryDto, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, OrdersService, TlinquiriesService, AddChecklistDto, StepsService, AddStepDto, ArticlesCRService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
-import { TranslocoModule } from '@ngneat/transloco';
+import { flatten, TranslocoModule } from '@ngneat/transloco';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ValidationService } from '../../shared/validation.service';
@@ -39,7 +39,7 @@ export class NewContainerOrderPageComponent implements OnInit {
   validationService = inject(ValidationService);
   checklistService = inject(ChecklistsService);
   csInquiryService = inject(CsinquiriesService);
-  articlesService = inject(ArticlesService);
+  articlesCRService = inject(ArticlesCRService);
   tlInquiryService = inject(TlinquiriesService);
   cdr = inject(ChangeDetectorRef);
 
@@ -67,6 +67,8 @@ export class NewContainerOrderPageComponent implements OnInit {
   thctb = signal(false);
   readyToLoad = signal('17.12.2023');
   loadingPlattform = signal('Test');
+  fastLine = signal(false);
+  directLine = signal(false);
 
   isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
   isLoadingPlattfromValid = computed(() => this.validationService.isAnyInputValid(this.readyToLoad()));
@@ -80,6 +82,7 @@ export class NewContainerOrderPageComponent implements OnInit {
   isContainerSizeBValid = computed(() => this.validationService.isNumberValid(this.containersizeB()));
   isContainerSizeHcValid = computed(() => this.validationService.isNumberValid(this.containersizeHc()));
   areArticleNumbersValid = signal<boolean>(true);
+
   setAreArticleNumbersValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
       if (this.getFormGroup(i).get('articleNumber')!.value < 1) {
@@ -87,7 +90,7 @@ export class NewContainerOrderPageComponent implements OnInit {
         return;
       }
 
-      if (this.getFormGroup(i).get('directline')!.value === true && this.getFormGroup(i).get('palletAmount')!.value < 1) {
+      if ((this.fastLine() === true && this.getFormGroup(i).get('palletAmount')!.value < 1) || this.directLine() === true && this.getFormGroup(i).get('palletAmount')!.value < 1) {
         this.areArticleNumbersValid.set(false);
         return;
       }
@@ -164,7 +167,9 @@ export class NewContainerOrderPageComponent implements OnInit {
       freeDetention: this.freeDetention(),
       thctb: this.thctb(),
       readyToLoad: this.readyToLoad(),
-      loadingPlattform: this.loadingPlattform()
+      loadingPlattform: this.loadingPlattform(),
+      isDirectLine: this.directLine(),
+      isFastLine: this.fastLine()
     };
 
     let tlInquiry: AddTlinquiryDto = {
@@ -194,15 +199,15 @@ export class NewContainerOrderPageComponent implements OnInit {
       .subscribe(csInquiryObj => {
         for (let i = 0; i < this.articlesFormArray.length; i++) {
 
-          let article: AddArticleDto = {
-            isDirectLine: this.getFormGroup(i).get('directline')!.value,
-            isFastLine: this.getFormGroup(i).get('fastLine')!.value,
+
+          let article: AddArticleCRDto = {
             pallets: this.getFormGroup(i).get('palletAmount')!.value,
             articleNumber: this.getFormGroup(i).get('articleNumber')!.value,
             csInquiryId: csInquiryObj.id
           };
+          console.log(article);
 
-          this.articlesService.articlesPost(article).subscribe(x =>
+          this.articlesCRService.articlesCRPost(article).subscribe(x =>
             console.log('article posted: ' + x.id)
           );
         }
@@ -221,6 +226,7 @@ export class NewContainerOrderPageComponent implements OnInit {
 
             this.checklistService.checklistsPost(checklistDto)
             .subscribe(currChecklist => {
+              console.log(csInquiryObj.id);
               if(this.additonalInformation() === ''){
                 order = {
                   customerName: this.customerName(),
@@ -228,8 +234,8 @@ export class NewContainerOrderPageComponent implements OnInit {
                   createdBy: this.createdBy(),
                   amount: this.amount(),
                   checklistId: currChecklist.id,
-                  csid: csInquiryObj.id,
-                  tlid: tlInquiryObj.id
+                  csId: csInquiryObj.id,
+                  tlId: tlInquiryObj.id
                 };
               }else{
                 order = {
@@ -238,8 +244,8 @@ export class NewContainerOrderPageComponent implements OnInit {
                   createdBy: this.createdBy(),
                   amount: this.amount(),
                   checklistId: this.checklistId(),
-                  csid: csInquiryObj.id,
-                  tlid: tlInquiryObj.id,
+                  csId: csInquiryObj.id,
+                  tlId: tlInquiryObj.id,
                   additionalInformation: this.additonalInformation()
                 };
               }

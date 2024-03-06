@@ -32,6 +32,8 @@ export interface Tlinquiry {
     ets?: string;
     eta?: string;
     boat?: string | null;
+    approvedByCrTl?: boolean;
+    approvedByCrTlTime?: string | null;
     readonly orders?: Array<Order> | null;
 }
 

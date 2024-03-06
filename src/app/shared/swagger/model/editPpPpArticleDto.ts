@@ -11,21 +11,14 @@
  */
 
 
-export interface OrderDto { 
+export interface EditPpPpArticleDto { 
     id: number;
-    status: string;
-    customerName: string;
-    createdBy: string;
-    amount: number;
-    additionalInformation: string;
-    lastUpdated: string;
-    checklistId: number;
-    sped: string;
-    country: string;
-    readyToLoad: string;
-    abNumber: number;
-    csid: number;
-    tlid: number;
-    ppId: number;
+    shortText: string;
+    deliveryDate: string;
+    nozzle: string;
+    factory: string;
+    productionOrder: string;
+    plannedOrder: string;
+    plant: string;
 }
 

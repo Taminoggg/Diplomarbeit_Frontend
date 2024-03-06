@@ -55,10 +55,6 @@ export class SettingsComponent implements OnInit {
       status: 'Test',
       customerName: 'Test',
       createdBy: 'Test',
-      approvedByCrCs: false,
-      approvedByCrTl: false,
-      approvedByPpCs: false,
-      approvedByPpPp: false,
       amount: 1,
       lastUpdated: 'Test',
       checklistId: 1,
@@ -69,10 +65,7 @@ export class SettingsComponent implements OnInit {
       abNumber: 1,
       readyToLoad: 'Test',
       additionalInformation: '',
-      approvedByCsTime: '',
-      approvedByTlTime: '',
-      approvedByPpCsTime: '',
-      approvedByPpPpTime: ''
+      ppId: 1
     };
   
     let propertiesToCheck:string[] = [];

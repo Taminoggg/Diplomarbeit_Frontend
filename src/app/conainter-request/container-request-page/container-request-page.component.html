@@ -9,6 +9,10 @@
   <button (click)="navigateToPage('/new-container-order-page')">
     <h2>{{'new' | transloco}}</h2>
   </button>
+  }@else if (htmlContent === 'productionPlanningCS') {
+    <button (click)="navigateToPage('/new-production-planning-page')">
+      <h2>{{'new' | transloco}}</h2>
+    </button>
   }
 </div>
 
@@ -75,9 +79,6 @@
     @for (currOrder of dataService.allOrders(); track $index) {
     <tr>
       @for (prop of dataService.tableHeaders; track $index) {
-      @if (prop.value !== 'approvedByCrCs' && prop.value !== 'approvedByCrTl' && prop.value !== 'approvedByPpCs' &&
-      prop.value !==
-      'approvedByPpPp') {
       @if(prop.value === 'chat'){
       <td (click)="navigateToPage('/chat-for-order/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
       }@else if (prop.value === 'assignment') {
@@ -87,26 +88,23 @@
       }@else {
       <td>
         @if (prop.value === 'articleNumbers') {
-        <label>{{getArticlesForOrder(currOrder.id)}}</label>
+        {{getArticlesForOrder(currOrder.id)}}
         }@else if(prop.value === 'factory') {
-        <label>{{getFactoriesForOrder(currOrder.id)}}</label>
+        {{getFactoriesForOrder(currOrder.id)}}
         }@else if(prop.value === 'plant'){
-        <label>{{getPlantsForOrder(currOrder.id)}}</label>
-        }@else {
-        @if (currOrder[prop.value].toString().length > 30) {
-        {{currOrder[prop.value].toString().substring(0, 30)}}...
+        {{getPlantsForOrder(currOrder.id)}}
+        }@else if(prop.value === 'approvedByPpPp'){
+        TEST
+        }@else if(prop.value === 'approvedByPpCs'){
+        TEST
+        }@else if(prop.value === 'approvedByCrTl'){
+        TEST
+        }@else if(prop.value === 'approvedByCrCs'){
+        TEST
         }@else {
         {{currOrder[prop.value]}}
         }
-        }
       </td>
-      }
-      }@else {
-      @if (currOrder[prop.value]) {
-      <td>{{'yes' | transloco}}</td>
-      }@else {
-      <td>{{'no' | transloco}}</td>
-      }
       }
       }
     </tr>

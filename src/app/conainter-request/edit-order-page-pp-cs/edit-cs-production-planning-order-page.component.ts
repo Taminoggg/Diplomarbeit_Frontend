@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticlesService, ChecklistDto, ChecklistsService, EditArticleDto, OrderDto, OrdersService } from '../../shared/swagger';
+import { ArticlesPPService, ChecklistDto, ChecklistsService, EditPpCrArticleDto, OrderDto, OrdersService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -18,7 +18,7 @@ import { EditService } from '../../edit.service';
 export class EditCsProductionPlanningOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
 
-  articlesService = inject(ArticlesService);
+  articlesPPService = inject(ArticlesPPService);
   fb = inject(FormBuilder);
   router = inject(Router);
   orderService = inject(OrdersService);
@@ -32,19 +32,12 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
       status: 'Test',
       customerName: 'Test',
       createdBy: 'Test',
-      approvedByCrCs: false,
-      approvedByCrTl: false,
-      approvedByPpCs: false,
-      approvedByPpPp: false,
-      approvedByCsTime: '',
-      approvedByTlTime: '',
-      approvedByPpCsTime: '',
-      approvedByPpPpTime: '',
       amount: 0,
       lastUpdated: 'Test',
       checklistId: 1,
-      csid: 1,
-      tlid: 1,
+      csid: 0,
+      tlid: 0,
+      ppId: 1,
       readyToLoad: 'Test',
       abNumber: 1,
       country: 'Test',
@@ -85,16 +78,20 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
       .subscribe(x => {
         if (x !== null && x !== undefined) {
           this.currOrder.set(x);
-          console.log(this.currOrder());
+          
           this.setOrderSignals();
+          console.log(this.currOrder());
+          console.log('articlesForId');
 
-          this.articlesService.articlesCsInquiryIdGet(this.currOrder().csid)
+          this.articlesPPService.articlesPPProductionPlanningIdGet(this.currOrder().ppId)
             .subscribe(x => x.forEach(x => {
+              console.log('article:');
+              console.log(x);
               if (x.minHeigthRequired !== 0 && x.desiredDeliveryDate !== null) {
-                this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation);
+                this.addArticle(x.articleNumber, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation);
               } else {
                 console.log('null');
-                this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, 1, '', false, false);
+                this.addArticle(x.articleNumber, x.id, 1, '', false, false);
               }
             }));
         }
@@ -105,12 +102,9 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id: number, minHeigthRequired: number, desiredDeliveryDate: string, inquiryForFixedOrder: boolean, inquiryForQuotation: boolean) {
+  addArticle(articleNumber: number, id: number, minHeigthRequired: number, desiredDeliveryDate: string, inquiryForFixedOrder: boolean, inquiryForQuotation: boolean) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber, Validators.required],
-      palletAmount: [palletAmount, Validators.required],
-      directline: [directLine],
-      fastLine: [fastLine],
       id: [id],
       minHeigthRequired: [minHeigthRequired],
       desiredDeliveryDate: [desiredDeliveryDate],
@@ -133,30 +127,31 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   saveOrder(): void {
     console.log(this.articlesFormArray.length);
     for (let i = 0; i < this.articlesFormArray.length; i++) {
-      let article: EditArticleDto = {
+      let article: EditPpCrArticleDto = {
         id: this.getFormGroup(i).get('id')!.value,
         minHeigthRequired: this.getFormGroup(i).get('minHeigthRequired')!.value,
         desiredDeliveryDate: this.getFormGroup(i).get('desiredDeliveryDate')!.value,
         inquiryForFixedOrder: this.getFormGroup(i).get('inquiryForFixedOrder')!.value,
-        inquiryForQuotation: this.getFormGroup(i).get('inquiryForQuotation')!.value
+        inquiryForQuotation: this.getFormGroup(i).get('inquiryForQuotation')!.value,
+        articleNumber: this.getFormGroup(i).get('articleNumber')!.value
       };
 
       console.log('edited articles: ');
       if (i + 1 !== this.articlesFormArray.length) {
-        this.articlesService.articlesPut(article).subscribe(x => console.log(x));
+        this.articlesPPService.articlesPPEditPpCrArticlePut(article).subscribe(x => console.log(x));
       } else {
-        this.articlesService.articlesPut(article).subscribe(x => this.editService.navigateToPath());
+        this.articlesPPService.articlesPPEditPpCrArticlePut(article).subscribe(x => this.editService.navigateToPath());
       }
     }
   }
 
   publish() {
-    this.orderService.ordersApprovedByPpCsPut(this.editService.createEditOrder(this.currOrder().id))
-      .subscribe(x => this.saveOrder());
+    //this.orderService.ordersApprovedByPpCsPut(this.editService.createEditOrder(this.currOrder().id))
+    //  .subscribe(x => this.saveOrder());
   }
 
   setOrderSignals(): void {
     this.editService.setOrderSignals(this.currOrder());
-    this.isApprovedByPpCs.set(this.currOrder().approvedByPpCs);
+    //this.isApprovedByPpCs.set(this.currOrder().approvedByPpCs);
   }
 }

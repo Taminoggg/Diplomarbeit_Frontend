@@ -22,7 +22,11 @@ export interface CsinquiryDto {
     containersizeHc: number;
     freeDetention: boolean;
     thctb: boolean;
+    isFastLine: boolean;
+    isDirectLine: boolean;
     readyToLoad: string;
     loadingPlattform: string;
+    approvedByCrCs: boolean;
+    approvedByCrCsTime: string;
 }
 

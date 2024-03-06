@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddArticleDto, ArticlesService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveOrderDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { AddArticleCRDto, ArticlesCRService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -18,7 +18,7 @@ import { EditService } from '../../edit.service';
 export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
 
-  articlesService = inject(ArticlesService);
+  articlesCRService = inject(ArticlesCRService);
   validationService = inject(ValidationService);
   router = inject(Router);
   fb = inject(FormBuilder);
@@ -26,6 +26,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   checklistService = inject(ChecklistsService);
   csinquiriesService = inject(CsinquiriesService);
   editService = inject(EditService);
+  tlinquiryService = inject(TlinquiriesService);
 
   myForm!: FormGroup;
   currOrder = signal<OrderDto>(
@@ -34,24 +35,17 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       status: 'Test',
       customerName: 'Test',
       createdBy: 'Test',
-      approvedByCrCs: false,
-      approvedByCrTl: false,
-      approvedByPpCs: false,
-      approvedByPpPp: false,
       amount: 1,
       lastUpdated: 'Test',
       checklistId: 1,
       csid: 1,
       tlid: 1,
+      ppId: 1,
       sped: 'Test',
       country: 'Test',
       abNumber: 1,
       readyToLoad: 'Test',
-      additionalInformation: '',
-      approvedByCsTime: '',
-      approvedByTlTime: '',
-      approvedByPpCsTime: '',
-      approvedByPpPpTime: ''
+      additionalInformation: ''
     });
 
   allChecklists = signal<ChecklistDto[]>([]);
@@ -68,12 +62,18 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       freeDetention: false,
       thctb: false,
       readyToLoad: '01.01.1999',
-      loadingPlattform: 'Loading'
+      loadingPlattform: 'Loading',
+      approvedByCrCs: false,
+      approvedByCrCsTime: "",
+      isDirectLine: false,
+      isFastLine: false
     });
 
   //OrderData
   isApprovedByCs = signal(false);
   isApprovedByTl = signal(false);
+  fastLine = signal(false);
+  directLine = signal(false);
 
   //CsData
   container = signal('');
@@ -114,8 +114,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       this.isContainerSizeAValid() &&
       this.isContainerSizeBValid() &&
       this.isContainerSizeHcValid() &&
-      this.areArticleNumbersValid() &&
-      !this.isApprovedByCs()
+      this.areArticleNumbersValid()
     );
   });
 
@@ -136,14 +135,17 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
         this.currOrder.set(x);
         this.setOrderSignals();
 
-        this.articlesService.articlesCsInquiryIdGet(this.currOrder().csid)
-          .subscribe(x => x.forEach(x => this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id)));
+        this.articlesCRService.articlesCRCsInquiryIdGet(this.currOrder().csid)
+          .subscribe(x => x.forEach(x => this.addArticle(x.articleNumber, x.pallets, x.id)));
 
         this.csinquiriesService.csinquiriesIdGet(this.currOrder().csid)
           .subscribe(x => {
             this.currCsInquiry.set(x);
             this.setCsInquirySignals();
           });
+
+        this.tlinquiryService.tlinquiriesIdGet(this.currOrder().tlid)
+          .subscribe(x => this.isApprovedByTl.set(x.approvedByCrTl));
       });
   }
 
@@ -151,12 +153,10 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastline: boolean, id: number) {
+  addArticle(articleNumber: number, palletAmount: number, id: number) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber, Validators.required],
       palletAmount: [palletAmount, Validators.required],
-      directline: [directLine],
-      fastline: [fastline],
       id: [id]
     });
 
@@ -170,7 +170,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   removeArticle(index: number) {
     const articleFormGroup = this.getFormGroup(index);
     const articleId = articleFormGroup.get('id')?.value;
-    this.articlesService.articlesDelete(articleId).subscribe(x => console.log('article deleted: ' + articleId));
+    this.articlesCRService.articlesCRDelete(articleId).subscribe(x => console.log('article deleted: ' + articleId));
     this.articlesFormArray.removeAt(index);
   }
 
@@ -213,10 +213,8 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       amount: this.editService.amount(),
       checklistId: this.editService.checklistId(),
       id: this.id,
-      approvedByTl: this.isApprovedByTl(),
-      approvedByCs: this.isApprovedByCs(),
       additionalInformation: this.editService.additonalInformation() === '' ? null : this.editService.additonalInformation()
-  };
+    };
 
     return order;
   }
@@ -239,30 +237,29 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       .subscribe(x => {
         this.saveCsInquery();
         this.saveArticlesToDB();
-        let editOrder: EditApproveOrderDto = {
-          id: this.currOrder().id,
+        let editOrder: EditApproveDto = {
+          id: this.currOrder().csid,
           approve: true
         };
 
-        this.orderService.ordersApprovedByCrCsPut(editOrder)
-          .subscribe(x => this.editService.navigateToPath());
+
+        this.csinquiriesService.csinquiriesApproveCrCsPut(editOrder)
+          .subscribe(x =>  this.editService.navigateToPath());
       });
   }
 
   saveArticlesToDB() {
-    this.articlesService.articlesCsIdDelete(this.currCsInquiry().id)
+    this.articlesCRService.articlesCRCsIdDelete(this.currCsInquiry().id)
       .subscribe(x => {
         for (let i = 0; i < this.articlesFormArray.length; i++) {
 
-          let article: AddArticleDto = {
-            isDirectLine: this.getFormGroup(i).get('directline')!.value,
-            isFastLine: this.getFormGroup(i).get('fastline')!.value,
+          let article: AddArticleCRDto = {
             pallets: this.getFormGroup(i).get('palletAmount')!.value,
             articleNumber: this.getFormGroup(i).get('articleNumber')!.value,
             csInquiryId: this.currCsInquiry().id
           };
 
-          this.articlesService.articlesPost(article).subscribe(x =>
+          this.articlesCRService.articlesCRPost(article).subscribe(x =>
             console.log('article posted: ' + x.id)
           );
         }
@@ -282,7 +279,9 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       freeDetention: this.freeDetention(),
       thctb: this.thctb(),
       readyToLoad: this.readyToLoad(),
-      loadingPlattform: this.loadingPlattform()
+      loadingPlattform: this.loadingPlattform(),
+      isDirectLine: this.fastLine(),
+      isFastLine: this.directLine()
     }
 
     this.csinquiriesService.csinquiriesPut(editedCsInquery)
@@ -291,8 +290,6 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
 
   setOrderSignals() {
     this.editService.setOrderSignals(this.currOrder());
-    this.isApprovedByCs.set(this.currOrder().approvedByCrCs);
-    this.isApprovedByTl.set(this.currOrder().approvedByCrTl);
   }
 
   setCsInquirySignals() {
@@ -307,5 +304,8 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.thctb.set(this.currCsInquiry().thctb);
     this.readyToLoad.set(this.currCsInquiry().readyToLoad);
     this.loadingPlattform.set(this.currCsInquiry().loadingPlattform);
+    this.fastLine.set(this.currCsInquiry().isFastLine);
+    this.directLine.set(this.currCsInquiry().isDirectLine);
+    this.isApprovedByCs.set(this.currCsInquiry().approvedByCrCs);
   }
 }

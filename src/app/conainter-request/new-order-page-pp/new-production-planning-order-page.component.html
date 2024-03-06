@@ -1,0 +1,69 @@
+<div class="form-container">
+  <div class="form-row">
+    <button class="back-button" (click)="editService.navigateToPath()">{{'back' | transloco}}</button>
+    <button class="save-button" (click)="editService.generatePDFFromContent()">{{'generatePDF' | transloco}}</button>
+  </div>
+
+  <div id="contentToConvert" class="form-content">
+    <div class="csData">
+      <div class="form-row">
+        <div class="form-group">
+          <label>{{'customer' | transloco}}</label>
+          <input [ngSignal]="customerName" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>{{'created-by' | transloco}}</label>
+          <input [ngSignal]="createdBy" type="text">
+        </div>
+      </div>
+
+      <form [formGroup]="myForm">
+        <div formArrayName="articles">
+          @for (articleGroup of articlesFormArray.controls; track $index) {
+          <div [formGroup]="getFormGroup($index)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>{{'min-heigth-required' | transloco}}</label>
+                <input (input)="setAreArticlesValid()" type="number" formControlName="minHeigthRequired">
+                @if (!validationService.isNumberValid(getFormGroup($index).get('minHeigthRequired')!.value)) { <label
+                  class="error-message">
+                  {{'error-message-number' | transloco}}</label>
+                }
+              </div>
+
+              <div class="form-group">
+                <div class="checkbox-container">
+                  <label class="checkbox-label">{{'inquiry-for-fixed-order' | transloco}}</label>
+                  <input class="checkbox-input" type="checkbox" formControlName="inquiryForFixedOrder">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="checkbox-container">
+                  <label class="checkbox-label">{{'inquiry-for-quotation' | transloco}}</label>
+                  <input class="checkbox-input" type="checkbox" formControlName="inquiryForQuotation">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>{{'desired-delivery-date' | transloco}}</label>
+                <input (input)="setAreArticlesValid()" type="text" formControlName="desiredDeliveryDate">
+                @if (!validationService.isDateValid(getFormGroup($index).get('desiredDeliveryDate')!.value)) { <label
+                  class="error-message">
+                  {{'error-message-date' | transloco}}</label>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </form>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
+      </div>
+    </div>
+  </div>

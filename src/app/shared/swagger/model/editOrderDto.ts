@@ -17,8 +17,6 @@ export interface EditOrderDto {
     status: string;
     customerName: string;
     createdBy: string;
-    approvedByCs: boolean;
-    approvedByTl: boolean;
     amount: number;
     checklistId: number;
 }

@@ -120,6 +120,20 @@
       </div>
 
       <div class="form-group">
+        <div class="checkbox-container">
+          <label class="checkbox-label">{{'fast-line' | transloco}}</label>
+          <input class="checkbox-input" [ngSignal]="fastLine" type="checkbox">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-container">
+          <label class="checkbox-label">{{'direct-line' | transloco}}</label>
+          <input class="checkbox-input" [ngSignal]="directLine" type="checkbox">
+        </div>
+      </div>
+
+      <div class="form-group">
         <label>{{'ready-to-load' | transloco}}</label>
         <input [ngSignal]="readyToLoad" type="text">
         @if(!isReadyToLoadValid()){
@@ -146,16 +160,7 @@
                 }
             </div>
 
-            <div class="form-group">
-              <div class="checkbox-container">
-                <label class="checkbox-label">{{'direct-line' | transloco}}</label>
-                <input class="checkbox-input" (change)="setAreArticleNumbersValid()" type="checkbox"
-                  formControlName="directline">
-              </div>
-
-            </div>
-
-            @if (getFormGroup($index).get('directline')!.value) {
+            @if (fastLine() === true || directLine() === true) {
             <div class="form-group">
               <label>{{'pallet-amount' | transloco}}</label>
               <input (change)="setAreArticleNumbersValid()" min="1" type="number" formControlName="palletAmount">

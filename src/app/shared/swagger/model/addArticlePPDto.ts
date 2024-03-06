@@ -11,15 +11,9 @@
  */
 
 
-export interface AddOrderDto { 
-    status: string;
-    customerName: string;
-    additionalInformation?: string | null;
-    createdBy: string;
-    amount: number;
-    checklistId?: number | null;
-    csId?: number | null;
-    tlId?: number | null;
-    ppId?: number | null;
+export interface AddArticlePPDto { 
+    articleNumber: number;
+    pallets: number;
+    productionPlanningId: number;
 }
 

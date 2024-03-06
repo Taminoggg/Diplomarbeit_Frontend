@@ -1,11 +1,12 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticlesService, ChecklistDto, ChecklistsService, EditPPArticleDto, OrderDto, OrdersService } from '../../shared/swagger';
+import { ArticlesPPService, ChecklistDto, ChecklistsService, EditPpPpArticleDto, OrderDto, OrdersService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { TranslocoModule } from '@ngneat/transloco';
 import { ValidationService } from '../../shared/validation.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditService } from '../../edit.service';
+import { EditPPArticleDto } from '../../shared/swagger/model/editPPArticleDto';
 
 @Component({
   selector: 'app-edit-order-page',
@@ -17,7 +18,7 @@ import { EditService } from '../../edit.service';
 export class EditPPProductionPlanningOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
 
-  articlesService = inject(ArticlesService);
+  articlesPPService = inject(ArticlesPPService);
   fb = inject(FormBuilder);
   editService = inject(EditService);
   orderService = inject(OrdersService);
@@ -30,19 +31,12 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
       status: 'Test',
       customerName: 'Test',
       createdBy: 'Test',
-      approvedByCrCs: false,
-      approvedByCrTl: false,
-      approvedByPpCs: false,
-      approvedByPpPp: false,
-      approvedByCsTime: '',
-      approvedByTlTime: '',
-      approvedByPpCsTime: '',
-      approvedByPpPpTime: '',
       amount: 0,
       lastUpdated: 'Test',
       checklistId: 1,
       csid: 1,
       tlid: 1,
+      ppId: 1,
       readyToLoad: 'Test',
       abNumber: 1,
       country: 'Test',
@@ -84,7 +78,7 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
           console.log(this.currOrder());
           this.setOrderSignals();
 
-          this.articlesService.articlesCsInquiryIdGet(this.currOrder().csid)
+          this.articlesPPService.articlesPPProductionPlanningIdGet(this.currOrder().ppId)
             .subscribe(x => x.forEach(x => {
               this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
             }));
@@ -132,7 +126,7 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
     console.log(this.articlesFormArray.length);
     for (let i = 0; i < this.articlesFormArray.length; i++) {
       console.log(this.getFormGroup(i).get('plant')!.value);
-      let article: EditPPArticleDto = {
+      let article: EditPpPpArticleDto = {
         id: this.getFormGroup(i).get('id')!.value,
         deliveryDate: this.getFormGroup(i).get('deliveryDate')!.value,
         plannedOrder: this.getFormGroup(i).get('plannedOrder')!.value,
@@ -145,21 +139,21 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
 
       console.log('edited articles: ');
       if (i + 1 !== this.articlesFormArray.length) {
-        this.articlesService.articlesProductionPlanningPut(article).subscribe(x => console.log(x));
+        this.articlesPPService.articlesPPEditPpPpArticlePut(article).subscribe(x => console.log(x));
       } else {
-        this.articlesService.articlesProductionPlanningPut(article).subscribe(x => this.editService.navigateToPath());
+        this.articlesPPService.articlesPPEditPpPpArticlePut(article).subscribe(x => this.editService.navigateToPath());
       }
     }
   }
 
   publish() {
-    this.orderService.ordersApprovedByPpPpPut(this.editService.createEditOrder(this.currOrder().id))
-      .subscribe(x => this.saveOrder());
+    //this.orderService.ordersApprovedByPpPpPut(this.editService.createEditOrder(this.currOrder().id))
+    //  .subscribe(x => this.saveOrder());
   }
 
   setOrderSignals(): void {
     this.editService.setOrderSignals(this.currOrder());
     console.log(this.currOrder());
-    this.isApprovedByPpPp.set(this.currOrder().approvedByPpPp);
+    //this.isApprovedByPpPp.set(this.currOrder().approvedByPpPp);
   }
 }

@@ -13,6 +13,7 @@ import { Csinquiry } from './csinquiry';
 import { MessageConversation } from './messageConversation';
 import { Checklist } from './checklist';
 import { Tlinquiry } from './tlinquiry';
+import { ProductionPlanning } from './productionPlanning';
 
 
 export interface Order { 
@@ -20,23 +21,17 @@ export interface Order {
     status?: string | null;
     customerName?: string | null;
     createdBy?: string | null;
-    approvedByCrCs?: boolean;
-    approvedByCrTl?: boolean;
-    approvedByPpCs?: boolean;
-    approvedByPpPp?: boolean;
-    approvedByCrCsTime?: string | null;
-    approvedByCrTlTime?: string | null;
-    approvedByPpCsTime?: string | null;
-    approvedByPpPpTime?: string | null;
     amount?: number;
     lastUpdated?: string;
-    checklistId?: number;
-    csid?: number;
-    tlid?: number;
+    checklistId?: number | null;
+    csId?: number | null;
+    tlId?: number | null;
+    ppId?: number | null;
     additionalInformation?: string | null;
     checklist?: Checklist;
     readonly messageConversations?: Array<MessageConversation> | null;
     cs?: Csinquiry;
     tl?: Tlinquiry;
+    productionPlanning?: ProductionPlanning;
 }
 
