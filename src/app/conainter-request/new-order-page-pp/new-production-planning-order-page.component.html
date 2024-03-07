@@ -48,16 +48,24 @@
 
               <div class="form-group">
                 <label>{{'desired-delivery-date' | transloco}}</label>
-                <input (input)="setAreArticlesValid()" type="text" formControlName="desiredDeliveryDate">
+                <input format="dd.MM.yyyy" (input)="setAreArticlesValid()" type="date" formControlName="desiredDeliveryDate">
                 @if (!validationService.isDateValid(getFormGroup($index).get('desiredDeliveryDate')!.value)) { <label
                   class="error-message">
                   {{'error-message-date' | transloco}}</label>
                 }
               </div>
             </div>
+
+            @if (articlesFormArray.controls.length > 1) {
+            <button class="remove-article-button" (click)="removeArticle($index)">{{'remove-article' |
+              transloco}}</button>
+            }
           </div>
           }
         </div>
+  
+        <button class="add-article-button" (click)="addArticle()">{{'add-article' |
+          transloco}}</button>
       </form>
     </div>
 

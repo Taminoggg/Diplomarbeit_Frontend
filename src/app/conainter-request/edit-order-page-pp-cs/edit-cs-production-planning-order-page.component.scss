@@ -117,3 +117,32 @@ select {
   font-weight: bold;
   margin-top: -10px;
 }
+
+.add-article-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  &:hover {
+    background-color: darkblue;
+  }
+}
+
+.remove-article-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: red;
+  color: white;
+  margin-top: 10px;
+
+  &:hover {
+    background-color: darkred;
+  }
+}

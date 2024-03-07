@@ -27,25 +27,6 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   csinquiriesService = inject(CsinquiriesService);
   validationService = inject(ValidationService);
   editService = inject(EditService);
-
-  currOrder = signal<OrderDto>(
-    {
-      id: 1,
-      status: 'Test',
-      customerName: 'Test',
-      createdBy: 'Test',
-      amount: 0,
-      lastUpdated: 'Test',
-      checklistId: 1,
-      csid: 1,
-      tlid: 1,
-      ppId: 1,
-      readyToLoad: 'Test',
-      abNumber: 1,
-      country: 'Test',
-      sped: 'Test',
-      additionalInformation: ''
-    });
   allChecklists = signal<ChecklistDto[]>([]);
   currCsInquiry = signal<CsinquiryDto>({
     id: 0,
@@ -167,8 +148,8 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.orderService.ordersIdGet(this.id)
       .subscribe(x => {
         if (x !== null && x !== undefined) {
-          this.currOrder.set(x);
-          console.log(this.currOrder());
+          this.editService.currOrder.set(x);
+          console.log(this.editService.currOrder());
           this.setOrderSignals();
           this.tlinquiriesService.tlinquiriesIdGet(this.editService.tlId())
             .subscribe(x => {
@@ -178,7 +159,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
               }
             });
 
-          this.articlesCRService.articlesCRCsInquiryIdGet(this.currOrder().csid)
+          this.articlesCRService.articlesCRCsInquiryIdGet(this.editService.currOrder().csid)
             .subscribe(x => x.forEach(x => {
               this.addArticle(x.articleNumber, x.pallets, x.id);
               console.log('adding Article');
@@ -192,7 +173,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
               }
             });
 
-          this.checklistService.checklistsIdGet(this.currOrder().checklistId)
+          this.checklistService.checklistsIdGet(this.editService.currOrder().checklistId)
             .subscribe(x => {
               if (x.checklistname !== null && x.checklistname !== undefined) {
                 this.currChecklistname.set(x.checklistname);
@@ -253,7 +234,6 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   prepareSaveOrder() {
     const order: EditOrderDto = {
       customerName: this.editService.customerName(),
-      status: this.editService.status(),
       createdBy: this.editService.createdBy(),
       amount: this.editService.amount(),
       checklistId: this.editService.checklistId(),
@@ -268,7 +248,11 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     let order = this.prepareSaveOrder();
 
     this.orderService.ordersPut(order)
-      .subscribe(_ => this.saveTlInquery());
+      .subscribe(x => {
+        this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('tl-in-progress'))
+          .subscribe(_ => _);
+        this.saveTlInquery();
+      });
   }
 
   saveTlInquery() {
@@ -304,14 +288,16 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
 
     this.orderService.ordersPut(order)
       .subscribe(_ => {
+        this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('edited-by-tl'))
+          .subscribe(_ => _);
         this.saveTlInquery();
-        this.tlinquiriesService.tlinquiriesApproveCrTlPut(this.editService.createEditOrder(this.currOrder().id))
+        this.tlinquiriesService.tlinquiriesApproveCrTlPut(this.editService.createEditStatusDto(this.editService.currOrder().tlid))
           .subscribe(x => this.editService.navigateToPath());
       });
   }
 
   setOrderSignals(): void {
-    this.editService.setOrderSignals(this.currOrder());
+    this.editService.setOrderSignals(this.editService.currOrder());
   }
 
   setCsInquirySignals() {

@@ -14,7 +14,6 @@
 export interface EditOrderDto { 
     id: number;
     additionalInformation?: string | null;
-    status: string;
     customerName: string;
     createdBy: string;
     amount: number;

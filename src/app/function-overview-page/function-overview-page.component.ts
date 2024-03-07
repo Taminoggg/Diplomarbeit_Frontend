@@ -21,6 +21,6 @@ export class FunctionOverviewPageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.dataService.refreshPage('none', '', '');
+        this.dataService.refreshPage('none', '', '', '', false, false);
     }
 }

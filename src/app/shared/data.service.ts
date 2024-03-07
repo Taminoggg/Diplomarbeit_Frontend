@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { ArticlesPPService, CsinquiriesService, OrderDto, OrdersService, TlinquiriesService } from './swagger';
+import { ArticlesPPService, CsinquiriesService, OrderDto, OrdersService, ProductionPlanningsService, TlinquiriesService } from './swagger';
 import { HttpBackend, HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 
 @Injectable({
@@ -10,6 +10,7 @@ export class DataService {
   orderService = inject(OrdersService);
   csinquiryService = inject(CsinquiriesService);
   tlinquiryService = inject(TlinquiriesService);
+  productionService = inject(ProductionPlanningsService);
   articlePPService = inject(ArticlesPPService);
   allOrders = signal<OrderDto[]>([]);
   lastSortedBy = signal('');
@@ -17,7 +18,13 @@ export class DataService {
   factoriesForOrder = new Map<number, string[]>();
   plantsForOrder = new Map<number, string[]>();
   orderIds: number[] = [];
-  tableHeaders: { label: string; value: (keyof OrderDto | 'approvedByPpPp' | 'approvedByPpCs' | 'approvedByCrTl' | 'approvedByCrCs' | 'articleNumbers' | 'factory' | 'plant' | 'assignment' | 'create' | 'chat') }[] = [];
+  approvedBy = new Map<number, boolean>();
+  tableHeaders: { label: string; value: (keyof OrderDto | 'approvedBy' | 'articleNumbers' | 'factory' | 'plant' | 'assignment' | 'create' | 'chat') }[] = [];
+
+  filteredBy = '';
+  filterByCreatedByName = ''
+  showFinished = false;
+  showCanceled = false;
 
   getOrdersOrderedBy(orderString: string): void {
     switch (orderString) {
@@ -104,46 +111,44 @@ export class DataService {
     }
   }
 
-  refreshPage(selectedFilter: string, value: string, filteredBy: string): void {
+  refreshPage(selectedFilter: string, value: string, filteredBy: string, filterByCreatedByName: string, showFinished: boolean, showCanceled: boolean): void {
     console.log("GETTING ORDERS: selectedFilter: " + selectedFilter + " value: " + value);
     if (value === "") {
       selectedFilter = 'none';
     }
+
+    this.filteredBy = filteredBy;
+    this.filterByCreatedByName = filterByCreatedByName;
+    this.showCanceled = showCanceled;
+    this.showFinished = showFinished;
+
     switch (selectedFilter) {
       case "none":
         console.log('case none');
         this.orderService.ordersGet()
           .subscribe(x => {
-            this.getDetailsForOrder(x, filteredBy);
+            this.getDetailsForOrder(x);
           });
         break;
       case "customername":
         console.log('case customername');
         this.orderService.ordersCustomernameGet(value)
           .subscribe(x => {
-            this.getDetailsForOrder(x, filteredBy);
-          });
-        break;
-      case "createdBy":
-        console.log('case create by');
-        this.orderService.ordersCreatedByGet(value)
-          .subscribe(x => {
-            this.getDetailsForOrder(x, filteredBy);
+            this.getDetailsForOrder(x);
           });
         break;
       case "status":
         console.log('case status');
         this.orderService.ordersStatusGet(value)
           .subscribe(x => {
-            this.getDetailsForOrder(x, filteredBy);
+            this.getDetailsForOrder(x);
           });
         break;
       case "approvedByCs":
         console.log('case approvedByCs ' + JSON.parse(value));
         this.orderService.ordersGet()
           .subscribe(orders => {
-            this.getDetailsForOrder(orders, filteredBy);
-
+            this.getDetailsForOrder(orders);
             let totalOrders = orders.length;
             let processedOrders = 0;
             let filteredOrdersCs = signal<OrderDto[]>([]);
@@ -163,7 +168,8 @@ export class DataService {
                   processedOrders++;
 
                   if (processedOrders === totalOrders) {
-                    this.getDetailsForOrder(filteredOrdersCs(), '');
+                    this.filteredBy = '';
+                    this.getDetailsForOrder(filteredOrdersCs());
                   }
                 });
             });
@@ -178,7 +184,7 @@ export class DataService {
             let filteredOrdersTl = signal<OrderDto[]>([]);
             let totalOrders = this.allOrders().length;
             let processedOrders = 0;
-    
+
             this.allOrders().forEach(order => {
               this.tlinquiryService.tlinquiriesIdGet(order.tlid)
                 .subscribe(x => {
@@ -192,9 +198,9 @@ export class DataService {
                     }
                   }
                   processedOrders++;
-    
+
                   if (processedOrders === totalOrders) {
-                    this.getDetailsForOrder(filteredOrdersTl(), filteredBy);
+                    this.getDetailsForOrder(filteredOrdersTl());
                   }
                 });
             });
@@ -204,42 +210,42 @@ export class DataService {
         console.log('case approvedByPp ' + JSON.parse(value));
         this.orderService.ordersApprovedByPpGet(JSON.parse(value))
           .subscribe(x => {
-            this.getDetailsForOrder(x, filteredBy);
+            this.getDetailsForOrder(x);
           });
         break;
       case "approvedByPpCs":
         console.log('case approvedByPpCs ' + JSON.parse(value));
         this.orderService.ordersApprovedByPpCsGet(JSON.parse(value))
           .subscribe(x => {
-            this.getDetailsForOrder(x, filteredBy);
+            this.getDetailsForOrder(x);
           });
         break;
       case "amount":
         console.log('case amount');
         this.orderService.ordersAmountGet(parseInt(value))
           .subscribe(x => {
-            this.getDetailsForOrder(x, filteredBy);
+            this.getDetailsForOrder(x);
           });
         break;
       case "lastUpdated":
         console.log('case last udpated');
         this.orderService.ordersLastUpdatedGet(value)
           .subscribe(x => {
-            this.getDetailsForOrder(x, filteredBy);
+            this.getDetailsForOrder(x);
           });
         break;
       case "country":
         console.log('case country');
         this.orderService.ordersCountryGet(value)
           .subscribe(x => {
-            this.getDetailsForOrder(x, filteredBy);
+            this.getDetailsForOrder(x);
           });
         break;
       case "sped":
         console.log('case sped');
         this.orderService.ordersSpedGet(value)
           .subscribe(x => {
-            this.getDetailsForOrder(x, filteredBy);
+            this.getDetailsForOrder(x);
           });
         break;
       default:
@@ -248,27 +254,38 @@ export class DataService {
     }
   }
 
-   getDetailsForOrder(x: OrderDto[], filteredBy: string) {
+  getDetailsForOrder(x: OrderDto[]) {
     this.orderIds = [];
     this.allOrders.set(x);
 
-    console.log('test');
-    console.log(filteredBy);
-    if(filteredBy === "containerRequestCS"){
-      console.log('artilces only for CR');
-      console.log(this.allOrders());
+    this.allOrders.set(this.allOrders().filter(x => x.createdBy.toLowerCase().includes(this.filterByCreatedByName.toLowerCase())));
+
+    if (!this.showFinished) {
+      this.allOrders.set(this.allOrders().filter(x => x.canceled === false));
+    }
+
+    if (!this.showFinished) {
+      this.allOrders.set(this.allOrders().filter(x => x.successfullyFinished === false));
+    }
+
+    if (this.filteredBy === "containerRequestCS" || this.filteredBy === "containerRequestTL") {
       this.allOrders.set(this.allOrders().filter(x => x.csid > 0 && x.tlid > 0));
-      console.log(this.allOrders());
-    }else if (filteredBy === "containerRequestTL") {
-      this.allOrders.set(this.allOrders().filter(x => x.csid > 0 && x.tlid > 0));
-      this.filterForTlinquiry();
-    }else if (filteredBy === "productionPlanningCS") {
-      console.log('artilces only for PP');
-      console.log(this.allOrders());
+      if (this.filteredBy === "containerRequestCS") {
+        this.allOrders().forEach(order => this.csinquiryService.csinquiriesIdGet(order.csid).subscribe(x => this.approvedBy.set(order.id, x.approvedByCrCs)));
+      } else {
+        this.allOrders().forEach(order => this.tlinquiryService.tlinquiriesIdGet(order.tlid).subscribe(x => this.approvedBy.set(order.id, x.approvedByCrTl)));
+        this.filterForApprovedByCrCs();
+        return;
+      }
+    } else if (this.filteredBy === "productionPlanningCS" || this.filteredBy === "productionPlanningPP") {
       this.allOrders.set(this.allOrders().filter(x => x.ppId > 0));
-      console.log(this.allOrders());
-    } else if (filteredBy === "productionPlanningPP") {
-      this.allOrders.set(this.allOrders().filter(x => x.ppId > 0));
+      if (this.filteredBy === "productionPlanningCS") {
+        this.allOrders().forEach(order => this.productionService.productionPlanningsIdGet(order.ppId).subscribe(x => this.approvedBy.set(order.id, x.approvedByPpCs)));
+      } else {
+        this.allOrders().forEach(order => this.productionService.productionPlanningsIdGet(order.ppId).subscribe(x => this.approvedBy.set(order.id, x.approvedByPpPp)));
+        this.filterForApprovedByPpCs();
+        return;
+      }
     }
 
     this.allOrders().forEach(currOrder => {
@@ -280,7 +297,28 @@ export class DataService {
     this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.factoriesForOrder.set(order.id, x.map(x => x.factory))));
   }
 
-  filterForTlinquiry() {
+  filterForApprovedByPpCs() {
+    let filteredOrdersPpCs = signal<OrderDto[]>([]);
+    let totalOrders = this.allOrders().length;
+    let processedOrders = 0;
+
+    this.allOrders().forEach(order => {
+      this.productionService.productionPlanningsIdGet(order.ppId)
+        .subscribe(x => {
+          if (x.approvedByPpCs === true) {
+            filteredOrdersPpCs().push(order);
+          }
+          processedOrders++;
+
+          if (processedOrders === totalOrders) {
+            this.filteredBy = '';
+            this.getDetailsForOrder(filteredOrdersPpCs());
+          }
+        });
+    });
+  }
+
+  filterForApprovedByCrCs() {
     console.log("🚀 ~ DataService ~ filterForTlinquiry ~ filterForTlinquiry:")
     let filteredOrdersTl = signal<OrderDto[]>([]);
     let totalOrders = this.allOrders().length;
@@ -295,7 +333,8 @@ export class DataService {
           processedOrders++;
 
           if (processedOrders === totalOrders) {
-            this.getDetailsForOrder(filteredOrdersTl(), '');
+            this.filteredBy = '';
+            this.getDetailsForOrder(filteredOrdersTl());
           }
         });
     });

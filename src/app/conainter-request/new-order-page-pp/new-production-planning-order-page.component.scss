@@ -111,3 +111,11 @@ select {
     background-color: darkblue;
   }
 }
+
+.error-message {
+  position: absolute;
+  color: red;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: -10px;
+}

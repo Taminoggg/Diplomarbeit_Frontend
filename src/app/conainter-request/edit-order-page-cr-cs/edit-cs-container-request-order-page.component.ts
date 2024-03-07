@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddArticleCRDto, ArticlesCRService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditApproveDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService } from '../../shared/swagger';
+import { AddArticleCRDto, ArticlesCRService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -29,25 +29,6 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   tlinquiryService = inject(TlinquiriesService);
 
   myForm!: FormGroup;
-  currOrder = signal<OrderDto>(
-    {
-      id: 1,
-      status: 'Test',
-      customerName: 'Test',
-      createdBy: 'Test',
-      amount: 1,
-      lastUpdated: 'Test',
-      checklistId: 1,
-      csid: 1,
-      tlid: 1,
-      ppId: 1,
-      sped: 'Test',
-      country: 'Test',
-      abNumber: 1,
-      readyToLoad: 'Test',
-      additionalInformation: ''
-    });
-
   allChecklists = signal<ChecklistDto[]>([]);
   currCsInquiry = signal<CsinquiryDto>(
     {
@@ -132,19 +113,19 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
 
     this.orderService.ordersIdGet(this.id)
       .subscribe(x => {
-        this.currOrder.set(x);
+        this.editService.currOrder.set(x);
         this.setOrderSignals();
 
-        this.articlesCRService.articlesCRCsInquiryIdGet(this.currOrder().csid)
+        this.articlesCRService.articlesCRCsInquiryIdGet(this.editService.currOrder().csid)
           .subscribe(x => x.forEach(x => this.addArticle(x.articleNumber, x.pallets, x.id)));
 
-        this.csinquiriesService.csinquiriesIdGet(this.currOrder().csid)
+        this.csinquiriesService.csinquiriesIdGet(this.editService.currOrder().csid)
           .subscribe(x => {
             this.currCsInquiry.set(x);
             this.setCsInquirySignals();
           });
 
-        this.tlinquiryService.tlinquiriesIdGet(this.currOrder().tlid)
+        this.tlinquiryService.tlinquiriesIdGet(this.editService.currOrder().tlid)
           .subscribe(x => this.isApprovedByTl.set(x.approvedByCrTl));
       });
   }
@@ -161,6 +142,18 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     });
 
     this.articlesFormArray.push(articleGroup);
+  }
+
+  cancelOrder() {
+    this.orderService.ordersCancelPut(this.editService.createEditStatusDto(this.editService.currOrder().id))
+      .subscribe(x => this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('order-canceled'))
+        .subscribe(_ => _));
+  }
+
+  finishOrder() {
+    this.orderService.ordersSuccessfullyFinishedPut(this.editService.createEditStatusDto(this.editService.currOrder().id))
+      .subscribe(x => this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('order-finished'))
+        .subscribe(_ => _));
   }
 
   getFormGroup(index: number): FormGroup {
@@ -208,7 +201,6 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   prepareSaveOrder() {
     const order: EditOrderDto = {
       customerName: this.editService.customerName(),
-      status: this.editService.status(),
       createdBy: this.editService.createdBy(),
       amount: this.editService.amount(),
       checklistId: this.editService.checklistId(),
@@ -237,14 +229,12 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       .subscribe(x => {
         this.saveCsInquery();
         this.saveArticlesToDB();
-        let editOrder: EditApproveDto = {
-          id: this.currOrder().csid,
-          approve: true
-        };
 
+        this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('sent-to-tl'))
+          .subscribe(x => x);
 
-        this.csinquiriesService.csinquiriesApproveCrCsPut(editOrder)
-          .subscribe(x =>  this.editService.navigateToPath());
+        this.csinquiriesService.csinquiriesApproveCrCsPut(this.editService.createEditStatusDto(this.editService.currOrder().csid))
+          .subscribe(x => this.editService.navigateToPath());
       });
   }
 
@@ -289,7 +279,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   setOrderSignals() {
-    this.editService.setOrderSignals(this.currOrder());
+    this.editService.setOrderSignals(this.editService.currOrder());
   }
 
   setCsInquirySignals() {

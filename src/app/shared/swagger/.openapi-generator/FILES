@@ -26,7 +26,6 @@ model/addMessageConversationDto.ts
 model/addMessageDto.ts
 model/addOrderDto.ts
 model/addStepDto.ts
-model/addTlinquiryDto.ts
 model/articleCR.ts
 model/articleCRDto.ts
 model/articlePP.ts
@@ -35,12 +34,12 @@ model/checklist.ts
 model/checklistDto.ts
 model/csinquiry.ts
 model/csinquiryDto.ts
-model/editApproveDto.ts
 model/editCheckStepDto.ts
 model/editCsinquiryDto.ts
 model/editOrderDto.ts
-model/editPpCrArticleDto.ts
+model/editOrderStatusDto.ts
 model/editPpPpArticleDto.ts
+model/editStatusDto.ts
 model/editStepDto.ts
 model/editTlInqueryDto.ts
 model/fileByteDto.ts

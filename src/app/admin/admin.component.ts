@@ -19,8 +19,6 @@ export class AdminComponent implements OnInit {
     this.checklistService.checklistsGeneratedByAdminGet()
       .subscribe(x => this.allChecklists.set(x));
 
-    this.dataService.refreshPage('none', '', '');
-
     this.dataService.allOrders().forEach(order => {
       this.messageConversationService.messageConversationsConversationIdGet(order.id)
         .subscribe(x => {

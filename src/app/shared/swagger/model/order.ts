@@ -18,6 +18,8 @@ import { ProductionPlanning } from './productionPlanning';
 
 export interface Order { 
     id?: number;
+    canceled?: boolean;
+    successfullyFinished?: boolean;
     status?: string | null;
     customerName?: string | null;
     createdBy?: string | null;

@@ -52,6 +52,8 @@ export class SettingsComponent implements OnInit {
   setPropertiesNotInTableHeaders() {
     let orderDto: OrderDto = {
       id: 1,
+      successfullyFinished: false,
+      canceled: false,
       status: 'Test',
       customerName: 'Test',
       createdBy: 'Test',

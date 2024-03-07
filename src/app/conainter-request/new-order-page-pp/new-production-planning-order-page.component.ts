@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, computed, inject, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddArticleCRDto, AddCsinquiryDto, AddOrderDto, AddTlinquiryDto, ChecklistDto, ChecklistsService, OrdersService, AddChecklistDto, StepsService, AddStepDto, ArticlesCRService, ProductionPlanningsService, AddArticlePPDto, ArticlesPPService } from '../../shared/swagger';
+import { AddOrderDto, ChecklistsService, OrdersService, ProductionPlanningsService, AddArticlePPDto, ArticlesPPService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { TranslocoModule } from '@ngneat/transloco';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,7 +17,7 @@ import { EditService } from '../../edit.service';
 })
 export class NewProductionPlanningOrderPageComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
-    this.editService.navigationPath = '/new-production-planning-page';
+    this.editService.navigationPath = '/container-request-page/productionPlanningCS';
   }
 
   ngOnInit(): void {
@@ -25,6 +25,7 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
       articles: this.fb.array([])
     });
 
+    this.editService.navigationPath = '/container-request-page/productionPlanningCS';
     this.addArticle();
   }
 
@@ -88,8 +89,8 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
       palletAmount: [1, Validators.required],
       minHeigthRequired: [1, Validators.required],
       desiredDeliveryDate: [''],
-      inquiryForFixedOrder: [''],
-      inquiryForQuotation: ['']
+      inquiryForFixedOrder: [false],
+      inquiryForQuotation: [false]
     });
 
     this.articlesFormArray.push(articleGroup);
@@ -116,11 +117,24 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
       .subscribe(productionPlanningObj => {
         console.log(productionPlanningObj);
         for (let i = 0; i < this.articlesFormArray.length; i++) {
+          console.log('article: ');
+          console.log(this.getFormGroup(i).get('minHeigthRequired')!.value);
+          console.log(this.getFormGroup(i).get('inquiryForFixedOrder')!.value);
+          console.log(this.getFormGroup(i).get('inquiryForQuotation')!.value);
+          console.log(this.getFormGroup(i).get('desiredDeliveryDate')!.value);
+          console.log(this.getFormGroup(i).get('minHeigthRequired')!.value);
+
           let article: AddArticlePPDto = {
             articleNumber: this.getFormGroup(i).get('articleNumber')!.value,
             productionPlanningId: productionPlanningObj.id,
-            pallets: 1
+            pallets: this.getFormGroup(i).get('palletAmount')!.value,
+            minHeigthRequired: this.getFormGroup(i).get('minHeigthRequired')!.value,
+            inquiryForFixedOrder: this.getFormGroup(i).get('inquiryForFixedOrder')!.value,
+            inquiryForQuotation: this.getFormGroup(i).get('inquiryForQuotation')!.value,
+            desiredDeliveryDate: this.getFormGroup(i).get('desiredDeliveryDate')!.value
           };
+          console.log('all articles: ');
+          console.log(article);
 
           this.articlesPPService.articlesPPPost(article).subscribe(x => {
             console.log('article posted: ' + x.id);
@@ -133,7 +147,6 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
         if (this.additonalInformation() === '') {
           order = {
             customerName: this.customerName(),
-            status: this.status(),
             createdBy: this.createdBy(),
             amount: 1,
             ppId: productionPlanningObj.id,
@@ -141,7 +154,6 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
         } else {
           order = {
             customerName: this.customerName(),
-            status: this.status(),
             createdBy: this.createdBy(),
             amount: 1,
             ppId: productionPlanningObj.id,

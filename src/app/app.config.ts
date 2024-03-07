@@ -15,9 +15,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     importProvidersFrom(ApiModule),
     { provide: BASE_PATH, useValue: environment.apiRoot },
-    provideAnimations(),
-    provideAnimations(),
-    provideAnimations(), provideHttpClient(), provideTransloco({
+    provideAnimations(), 
+    provideTransloco({
       config: {
         availableLangs: ['en', 'de', 'pl'],
         reRenderOnLangChange: true,

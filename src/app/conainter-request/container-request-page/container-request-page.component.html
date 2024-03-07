@@ -10,9 +10,9 @@
     <h2>{{'new' | transloco}}</h2>
   </button>
   }@else if (htmlContent === 'productionPlanningCS') {
-    <button (click)="navigateToPage('/new-production-planning-page')">
-      <h2>{{'new' | transloco}}</h2>
-    </button>
+  <button (click)="navigateToPage('/new-production-planning-page')">
+    <h2>{{'new' | transloco}}</h2>
+  </button>
   }
 </div>
 
@@ -20,7 +20,6 @@
   <label>Filter:&nbsp;</label>
   <select #currFilter (change)="setSelectedFilter(currFilter.value)">
     <option value="customername">{{'customer' | transloco}}</option>
-    <option value="createdBy">{{'created-by' | transloco}}</option>
     <option value="status">{{'status' | transloco}}</option>
     <option value="lastUpdated">{{'last-updated' | transloco}}</option>
     @if (htmlContent === 'containerRequestCS') {
@@ -40,7 +39,7 @@
     <option value="sped">{{'sped' | transloco}}</option>
   </select>
   <div>
-    @if (selectedFilter() === 'customername' || selectedFilter() === 'createdBy' || selectedFilter() === 'country' ||
+    @if (selectedFilter() === 'customername' || selectedFilter() === 'country' ||
     selectedFilter() === 'sped') {
     <div>
       <input (change)="filterOrders()" [ngSignal]="filterValue" type="text"
@@ -61,10 +60,23 @@
     }
     @if (selectedFilter() === 'lastUpdated') {
     <div>
-      <input (change)="filterOrders()" [ngSignal]="filterValue" type="date">
+      <input format="dd.MM.yyyy" (change)="filterOrders()" [ngSignal]="filterValue" type="date">
     </div>
     }
   </div>
+  <div class="filter-option">
+    <label>{{'show-finished-orders' | transloco}}</label>
+    <input (change)="filterOrders()" [ngSignal]="showFinished" type="checkbox">
+  </div>
+  <div class="filter-option">
+    <label>{{'show-canceled-orders' | transloco}}</label>
+    <input (change)="filterOrders()" [ngSignal]="showCanceled" type="checkbox">
+  </div>
+  <div class="filter-option">
+    <label>{{'created-by' | transloco}}</label>
+    <input class="simple-margin" (change)="filterOrders()" type="text" [ngSignal]="filterByCreatedByName">
+  </div>
+
   <button class="settings-button" (click)="settingsPage()">
     <mat-icon>settings</mat-icon>
   </button>
@@ -93,14 +105,16 @@
         {{getFactoriesForOrder(currOrder.id)}}
         }@else if(prop.value === 'plant'){
         {{getPlantsForOrder(currOrder.id)}}
-        }@else if(prop.value === 'approvedByPpPp'){
-        TEST
-        }@else if(prop.value === 'approvedByPpCs'){
-        TEST
-        }@else if(prop.value === 'approvedByCrTl'){
-        TEST
-        }@else if(prop.value === 'approvedByCrCs'){
-        TEST
+        }@else if(prop.value === 'approvedBy'){
+        @if(getApprovedByForOrder(currOrder.id)){
+        {{'yes' | transloco}}
+        }@else {
+        {{'no' | transloco}}
+        }
+        }@else if(prop.value === 'lastUpdated' || prop.value === 'readyToLoad'){
+        {{currOrder[prop.value] | date:'dd.MM.yyyy'}}
+        }@else if(prop.value === 'status'){
+        {{currOrder[prop.value] | transloco}}
         }@else {
         {{currOrder[prop.value]}}
         }

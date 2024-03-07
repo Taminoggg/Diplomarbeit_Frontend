@@ -11,13 +11,8 @@
  */
 
 
-export interface AddArticlePPDto { 
-    articleNumber: number;
-    pallets: number;
-    productionPlanningId: number;
-    minHeigthRequired: number;
-    desiredDeliveryDate: string;
-    inquiryForFixedOrder: boolean;
-    inquiryForQuotation: boolean;
+export interface EditStatusDto { 
+    id: number;
+    status: boolean;
 }
 

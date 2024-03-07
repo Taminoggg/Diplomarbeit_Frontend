@@ -16,6 +16,8 @@ export interface OrderDto {
     status: string;
     customerName: string;
     createdBy: string;
+    canceled: boolean;
+    successfullyFinished: boolean;
     amount: number;
     additionalInformation: string;
     lastUpdated: string;

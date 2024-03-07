@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import html2canvas from 'html2canvas';
 import jspdf from 'jspdf';
 import { Router } from '@angular/router';
-import { OrderDto, EditApproveDto, ChecklistsService, OrdersService } from './shared/swagger';
+import { OrderDto, ChecklistsService, OrdersService, EditStatusDto, EditOrderStatusDto } from './shared/swagger';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +22,26 @@ export class EditService {
   isApprovedByPpPp = signal(false);
   additonalInformation = signal('');
   navigationPath = '';
+  currOrder = signal<OrderDto>(
+    {
+      id: 1,
+      status: 'Test',
+      customerName: 'Test',
+      createdBy: 'Test',
+      amount: 0,
+      successfullyFinished: false,
+      canceled: false,
+      lastUpdated: 'Test',
+      checklistId: 1,
+      csid: 1,
+      tlid: 1,
+      ppId: 1,
+      readyToLoad: 'Test',
+      abNumber: 1,
+      country: 'Test',
+      sped: 'Test',
+      additionalInformation: ''
+    });
 
   navigateToPath(): void {
     this.router.navigateByUrl(this.navigationPath);
@@ -59,10 +79,18 @@ export class EditService {
     }
   }
 
-  createEditOrder(id: number): EditApproveDto {
-    let editOrder: EditApproveDto = {
+  createEditStatusDto(id:number): EditStatusDto {
+    let editOrder: EditStatusDto = {
       id: id,
-      approve: true
+      status: true
+    };
+    return editOrder;
+  }
+
+  createEditOrderStatusDto(status:string): EditOrderStatusDto {
+    let editOrder: EditOrderStatusDto = {
+      id: this.currOrder().id,
+      status: status
     };
     return editOrder;
   }

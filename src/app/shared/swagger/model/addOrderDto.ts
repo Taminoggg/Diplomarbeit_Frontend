@@ -12,7 +12,6 @@
 
 
 export interface AddOrderDto { 
-    status: string;
     customerName: string;
     additionalInformation?: string | null;
     createdBy: string;

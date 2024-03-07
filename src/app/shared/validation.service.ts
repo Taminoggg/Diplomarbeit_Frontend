@@ -5,7 +5,7 @@ import { FormArray } from '@angular/forms';
   providedIn: 'root'
 })
 export class ValidationService {
-  simpleDatePattern = /^(?<day>[0-2]\d|3[0-1])\.(?<month>0\d|1[0-2])\.(?<year>\d{4})$/gm;
+  simpleDatePattern = /^(?<year>\d{4})\-(?<month>0\d|1[0-2])\-(?<day>[0-2]\d|3[0-1])$/gm;
   simpleStringPattern = /^[A-Z\d-,][a-zA-Z\d-,]*(?:\s\w+)*$/gm;
   simpleNumberPattern = /^[1-9]\d*$/gm;
 

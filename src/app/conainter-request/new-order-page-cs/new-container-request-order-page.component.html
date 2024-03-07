@@ -135,9 +135,10 @@
 
       <div class="form-group">
         <label>{{'ready-to-load' | transloco}}</label>
-        <input [ngSignal]="readyToLoad" type="text">
-        @if(!isReadyToLoadValid()){
-        <label class="error-message">{{'error-message-ready-to-load' | transloco}}</label>
+        <input [ngSignal]="readyToLoad" type="date" format="dd.MM.yyyy">
+        @if (!validationService.isDateValid(readyToLoad())) { <label
+          class="error-message">
+          {{'error-message-date' | transloco}}</label>
         }
       </div>
 

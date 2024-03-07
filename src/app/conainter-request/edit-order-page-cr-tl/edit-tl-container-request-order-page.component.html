@@ -179,7 +179,7 @@
 
       <div class="form-group">
         <label>{{'excepted-retrieve-week' | transloco}}</label>
-        <input type="text" [ngSignal]="expectedRetrieveWeek">
+        <input type="date" [ngSignal]="expectedRetrieveWeek" format="dd.MM.yyyy">
         @if(!isExpectedRetrieveWeekValid()){
         <label class="error-message">{{'error-message-date' | transloco}}</label>
         }
@@ -195,7 +195,7 @@
 
       <div class="form-group">
         <label>{{'invoice-on' | transloco}}</label>
-        <input type="text" [ngSignal]="invoiceOn">
+        <input type="date" [ngSignal]="invoiceOn" format="dd.MM.yyyy">
         @if(!isInvoiceOnValid()){
         <label class="error-message">{{'error-message-date' | transloco}}</label>
         }
@@ -206,7 +206,7 @@
 
       <div class="form-group">
         <label>{{'retrieve-date' | transloco}}</label>
-        <input type="text" [ngSignal]="retrieveDate">
+        <input type="date" [ngSignal]="retrieveDate" format="dd.MM.yyyy">
         @if(!isRetrieveDateValid()){
         <label class="error-message">{{'error-message-date' | transloco}}</label>
         }
@@ -272,7 +272,7 @@
     <div class="form-row">
       <div class="form-group">
         <label>{{'ets' | transloco}}</label>
-        <input type="text" [ngSignal]="ets">
+        <input type="date" [ngSignal]="ets" format="dd.MM.yyyy">
         @if(!isEtsValid()){
         <label class="error-message">{{'error-message-date' | transloco}}</label>
         }
@@ -280,7 +280,7 @@
 
       <div class="form-group">
         <label>{{'eta' | transloco}}</label>
-        <input type="text" [ngSignal]="eta">
+        <input type="date" [ngSignal]="eta" format="dd.MM.yyyy">
         @if(!isEtaValid()){
         <label class="error-message">{{'error-message-date' | transloco}}</label>
         }

@@ -17,33 +17,6 @@
               </div>
 
               <div class="form-group">
-                <div class="checkbox-container">
-                  <label class="checkbox-label">{{'direct-line' | transloco}}</label>
-                  <input class="checkbox-input" type="checkbox" formControlName="directLine" onclick="return false;"
-                    onkeydown="return false;">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <div class="checkbox-container">
-                  <label class="checkbox-label">{{'fast-line' | transloco}}</label>
-                  <input class="checkbox-input" type="checkbox" formControlName="fastLine" onclick="return false;"
-                    onkeydown="return false;">
-                </div>
-              </div>
-
-              @if (getFormGroup($index).get('directLine')!.value) {
-              <div class="form-group">
-                <label>{{'pallet-amount' | transloco}}</label>
-                <input readonly type="number" formControlName="palletAmount">
-              </div>
-              }
-              @else {
-              <div class="form-group"></div>
-              }
-            </div>
-            <div class="form-row">
-              <div class="form-group">
                 <label>{{'min-heigth-required' | transloco}}</label>
                 <input readonly type="number" formControlName="minHeigthRequired">
               </div>
@@ -76,7 +49,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label>{{'delivery-date' | transloco}}</label>
-                <input (input)="setAreArticlesValid()" type="text" formControlName="deliveryDate">
+                <input (input)="setAreArticlesValid()" type="date" formControlName="deliveryDate" format="dd.MM.yyyy">
                 @if (!validationService.isDateValid(getFormGroup($index).get('deliveryDate')!.value)) { <label
                   class="error-message">
                   {{'error-message-date' | transloco}}</label>
@@ -145,6 +118,9 @@
               </div>
             </div>
           </div>
+          <br>
+          <br>
+          <hr>
           }
         </div>
       </form>

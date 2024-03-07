@@ -1,12 +1,11 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticlesPPService, ChecklistDto, ChecklistsService, EditPpPpArticleDto, OrderDto, OrdersService } from '../../shared/swagger';
+import { ArticlesPPService, ChecklistDto, ChecklistsService, EditPpPpArticleDto, OrderDto, OrdersService, ProductionPlanningsService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { TranslocoModule } from '@ngneat/transloco';
 import { ValidationService } from '../../shared/validation.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditService } from '../../edit.service';
-import { EditPPArticleDto } from '../../shared/swagger/model/editPPArticleDto';
 
 @Component({
   selector: 'app-edit-order-page',
@@ -23,26 +22,8 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
   editService = inject(EditService);
   orderService = inject(OrdersService);
   checklistService = inject(ChecklistsService);
+  prodcutionPlanningService = inject(ProductionPlanningsService);
   validationService = inject(ValidationService);
-
-  currOrder = signal<OrderDto>(
-    {
-      id: 1,
-      status: 'Test',
-      customerName: 'Test',
-      createdBy: 'Test',
-      amount: 0,
-      lastUpdated: 'Test',
-      checklistId: 1,
-      csid: 1,
-      tlid: 1,
-      ppId: 1,
-      readyToLoad: 'Test',
-      abNumber: 1,
-      country: 'Test',
-      sped: 'Test',
-      additionalInformation: ''
-    });
   allChecklists = signal<ChecklistDto[]>([]);
   isApprovedByPpPp = signal(false);
 
@@ -54,7 +35,7 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
 
   setAreArticlesValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
-      if (!this.validationService.isAnyInputValid(this.getFormGroup(i).get('shortText')!.value) || !this.validationService.isDateValid(this.getFormGroup(i).get('deliveryDate')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('factory')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('nozzle')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('productionOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plannedOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plant')!.value)) {
+      if (!this.validationService.isAnyInputValid(this.getFormGroup(i).get('shortText')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('factory')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('nozzle')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('productionOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plannedOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plant')!.value)) {
         this.areArticlesValid.set(false);
         return;
       }
@@ -74,13 +55,12 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
     this.orderService.ordersIdGet(this.id)
       .subscribe(x => {
         if (x !== null && x !== undefined) {
-          this.currOrder.set(x);
-          console.log(this.currOrder());
-          this.setOrderSignals();
+          this.editService.currOrder.set(x);
+          this.editService.setOrderSignals(this.editService.currOrder());
 
-          this.articlesPPService.articlesPPProductionPlanningIdGet(this.currOrder().ppId)
+          this.articlesPPService.articlesPPProductionPlanningIdGet(this.editService.currOrder().ppId)
             .subscribe(x => x.forEach(x => {
-              this.addArticle(x.articleNumber, x.pallets, x.isDirectLine, x.isFastLine, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
+              this.addArticle(x.articleNumber, x.pallets, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
             }));
         }
       });
@@ -90,13 +70,11 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, directLine: boolean, fastLine: boolean, id: number, minHeigthRequired: number, desiredDeliveryDate: string, inquiryForFixedOrder: boolean, inquiryForQuotation: boolean, deliveryDate: string, shortText: string, factory: string, nozzle: string, productionOrder: string, plannedOrder: string, plant: string) {
+  addArticle(articleNumber: number, palletAmount: number, id: number, minHeigthRequired: number, desiredDeliveryDate: string, inquiryForFixedOrder: boolean, inquiryForQuotation: boolean, deliveryDate: string, shortText: string, factory: string, nozzle: string, productionOrder: string, plannedOrder: string, plant: string) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber, Validators.required],
       palletAmount: [palletAmount, Validators.required],
-      directLine: [directLine],
-      fastLine: [fastLine],
-      id: [id],
+      id: id,
       minHeigthRequired: [minHeigthRequired],
       desiredDeliveryDate: [desiredDeliveryDate],
       inquiryForFixedOrder: [inquiryForFixedOrder],
@@ -123,9 +101,16 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
   }
 
   saveOrder(): void {
-    console.log(this.articlesFormArray.length);
+    console.log('saving order');
     for (let i = 0; i < this.articlesFormArray.length; i++) {
       console.log(this.getFormGroup(i).get('plant')!.value);
+      console.log(this.getFormGroup(i).get('deliveryDate')!.value);
+      console.log(this.getFormGroup(i).get('plannedOrder')!.value);
+      console.log(this.getFormGroup(i).get('productionOrder')!.value);
+      console.log(this.getFormGroup(i).get('shortText')!.value);
+      console.log(this.getFormGroup(i).get('factory')!.value);
+      console.log(this.getFormGroup(i).get('nozzle')!.value);
+
       let article: EditPpPpArticleDto = {
         id: this.getFormGroup(i).get('id')!.value,
         deliveryDate: this.getFormGroup(i).get('deliveryDate')!.value,
@@ -139,21 +124,20 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
 
       console.log('edited articles: ');
       if (i + 1 !== this.articlesFormArray.length) {
-        this.articlesPPService.articlesPPEditPpPpArticlePut(article).subscribe(x => console.log(x));
+        this.articlesPPService.articlesPPPut(article).subscribe(x => console.log(x));
       } else {
-        this.articlesPPService.articlesPPEditPpPpArticlePut(article).subscribe(x => this.editService.navigateToPath());
+        this.articlesPPService.articlesPPPut(article).subscribe(x => this.editService.navigateToPath());
       }
     }
+    this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('pp-in-progress'))
+      .subscribe(_ => _);
   }
 
   publish() {
-    //this.orderService.ordersApprovedByPpPpPut(this.editService.createEditOrder(this.currOrder().id))
-    //  .subscribe(x => this.saveOrder());
-  }
+    this.prodcutionPlanningService.productionPlanningsApprovePpPpPut(this.editService.createEditStatusDto(this.editService.currOrder().ppId))
+      .subscribe(x => this.saveOrder());
 
-  setOrderSignals(): void {
-    this.editService.setOrderSignals(this.currOrder());
-    console.log(this.currOrder());
-    //this.isApprovedByPpPp.set(this.currOrder().approvedByPpPp);
+    this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('edited-by-pp'))
+      .subscribe(_ => _);
   }
 }

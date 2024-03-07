@@ -14,10 +14,8 @@
 export interface ArticlePPDto { 
     id: number;
     articleNumber: number;
-    isDirectLine: boolean;
-    isFastLine: boolean;
     pallets: number;
-    csinquiryId: number;
+    productionPlanningId: number;
     minHeigthRequired: number;
     desiredDeliveryDate: string;
     inquiryForFixedOrder: boolean;

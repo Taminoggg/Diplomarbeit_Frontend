@@ -19,9 +19,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { AddTlinquiryDto } from '../model/addTlinquiryDto';
-// @ts-ignore
-import { EditApproveDto } from '../model/editApproveDto';
+import { EditStatusDto } from '../model/editStatusDto';
 // @ts-ignore
 import { EditTlInqueryDto } from '../model/editTlInqueryDto';
 // @ts-ignore
@@ -98,14 +96,14 @@ export class TlinquiriesService {
     }
 
     /**
-     * @param editApproveDto 
+     * @param editStatusDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public tlinquiriesApproveCrTlPut(editApproveDto?: EditApproveDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<TlinquiryDto>;
-    public tlinquiriesApproveCrTlPut(editApproveDto?: EditApproveDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<TlinquiryDto>>;
-    public tlinquiriesApproveCrTlPut(editApproveDto?: EditApproveDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<TlinquiryDto>>;
-    public tlinquiriesApproveCrTlPut(editApproveDto?: EditApproveDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public tlinquiriesApproveCrTlPut(editStatusDto?: EditStatusDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<TlinquiryDto>;
+    public tlinquiriesApproveCrTlPut(editStatusDto?: EditStatusDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<TlinquiryDto>>;
+    public tlinquiriesApproveCrTlPut(editStatusDto?: EditStatusDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<TlinquiryDto>>;
+    public tlinquiriesApproveCrTlPut(editStatusDto?: EditStatusDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -155,7 +153,7 @@ export class TlinquiriesService {
         return this.httpClient.request<TlinquiryDto>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: editApproveDto,
+                body: editStatusDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -343,14 +341,13 @@ export class TlinquiriesService {
     }
 
     /**
-     * @param addTlinquiryDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public tlinquiriesPost(addTlinquiryDto?: AddTlinquiryDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<TlinquiryDto>;
-    public tlinquiriesPost(addTlinquiryDto?: AddTlinquiryDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<TlinquiryDto>>;
-    public tlinquiriesPost(addTlinquiryDto?: AddTlinquiryDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<TlinquiryDto>>;
-    public tlinquiriesPost(addTlinquiryDto?: AddTlinquiryDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public tlinquiriesPost(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<TlinquiryDto>;
+    public tlinquiriesPost(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<TlinquiryDto>>;
+    public tlinquiriesPost(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<TlinquiryDto>>;
+    public tlinquiriesPost(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -374,17 +371,6 @@ export class TlinquiriesService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json',
-            'text/json',
-            'application/*+json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -400,7 +386,6 @@ export class TlinquiriesService {
         return this.httpClient.request<TlinquiryDto>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: addTlinquiryDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

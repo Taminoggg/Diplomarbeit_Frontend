@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddArticleCRDto, AddCsinquiryDto, AddOrderDto, AddTlinquiryDto, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, OrdersService, TlinquiriesService, AddChecklistDto, StepsService, AddStepDto, ArticlesCRService } from '../../shared/swagger';
+import { AddArticleCRDto, AddCsinquiryDto, AddOrderDto, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, OrdersService, TlinquiriesService, AddChecklistDto, StepsService, AddStepDto, ArticlesCRService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
-import { flatten, TranslocoModule } from '@ngneat/transloco';
+import { TranslocoModule } from '@ngneat/transloco';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ValidationService } from '../../shared/validation.service';
@@ -155,6 +155,7 @@ export class NewContainerOrderPageComponent implements OnInit {
 
   saveOrder(): void {
     console.log('posted clicked');
+    console.log(this.readyToLoad().toString());
 
     let csInquiry: AddCsinquiryDto = {
       container: this.container(),
@@ -172,34 +173,9 @@ export class NewContainerOrderPageComponent implements OnInit {
       isFastLine: this.fastLine()
     };
 
-    let tlInquiry: AddTlinquiryDto = {
-      inquiryNumber: 1,
-      sped: 'Sped',
-      country: 'Country',
-      acceptingPort: 'AcceptingPort',
-      expectedRetrieveWeek: '17.12.2023',
-      weightInKg: 1,
-      invoiceOn: '17.12.2023',
-      retrieveDate: '17.12.2023',
-      isContainer40: false,
-      isContainerHc: false,
-      retrieveLocation: 'RetrieveLocation',
-      debtCapitalGeneralForerunEur: 1,
-      debtCapitalMainDol: 1,
-      debtCapitalTrailingDol: 1,
-      portOfDeparture: 'PortOfDeparture',
-      ets: '17.12.2023',
-      eta: '17.12.2023',
-      boat: 'Boat'
-    };
-
-    console.log(tlInquiry);
-
     this.csInquiryService.csinquiriesPost(csInquiry)
       .subscribe(csInquiryObj => {
         for (let i = 0; i < this.articlesFormArray.length; i++) {
-
-
           let article: AddArticleCRDto = {
             pallets: this.getFormGroup(i).get('palletAmount')!.value,
             articleNumber: this.getFormGroup(i).get('articleNumber')!.value,
@@ -214,7 +190,7 @@ export class NewContainerOrderPageComponent implements OnInit {
 
         console.log('posting tlInquiry');
 
-        this.tlInquiryService.tlinquiriesPost(tlInquiry)
+        this.tlInquiryService.tlinquiriesPost()
           .subscribe(tlInquiryObj => {
             let order: AddOrderDto;
 
@@ -230,7 +206,6 @@ export class NewContainerOrderPageComponent implements OnInit {
               if(this.additonalInformation() === ''){
                 order = {
                   customerName: this.customerName(),
-                  status: this.status(),
                   createdBy: this.createdBy(),
                   amount: this.amount(),
                   checklistId: currChecklist.id,
@@ -240,7 +215,6 @@ export class NewContainerOrderPageComponent implements OnInit {
               }else{
                 order = {
                   customerName: this.customerName(),
-                  status: this.status(),
                   createdBy: this.createdBy(),
                   amount: this.amount(),
                   checklistId: this.checklistId(),

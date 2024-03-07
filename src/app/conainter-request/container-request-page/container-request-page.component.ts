@@ -19,13 +19,15 @@ import { NgSignalDirective } from '../../shared/ngSignal.directive';
 })
 export class ContainerRequestPageComponent implements OnInit, OnChanges {
   @Input() htmlContent = 'containerRequestTL'
+  filterByCreatedByName = signal('');
+  showFinished = signal(false);
+  showCanceled = signal(false);
 
   ngOnChanges(changes: SimpleChanges): void {
     const tableConfig = localStorage.getItem(this.htmlContent + 'tableConfig');
 
     if (tableConfig) {   
       this.dataService.tableHeaders = JSON.parse(tableConfig);
-      console.log(this.dataService.tableHeaders);
       return;
     }
     else if (this.htmlContent === "containerRequestCS") {
@@ -35,7 +37,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'created-by', value: 'createdBy' },
         { label: 'ab-nr', value: 'abNumber' },
         { label: 'status', value: 'status' },
-        { label: 'approved', value: 'approvedByCrCs' },
+        { label: 'approved', value: 'approvedBy' },
         { label: 'amount', value: 'amount' },
         { label: 'country', value: 'country' },
         { label: 'ready-to-load', value: 'readyToLoad' },
@@ -52,7 +54,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'customer', value: 'customerName' },
         { label: 'created-by', value: 'createdBy' },
         { label: 'status', value: 'status' },
-        { label: 'approved', value: 'approvedByCrTl' },
+        { label: 'approved', value: 'approvedBy' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'sped', value: 'sped' },
         { label: 'edit', value: 'create' },
@@ -65,8 +67,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'created-by', value: 'createdBy' },
         { label: 'article', value: 'articleNumbers' },
         { label: 'status', value: 'status' },
-        { label: 'amount', value: 'amount' },
-        { label: 'approved', value: 'approvedByPpCs' },
+        { label: 'approved', value: 'approvedBy' },
         { label: 'factory', value: 'factory' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'plant', value: 'plant' },
@@ -80,8 +81,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'created-by', value: 'createdBy' },
         { label: 'article', value: 'articleNumbers' },
         { label: 'status', value: 'status' },
-        { label: 'amount', value: 'amount' },
-        { label: 'approved', value: 'approvedByPpPp' },
+        { label: 'approved', value: 'approvedBy' },
         { label: 'factory', value: 'factory' },
         { label: 'last-updated', value: 'lastUpdated' },
         { label: 'plant', value: 'plant' },
@@ -93,7 +93,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.dataService.refreshPage('none', '', this.htmlContent);
+    this.dataService.refreshPage('none', '', this.htmlContent, this.filterByCreatedByName(), this.showFinished(), this.showCanceled());
   }
 
   selectedFilter = signal<string>('customername');
@@ -107,14 +107,17 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   filterCsByApproved = signal(false);
 
   setSelectedFilter(value: string) {
-    this.dataService.refreshPage(this.selectedFilter(), this.filterValue(), this.htmlContent);
+    this.filterValue.set('');
+    this.dataService.refreshPage(this.selectedFilter(), this.filterValue(), this.htmlContent, this.filterByCreatedByName(), this.showFinished(), this.showCanceled());
 
     this.selectedFilter.set(value);
     if (this.selectedFilter() === 'approvedByPp' || this.selectedFilter() === 'approvedByCs' || this.selectedFilter() === 'approvedByTl' || this.selectedFilter() === 'approvedByPpCs') {
-      this.dataService.refreshPage(this.selectedFilter(), 'false', this.htmlContent);
+      this.dataService.refreshPage(this.selectedFilter(), 'false', this.htmlContent, this.filterByCreatedByName(), this.showFinished(), this.showCanceled());
     }
+  }
 
-    this.filterValue.set('');
+  getApprovedByForOrder(orderId: number): boolean {
+    return this.dataService.approvedBy.get(orderId)!;
   }
 
   getArticlesForOrder(orderId: number): number[] {
@@ -143,7 +146,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   }
 
   filterOrders() {
-    this.dataService.refreshPage(this.selectedFilter(), this.filterValue(), this.htmlContent);
+    this.dataService.refreshPage(this.selectedFilter(), this.filterValue(), this.htmlContent, this.filterByCreatedByName(), this.showFinished(), this.showCanceled());
   }
 
   openDialog(id: number) {

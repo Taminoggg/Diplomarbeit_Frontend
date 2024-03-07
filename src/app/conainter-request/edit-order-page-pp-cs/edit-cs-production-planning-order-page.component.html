@@ -6,6 +6,18 @@
 
   <div id="contentToConvert" class="form-content">
     <div class="csData">
+      <div class="form-row">
+        <div class="form-group">
+          <label>{{'customer' | transloco}}</label>
+          <input [ngSignal]="editService.customerName" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>{{'created-by' | transloco}}</label>
+          <input [ngSignal]="editService.createdBy" type="text">
+        </div>
+      </div>
+
       <form [formGroup]="myForm">
         <div formArrayName="articles">
           @for (articleGroup of articlesFormArray.controls; track $index) {
@@ -16,41 +28,58 @@
                 <input readonly type="number" formControlName="articleNumber">
               </div>
 
-                <div class="form-group">
-                  <label>{{'min-heigth-required' | transloco}}</label>
-                  <input (input)="setAreArticlesValid()" type="number" formControlName="minHeigthRequired">
-                  @if (!validationService.isNumberValid(getFormGroup($index).get('minHeigthRequired')!.value)) { <label
-                    class="error-message">
-                    {{'error-message-number' | transloco}}</label>
-                  }
-                </div>
+              <div class="form-group">
+                <label>{{'min-heigth-required' | transloco}}</label>
+                <input (input)="setAreArticlesValid()" type="number" formControlName="minHeigthRequired">
+                @if (!validationService.isNumberValid(getFormGroup($index).get('minHeigthRequired')!.value)) { <label
+                  class="error-message">
+                  {{'error-message-number' | transloco}}</label>
+                }
+              </div>
 
-                <div class="form-group">
-                  <div class="checkbox-container">
-                    <label class="checkbox-label">{{'inquiry-for-fixed-order' | transloco}}</label>
-                    <input class="checkbox-input" type="checkbox" formControlName="inquiryForFixedOrder">
-                  </div>
-                </div>
+              <div class="form-group">
+                <label>{{'pallet-amount' | transloco}}</label>
+                <input (input)="setAreArticlesValid()" type="number" formControlName="pallets">
+                @if (!validationService.isNumberValid(getFormGroup($index).get('pallets')!.value)) { <label
+                  class="error-message">
+                  {{'error-message-number' | transloco}}</label>
+                }
+              </div>
 
-                <div class="form-group">
-                  <div class="checkbox-container">
-                    <label class="checkbox-label">{{'inquiry-for-quotation' | transloco}}</label>
-                    <input class="checkbox-input" type="checkbox" formControlName="inquiryForQuotation">
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label>{{'desired-delivery-date' | transloco}}</label>
-                  <input (input)="setAreArticlesValid()" type="text" formControlName="desiredDeliveryDate">
-                  @if (!validationService.isDateValid(getFormGroup($index).get('desiredDeliveryDate')!.value)) { <label
-                    class="error-message">
-                    {{'error-message-date' | transloco}}</label>
-                  }
+              <div class="form-group">
+                <div class="checkbox-container">
+                  <label class="checkbox-label">{{'inquiry-for-fixed-order' | transloco}}</label>
+                  <input class="checkbox-input" type="checkbox" formControlName="inquiryForFixedOrder">
                 </div>
               </div>
+
+              <div class="form-group">
+                <div class="checkbox-container">
+                  <label class="checkbox-label">{{'inquiry-for-quotation' | transloco}}</label>
+                  <input class="checkbox-input" type="checkbox" formControlName="inquiryForQuotation">
+                </div>
+              </div>
+            
+              <div class="form-group">
+                <label>{{'desired-delivery-date' | transloco}}</label>
+                <input format="dd.MM.yyyy" (input)="setAreArticlesValid()" type="date" formControlName="desiredDeliveryDate" format="dd.MM.yyyy">
+                @if (!validationService.isDateValid(getFormGroup($index).get('desiredDeliveryDate')!.value)) { <label
+                  class="error-message">
+                  {{'error-message-date' | transloco}}</label>
+                }
+              </div>
             </div>
+
+            @if (articlesFormArray.controls.length > 1) {
+            <button class="remove-article-button" (click)="removeArticle($index)">{{'remove-article' |
+              transloco}}</button>
             }
           </div>
+          }
+        </div>
+
+        <button class="add-article-button" (click)="addArticle(1,1,'',false,false,1)">{{'add-article' |
+          transloco}}</button>
       </form>
     </div>
 
@@ -60,6 +89,14 @@
       </div>
       <div class="form-group">
         <button class="save-button" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
+          transloco}}</button>
+      </div>
+      <div class="form-group">
+        <button class="save-button" (click)="cancelOrder()">{{'finish' |
+          transloco}}</button>
+      </div>
+      <div class="form-group">
+        <button class="save-button" (click)="finishOrder()">{{'cancel' |
           transloco}}</button>
       </div>
     </div>

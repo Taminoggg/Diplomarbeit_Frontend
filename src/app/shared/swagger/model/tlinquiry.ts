@@ -18,10 +18,10 @@ export interface Tlinquiry {
     sped?: string | null;
     country?: string | null;
     acceptingPort?: string | null;
-    expectedRetrieveWeek?: string;
+    expectedRetrieveWeek?: string | null;
     weightInKg?: number;
-    invoiceOn?: string;
-    retrieveDate?: string;
+    invoiceOn?: string | null;
+    retrieveDate?: string | null;
     isContainer40?: boolean;
     isContainerHc?: boolean;
     retrieveLocation?: string | null;
@@ -29,8 +29,8 @@ export interface Tlinquiry {
     debtCapitalMainDol?: number;
     debtCapitalTrailingDol?: number;
     portOfDeparture?: string | null;
-    ets?: string;
-    eta?: string;
+    ets?: string | null;
+    eta?: string | null;
     boat?: string | null;
     approvedByCrTl?: boolean;
     approvedByCrTlTime?: string | null;
