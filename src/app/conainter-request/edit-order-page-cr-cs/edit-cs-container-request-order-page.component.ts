@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddArticleCRDto, ArticlesCRService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService } from '../../shared/swagger';
+import { AddArticleCRDto, ArticlesCRService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -24,6 +24,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   fb = inject(FormBuilder);
   orderService = inject(OrdersService);
   checklistService = inject(ChecklistsService);
+  tlinquiriesService = inject(TlinquiriesService);
   csinquiriesService = inject(CsinquiriesService);
   editService = inject(EditService);
   tlinquiryService = inject(TlinquiriesService);
@@ -49,6 +50,30 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       isDirectLine: false,
       isFastLine: false
     });
+  currTlInquiry = signal<TlinquiryDto>(
+    {
+      id: 1,
+      inquiryNumber: 1,
+      sped: 'Loading',
+      country: 'Loading',
+      acceptingPort: 'Loading',
+      expectedRetrieveWeek: '17.12.2023',
+      weightInKg: 1,
+      invoiceOn: '17.12.2023',
+      retrieveDate: '17.12.2023',
+      isContainer40: false,
+      isContainerHc: false,
+      retrieveLocation: 'Loading',
+      debtCapitalGeneralForerunEur: 1,
+      debtCapitalMainDol: 1,
+      debtCapitalTrailingDol: 1,
+      portOfDeparture: 'Loading',
+      ets: '17.12.2023',
+      eta: '17.12.2023',
+      boat: 'Loading',
+      approvedByCrTl: false,
+      approvedByCrTlTime: ""
+    });
 
   //OrderData
   isApprovedByCs = signal(false);
@@ -68,6 +93,26 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   thctb = signal(false);
   readyToLoad = signal('');
   loadingPlattform = signal('');
+
+  //TlData
+  inquiryNumber = signal(0);
+  sped = signal('');
+  country = signal('');
+  acceptingPort = signal('');
+  expectedRetrieveWeek = signal('');
+  weightInKg = signal(0);
+  invoiceOn = signal('');
+  retrieveDate = signal('');
+  isContainer40 = signal(false);
+  isContainerHc = signal(false);
+  retrieveLocation = signal('');
+  debtCapitalGeneralForerunEur = signal(0);
+  debtCapitalMainDol = signal(0);
+  debtCapitalTrailingDol = signal(0);
+  portOfDeparture = signal('');
+  ets = signal('');
+  eta = signal('');
+  boat = signal('');
 
   areArticleNumbersValid = signal<boolean>(true);
   isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
@@ -95,7 +140,9 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       this.isContainerSizeAValid() &&
       this.isContainerSizeBValid() &&
       this.isContainerSizeHcValid() &&
-      this.areArticleNumbersValid()
+      this.areArticleNumbersValid() &&
+      !this.editService.currOrder().successfullyFinished &&
+      !this.editService.currOrder().canceled
     );
   });
 
@@ -115,6 +162,14 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       .subscribe(x => {
         this.editService.currOrder.set(x);
         this.setOrderSignals();
+
+        this.tlinquiriesService.tlinquiriesIdGet(this.editService.tlId())
+            .subscribe(x => {
+              if (x !== null && x !== undefined) {
+                this.currTlInquiry.set(x);
+                this.setTlInquirySignals();
+              }
+            });
 
         this.articlesCRService.articlesCRCsInquiryIdGet(this.editService.currOrder().csid)
           .subscribe(x => x.forEach(x => this.addArticle(x.articleNumber, x.pallets, x.id)));
@@ -145,15 +200,15 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   cancelOrder() {
-    this.orderService.ordersCancelPut(this.editService.createEditStatusDto(this.editService.currOrder().id))
+    this.orderService.ordersCancelPut(this.editService.createEditStatusDto(this.editService.currOrder().id, true))
       .subscribe(x => this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('order-canceled'))
-        .subscribe(_ => _));
+        .subscribe(_ => this.editService.navigateToPath()));
   }
 
   finishOrder() {
-    this.orderService.ordersSuccessfullyFinishedPut(this.editService.createEditStatusDto(this.editService.currOrder().id))
+    this.orderService.ordersSuccessfullyFinishedPut(this.editService.createEditStatusDto(this.editService.currOrder().id, true))
       .subscribe(x => this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('order-finished'))
-        .subscribe(_ => _));
+        .subscribe(_ => this.editService.navigateToPath()));
   }
 
   getFormGroup(index: number): FormGroup {
@@ -203,7 +258,6 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       customerName: this.editService.customerName(),
       createdBy: this.editService.createdBy(),
       amount: this.editService.amount(),
-      checklistId: this.editService.checklistId(),
       id: this.id,
       additionalInformation: this.editService.additonalInformation() === '' ? null : this.editService.additonalInformation()
     };
@@ -233,7 +287,12 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
         this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('sent-to-tl'))
           .subscribe(x => x);
 
-        this.csinquiriesService.csinquiriesApproveCrCsPut(this.editService.createEditStatusDto(this.editService.currOrder().csid))
+        if(this.isApprovedByTl()){
+          this.tlinquiriesService.tlinquiriesApproveCrTlPut(this.editService.createEditStatusDto(this.editService.currOrder().tlid, true))
+          .subscribe(_ => _);
+        }
+
+        this.csinquiriesService.csinquiriesApproveCrCsPut(this.editService.createEditStatusDto(this.editService.currOrder().csid, true))
           .subscribe(x => this.editService.navigateToPath());
       });
   }
@@ -297,5 +356,26 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.fastLine.set(this.currCsInquiry().isFastLine);
     this.directLine.set(this.currCsInquiry().isDirectLine);
     this.isApprovedByCs.set(this.currCsInquiry().approvedByCrCs);
+  }
+
+  setTlInquirySignals(): void {
+    this.inquiryNumber.set(this.currTlInquiry().inquiryNumber);
+    this.sped.set(this.currTlInquiry().sped);
+    this.country.set(this.currTlInquiry().country);
+    this.acceptingPort.set(this.currTlInquiry().acceptingPort);
+    this.expectedRetrieveWeek.set(this.currTlInquiry().expectedRetrieveWeek);
+    this.weightInKg.set(this.currTlInquiry().weightInKg);
+    this.invoiceOn.set(this.currTlInquiry().invoiceOn);
+    this.retrieveDate.set(this.currTlInquiry().retrieveDate);
+    this.isContainer40.set(this.currTlInquiry().isContainer40);
+    this.isContainerHc.set(this.currTlInquiry().isContainerHc);
+    this.retrieveLocation.set(this.currTlInquiry().retrieveLocation);
+    this.debtCapitalGeneralForerunEur.set(this.currTlInquiry().debtCapitalGeneralForerunEur);
+    this.debtCapitalMainDol.set(this.currTlInquiry().debtCapitalMainDol);
+    this.debtCapitalTrailingDol.set(this.currTlInquiry().debtCapitalTrailingDol);
+    this.portOfDeparture.set(this.currTlInquiry().portOfDeparture);
+    this.ets.set(this.currTlInquiry().ets);
+    this.eta.set(this.currTlInquiry().eta);
+    this.boat.set(this.currTlInquiry().boat);
   }
 }

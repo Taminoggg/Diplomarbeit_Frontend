@@ -5,6 +5,164 @@
   </div>
 
   <div id="contentToConvert" class="form-content">
+    <div class="form-row">
+      <div class="form-group">
+        <label>{{'accepting-port' | transloco}}</label>
+        <input type="text" [ngSignal]="acceptingPort">
+        @if(!isAcceptingPortValid()){
+        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'boat' | transloco}}</label>
+        <input type="text" [ngSignal]="boat">
+        @if(!isBoatValid()){
+        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'inquery-number' | transloco}}</label>
+        <input type="number" [ngSignal]="inquiryNumber">
+        @if(!isInquiryNumberValid()){
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'sped' | transloco}}</label>
+        <input type="text" [ngSignal]="sped">
+        @if(!isSpedValid()){
+        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'country' | transloco}}</label>
+        <input type="text" [ngSignal]="country">
+        @if(!isCountryValid()){
+        <label class="error-message">{{'error-message-name-string' | transloco}}</label>
+        }
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>{{'excepted-retrieve-week' | transloco}}</label>
+        <input type="date" [ngSignal]="expectedRetrieveWeek" format="dd.MM.yyyy">
+        @if(!isExpectedRetrieveWeekValid()){
+        <label class="error-message">{{'error-message-date' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'retrieve-date' | transloco}}</label>
+        <input type="date" [ngSignal]="retrieveDate" format="dd.MM.yyyy">
+        @if(!isRetrieveDateValid()){
+        <label class="error-message">{{'error-message-date' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'invoice-on' | transloco}}</label>
+        <input type="date" [ngSignal]="invoiceOn" format="dd.MM.yyyy">
+        @if(!isInvoiceOnValid()){
+        <label class="error-message">{{'error-message-date' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'ets' | transloco}}</label>
+        <input type="date" [ngSignal]="ets" format="dd.MM.yyyy">
+        @if(!isEtsValid()){
+        <label class="error-message">{{'error-message-date' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'eta' | transloco}}</label>
+        <input type="date" [ngSignal]="eta" format="dd.MM.yyyy">
+        @if(!isEtaValid()){
+        <label class="error-message">{{'error-message-date' | transloco}}</label>
+        }
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>{{'weight-in-kg' | transloco}}</label>
+        <input type="number" [ngSignal]="weightInKg">
+        @if(!isWeigthInKgValid()){
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-container">
+          <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
+          <input class="checkbox-input" type="checkbox" [ngSignal]="isContainer40">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox-container">
+          <label class="checkbox-label">{{'is-container-hc' | transloco}}</label>
+          <input class="checkbox-input" type="checkbox" [ngSignal]="isContainerHc">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>{{'retrieve-location' | transloco}}</label>
+        <input type="text" [ngSignal]="retrieveLocation">
+        @if(!isRetrieveLocationValid()){
+        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
+        }
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>{{'debt-capital-general-forerun-eur' | transloco}}</label>
+        <input type="number" [ngSignal]="debtCapitalGeneralForerunEur">
+        @if(!isDebtCapitalGeneralForerunEurValid()){
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'debt-capital-main-dol' | transloco}}</label>
+        <input type="number" [ngSignal]="debtCapitalMainDol">
+        @if(!isDebtCapitalMainDolValid()){
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'debt-capital-trailing-dol' | transloco}}</label>
+        <input type="number" [ngSignal]="debtCapitalTrailingDol">
+        @if(!isDebtCapitalTrailingDolValid()){
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'port-of-departure' | transloco}}</label>
+        <input type="text" [ngSignal]="portOfDeparture">
+        @if(!isPortOfDepartureValid()){
+        <label class="error-message">{{'error-message-number' | transloco}}</label>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>{{'additional-text' | transloco}}</label>
+        <input [ngSignal]="editService.additonalInformation" type="text">
+      </div>
+    </div>
+
+    <br>
+    <br>
+
     <div class="csData">
       <div class="form-row">
         <div class="form-group">
@@ -24,7 +182,7 @@
 
         <div class="form-group">
           <label>{{'ready-to-load' | transloco}}</label>
-          <input readonly [ngSignal]="readyToLoad" type="text">
+          <input format="dd.MM.yyyy" readonly [ngSignal]="readyToLoad" type="date">
         </div>
       </div>
 
@@ -129,175 +287,6 @@
           }
         </div>
       </form>
-    </div>
-
-    <label class="note">{{'edited-by-cs' | transloco}}</label>
-    <hr>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>{{'status' | transloco}}</label>
-        <input type="text" [ngSignal]="editService.status">
-        @if(!isStatusValid()){
-        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'inquery-number' | transloco}}</label>
-        <input type="number" [ngSignal]="inquiryNumber">
-        @if(!isInquiryNumberValid()){
-        <label class="error-message">{{'error-message-number' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'sped' | transloco}}</label>
-        <input type="text" [ngSignal]="sped">
-        @if(!isSpedValid()){
-        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'country' | transloco}}</label>
-        <input type="text" [ngSignal]="country">
-        @if(!isCountryValid()){
-        <label class="error-message">{{'error-message-name-string' | transloco}}</label>
-        }
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>{{'accepting-port' | transloco}}</label>
-        <input type="text" [ngSignal]="acceptingPort">
-        @if(!isAcceptingPortValid()){
-        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'excepted-retrieve-week' | transloco}}</label>
-        <input type="date" [ngSignal]="expectedRetrieveWeek" format="dd.MM.yyyy">
-        @if(!isExpectedRetrieveWeekValid()){
-        <label class="error-message">{{'error-message-date' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'weight-in-kg' | transloco}}</label>
-        <input type="number" [ngSignal]="weightInKg">
-        @if(!isWeigthInKgValid()){
-        <label class="error-message">{{'error-message-number' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'invoice-on' | transloco}}</label>
-        <input type="date" [ngSignal]="invoiceOn" format="dd.MM.yyyy">
-        @if(!isInvoiceOnValid()){
-        <label class="error-message">{{'error-message-date' | transloco}}</label>
-        }
-      </div>
-    </div>
-
-    <div class="form-row">
-
-      <div class="form-group">
-        <label>{{'retrieve-date' | transloco}}</label>
-        <input type="date" [ngSignal]="retrieveDate" format="dd.MM.yyyy">
-        @if(!isRetrieveDateValid()){
-        <label class="error-message">{{'error-message-date' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <div class="checkbox-container">
-          <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
-          <input class="checkbox-input" type="checkbox" [ngSignal]="isContainer40">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="checkbox-container">
-          <label class="checkbox-label">{{'is-container-hc' | transloco}}</label>
-          <input class="checkbox-input" type="checkbox" [ngSignal]="isContainerHc">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>{{'retrieve-location' | transloco}}</label>
-        <input type="text" [ngSignal]="retrieveLocation">
-        @if(!isRetrieveLocationValid()){
-        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
-        }
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>{{'debt-capital-general-forerun-eur' | transloco}}</label>
-        <input type="number" [ngSignal]="debtCapitalGeneralForerunEur">
-        @if(!isDebtCapitalGeneralForerunEurValid()){
-        <label class="error-message">{{'error-message-number' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'debt-capital-main-dol' | transloco}}</label>
-        <input type="number" [ngSignal]="debtCapitalMainDol">
-        @if(!isDebtCapitalMainDolValid()){
-        <label class="error-message">{{'error-message-number' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'debt-capital-trailing-dol' | transloco}}</label>
-        <input type="number" [ngSignal]="debtCapitalTrailingDol">
-        @if(!isDebtCapitalTrailingDolValid()){
-        <label class="error-message">{{'error-message-number' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'port-of-departure' | transloco}}</label>
-        <input type="text" [ngSignal]="portOfDeparture">
-        @if(!isPortOfDepartureValid()){
-        <label class="error-message">{{'error-message-number' | transloco}}</label>
-        }
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>{{'ets' | transloco}}</label>
-        <input type="date" [ngSignal]="ets" format="dd.MM.yyyy">
-        @if(!isEtsValid()){
-        <label class="error-message">{{'error-message-date' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'eta' | transloco}}</label>
-        <input type="date" [ngSignal]="eta" format="dd.MM.yyyy">
-        @if(!isEtaValid()){
-        <label class="error-message">{{'error-message-date' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'boat' | transloco}}</label>
-        <input type="text" [ngSignal]="boat">
-        @if(!isBoatValid()){
-        <label class="error-message">{{'error-message-any-string' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>{{'additional-text' | transloco}}</label>
-        <input [ngSignal]="editService.additonalInformation" type="text">
-      </div>
     </div>
   </div>
 

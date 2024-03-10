@@ -22,6 +22,7 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
   editService = inject(EditService);
   orderService = inject(OrdersService);
   checklistService = inject(ChecklistsService);
+  productionPlanningService = inject(ProductionPlanningsService);
   prodcutionPlanningService = inject(ProductionPlanningsService);
   validationService = inject(ValidationService);
   allChecklists = signal<ChecklistDto[]>([]);
@@ -62,6 +63,11 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
             .subscribe(x => x.forEach(x => {
               this.addArticle(x.articleNumber, x.pallets, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
             }));
+
+            this.productionPlanningService.productionPlanningsIdGet(this.editService.currOrder().ppId)
+            .subscribe(x => {
+              this.isApprovedByPpPp.set(x.approvedByPpPp);
+            });
         }
       });
   }
@@ -95,12 +101,12 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
     return this.articlesFormArray.at(index) as FormGroup;
   }
 
-  saveArticles() {
-    const articles = this.myForm.value.articles;
-    console.log('Entered Articles:', articles);
+  saveOrders() {
+    this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('pp-in-progress'))
+      .subscribe(_ => this.saveArticles());
   }
 
-  saveOrder(): void {
+  saveArticles(): void {
     console.log('saving order');
     for (let i = 0; i < this.articlesFormArray.length; i++) {
       console.log(this.getFormGroup(i).get('plant')!.value);
@@ -129,15 +135,13 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
         this.articlesPPService.articlesPPPut(article).subscribe(x => this.editService.navigateToPath());
       }
     }
-    this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('pp-in-progress'))
-      .subscribe(_ => _);
   }
 
   publish() {
-    this.prodcutionPlanningService.productionPlanningsApprovePpPpPut(this.editService.createEditStatusDto(this.editService.currOrder().ppId))
-      .subscribe(x => this.saveOrder());
-
     this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('edited-by-pp'))
-      .subscribe(_ => _);
+    .subscribe(_ => _);
+
+    this.prodcutionPlanningService.productionPlanningsApprovePpPpPut(this.editService.createEditStatusDto(this.editService.currOrder().ppId, true))
+      .subscribe(x => this.saveArticles());
   }
 }

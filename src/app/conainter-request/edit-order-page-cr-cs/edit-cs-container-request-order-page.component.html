@@ -7,14 +7,6 @@
   <div id="contentToConvert" class="form-content">
     <div class="form-row">
       <div class="form-group">
-        <label>{{'status' | transloco}}</label>
-        <input [ngSignal]="editService.status" type="text">
-        @if(!isStatusValid()){
-        <label class="error-message">{{'error-message-number' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
         <label>{{'customer' | transloco}}</label>
         <input [ngSignal]="editService.customerName" type="text">
         @if(!isCustomerValid()){
@@ -189,21 +181,129 @@
       <button class="add-article-button" (click)="addArticle(1,1,1)">{{'add-article' |
         transloco}}</button>
     </form>
-  </div>
 
-  <div class="form-row">
-    <div class="form-group">
-      <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
-    </div>
-    <div class="form-group">
-      <button class="save-button" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
-        transloco}}</button>
-    </div>
-    <div class="form-group">
-      <button [disabled]="!isApprovedByTl()" class="save-button" (click)="cancelOrder()">{{'finish' | transloco}}</button>
-    </div>
-    <div class="form-group">
-      <button class="save-button" (click)="finishOrder()">{{'cancel' | transloco}}</button>
-    </div>
+    @if (isApprovedByTl()) {
+      <br>
+      <br>
+
+      <div class="tlData">
+        <div class="form-row">
+          <div class="form-group">
+            <label>{{'inquery-number' | transloco}}</label>
+            <input readonly type="number" [ngSignal]="inquiryNumber">
+          </div>
+    
+          <div class="form-group">
+            <label>{{'sped' | transloco}}</label>
+            <input readonly type="text" [ngSignal]="sped">
+          </div>
+    
+          <div class="form-group">
+            <label>{{'country' | transloco}}</label>
+            <input readonly type="text" [ngSignal]="country">
+          </div>
+
+          <div class="form-group">
+            <label>{{'accepting-port' | transloco}}</label>
+            <input readonly type="text" [ngSignal]="acceptingPort">
+          </div>
+        </div>
+    
+        <div class="form-row">
+          <div class="form-group">
+            <label>{{'weight-in-kg' | transloco}}</label>
+            <input readonly type="number" [ngSignal]="weightInKg">
+          </div>
+    
+          <div class="form-group">
+            <div class="checkbox-container">
+              <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
+              <input class="checkbox-input" type="checkbox" [ngSignal]="isContainer40">
+            </div>
+          </div>
+    
+          <div class="form-group">
+            <div class="checkbox-container">
+              <label class="checkbox-label">{{'is-container-hc' | transloco}}</label>
+              <input class="checkbox-input" type="checkbox" [ngSignal]="isContainerHc">
+            </div>
+          </div>
+    
+          <div class="form-group">
+            <label>{{'retrieve-location' | transloco}}</label>
+            <input readonly type="text" [ngSignal]="retrieveLocation">
+          </div>
+        </div>
+    
+        <div class="form-row">
+          <div class="form-group">
+            <label>{{'debt-capital-general-forerun-eur' | transloco}}</label>
+            <input readonly type="number" [ngSignal]="debtCapitalGeneralForerunEur">
+          </div>
+    
+          <div class="form-group">
+            <label>{{'debt-capital-main-dol' | transloco}}</label>
+            <input readonly type="number" [ngSignal]="debtCapitalMainDol">
+          </div>
+    
+          <div class="form-group">
+            <label>{{'debt-capital-trailing-dol' | transloco}}</label>
+            <input readonly type="number" [ngSignal]="debtCapitalTrailingDol">
+          </div>
+    
+          <div class="form-group">
+            <label>{{'port-of-departure' | transloco}}</label>
+            <input readonly type="text" [ngSignal]="portOfDeparture">
+          </div>
+
+          <div class="form-group">
+            <label>{{'boat' | transloco}}</label>
+            <input readonly type="text" [ngSignal]="boat">
+          </div>
+        </div>
+    
+        <div class="form-row">
+          <div class="form-group">
+            <label>{{'ets' | transloco}}</label>
+            <input readonly type="date" [ngSignal]="ets" format="dd.MM.yyyy">
+          </div>
+    
+          <div class="form-group">
+            <label>{{'eta' | transloco}}</label>
+            <input readonly type="date" [ngSignal]="eta" format="dd.MM.yyyy">
+          </div>
+    
+          <div class="form-group">
+            <label>{{'retrieve-date' | transloco}}</label>
+            <input readonly type="date" [ngSignal]="retrieveDate" format="dd.MM.yyyy">
+          </div>
+
+          <div class="form-group">
+            <label>{{'invoice-on' | transloco}}</label>
+            <input readonly type="date" [ngSignal]="invoiceOn" format="dd.MM.yyyy">
+          </div>
+
+          <div class="form-group">
+            <label>{{'excepted-retrieve-week' | transloco}}</label>
+            <input readonly type="date" [ngSignal]="expectedRetrieveWeek" format="dd.MM.yyyy">
+          </div>
+        </div>
+      </div>
+    }
+</div>
+<div class="form-row">
+  <div class="form-group">
+    <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
+  </div>
+  <div class="form-group">
+    <button class="save-button" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
+      transloco}}</button>
+  </div>
+  <div class="form-group">
+    <button [disabled]="!isApprovedByTl()" class="save-button" (click)="finishOrder()">{{'finish' |
+      transloco}}</button>
+  </div>
+  <div class="form-group">
+    <button class="save-button" (click)="cancelOrder()">{{'cancel' | transloco}}</button>
   </div>
 </div>

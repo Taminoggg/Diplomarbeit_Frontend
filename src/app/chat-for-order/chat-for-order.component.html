@@ -1,4 +1,4 @@
-<button class="back-button" (click)="navigateToHomePage()">{{'back' | transloco}}</button>
+<button class="back-button" (click)="navigateBack()">{{'back' | transloco}}</button>
 <div class="chat-container">
   <h1>{{'chat-for-order' | transloco}} {{id}}</h1>
   <br>
@@ -8,7 +8,9 @@
       <label>{{'begin-of-the-chat' | transloco}}</label>
       <br>
       @for (message of messagesForConversation(); track $index) {
+        
       <label class="datetime">{{message.dateTime}}</label>
+      <label class="content">{{message.from}}:</label>
       <label class="content">{{message.content}}</label>
       @if (fileForMessageExsits(message.id)) {
       <br>

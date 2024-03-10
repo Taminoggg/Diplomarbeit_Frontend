@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, computed, inject, numberAttribute, signal } from '@angular/core';
+import { Component, Input, OnInit, computed, inject, input, numberAttribute, signal } from '@angular/core';
 import { AddMessageConversationDto, AddMessageDto, FileByteDto, FilesService, MessageConversationsService, MessageDto, MessagesService } from '../shared/swagger';
 import { NgSignalDirective } from '../shared/ngSignal.directive';
 import { DecimalPipe } from '@angular/common';
@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './chat-for-order.component.scss'
 })
 export class ChatForOrderComponent implements OnInit {
+  @Input() htmlContent = '';
   @Input({ transform: numberAttribute }) id = 0;
 
   fileToUpload: File | null = null;
@@ -73,7 +74,6 @@ export class ChatForOrderComponent implements OnInit {
   fileForMessageExsits(id: number): boolean {
     
     let file = this.fileForMessage.get(id);
-    console.log(this.fileForMessage.get(id));
     if (file !== undefined) {
       return true;
     }
@@ -123,6 +123,20 @@ export class ChatForOrderComponent implements OnInit {
   }
 
   sendMessage(): void {
+    let from = '';
+
+    if(this.htmlContent === "containerRequestCS"){
+      from = 'CRCS';
+    }else if(this.htmlContent === "containerRequestTL"){
+      from = 'CRTL';
+    }else if(this.htmlContent === "productionPlanningCS"){
+      from = 'PPCS';
+    }else if(this.htmlContent === "productionPlanningPP"){
+      from = 'PPPP';
+    }else{
+      from = 'unknown';
+    }
+
     let message: AddMessageDto = {
       content: ""
     };
@@ -132,13 +146,15 @@ export class ChatForOrderComponent implements OnInit {
         .subscribe(x => {
           message = {
             content: this.messageContent(),
-            attachmentId: x.id
+            attachmentId: x.id,
+            from: from
           };
           this.postMessage(message);
         });
     } else {
       message = {
-        content: this.messageContent()
+        content: this.messageContent(),
+        from: from
       };
       this.postMessage(message);
     }
@@ -164,9 +180,7 @@ export class ChatForOrderComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
 
     if (inputElement && inputElement.files && inputElement.files.length > 0) {
-      // Assign the newly selected file
       this.fileToUpload = inputElement.files.item(0);
-      console.log(this.fileToUpload);
     }
     else {
       this.fileToUpload = null;
@@ -183,7 +197,7 @@ export class ChatForOrderComponent implements OnInit {
     }
   }
 
-  navigateToHomePage() {
-    this.router.navigateByUrl('/function-overview-age');
+  navigateBack() {
+    this.router.navigateByUrl('/container-request-page/'+this.htmlContent);
   }
 }

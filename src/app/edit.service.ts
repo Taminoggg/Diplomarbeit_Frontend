@@ -79,10 +79,10 @@ export class EditService {
     }
   }
 
-  createEditStatusDto(id:number): EditStatusDto {
+  createEditStatusDto(id:number, status:boolean): EditStatusDto {
     let editOrder: EditStatusDto = {
       id: id,
-      status: true
+      status: status
     };
     return editOrder;
   }

@@ -23,6 +23,6 @@ export const routes: Routes = [
   { path: 'function-overview-age', component: FunctionOverviewPageComponent },
   { path: 'admin-page', component: AdminComponent },
   { path: 'settings-page/:htmlContent', component: SettingsComponent },
-  { path: 'chat-for-order/:id', component: ChatForOrderComponent },
+  { path: 'chat-for-order/:htmlContent/:id', component: ChatForOrderComponent },
   { path: 'new-production-planning-page', component: NewProductionPlanningOrderPageComponent },
 ];

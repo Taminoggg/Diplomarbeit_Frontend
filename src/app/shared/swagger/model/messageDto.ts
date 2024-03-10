@@ -16,5 +16,6 @@ export interface MessageDto {
     content: string;
     attachmentId: number;
     dateTime: string;
+    from: string;
 }
 

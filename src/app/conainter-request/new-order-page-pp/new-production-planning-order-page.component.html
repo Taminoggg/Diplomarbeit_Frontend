@@ -16,6 +16,11 @@
           <label>{{'created-by' | transloco}}</label>
           <input [ngSignal]="createdBy" type="text">
         </div>
+
+        <div class="form-group">
+          <label>{{'additional-text' | transloco}}</label>
+          <input [ngSignal]="editService.additonalInformation" type="text">
+        </div>
       </div>
 
       <form [formGroup]="myForm">
@@ -27,6 +32,15 @@
                 <label>{{'min-heigth-required' | transloco}}</label>
                 <input (input)="setAreArticlesValid()" type="number" formControlName="minHeigthRequired">
                 @if (!validationService.isNumberValid(getFormGroup($index).get('minHeigthRequired')!.value)) { <label
+                  class="error-message">
+                  {{'error-message-number' | transloco}}</label>
+                }
+              </div>
+
+              <div class="form-group">
+                <label>{{'pallet-amount' | transloco}}</label>
+                <input (input)="setAreArticlesValid()" type="number" formControlName="palletAmount">
+                @if (!validationService.isNumberValid(getFormGroup($index).get('palletAmount')!.value)) { <label
                   class="error-message">
                   {{'error-message-number' | transloco}}</label>
                 }

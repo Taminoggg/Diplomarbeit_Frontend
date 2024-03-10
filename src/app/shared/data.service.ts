@@ -260,7 +260,7 @@ export class DataService {
 
     this.allOrders.set(this.allOrders().filter(x => x.createdBy.toLowerCase().includes(this.filterByCreatedByName.toLowerCase())));
 
-    if (!this.showFinished) {
+    if (!this.showCanceled) {
       this.allOrders.set(this.allOrders().filter(x => x.canceled === false));
     }
 

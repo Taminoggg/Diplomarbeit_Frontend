@@ -88,6 +88,8 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   thctb = signal(false);
   readyToLoad = signal('');
   loadingPlattform = signal('');
+  isFastLine = signal(false);
+  isDirectLine = signal(false);
 
   //TlData
   inquiryNumber = signal(0);
@@ -236,7 +238,6 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       customerName: this.editService.customerName(),
       createdBy: this.editService.createdBy(),
       amount: this.editService.amount(),
-      checklistId: this.editService.checklistId(),
       id: this.id,
       additionalInformation: this.editService.additonalInformation() === '' ? undefined : this.editService.additonalInformation()
     };
@@ -291,7 +292,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
         this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('edited-by-tl'))
           .subscribe(_ => _);
         this.saveTlInquery();
-        this.tlinquiriesService.tlinquiriesApproveCrTlPut(this.editService.createEditStatusDto(this.editService.currOrder().tlid))
+        this.tlinquiriesService.tlinquiriesApproveCrTlPut(this.editService.createEditStatusDto(this.editService.currOrder().tlid, true))
           .subscribe(x => this.editService.navigateToPath());
       });
   }
@@ -301,6 +302,8 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   setCsInquirySignals() {
+    this.isFastLine.set(this.currCsInquiry().isFastLine);
+    this.isDirectLine.set(this.currCsInquiry().isDirectLine);
     this.container.set(this.currCsInquiry().container);
     this.abnumber.set(this.currCsInquiry().abnumber);
     this.grossWeightInKg.set(this.currCsInquiry().grossWeightInKg);

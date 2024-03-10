@@ -16,6 +16,7 @@ export interface Message {
     id?: number;
     content?: string | null;
     attachmentId?: number | null;
+    from?: string | null;
     dateTime?: string;
     attachment?: any;
     readonly messageConversations?: Array<MessageConversation> | null;

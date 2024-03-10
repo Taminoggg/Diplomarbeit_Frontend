@@ -92,7 +92,7 @@
     <tr>
       @for (prop of dataService.tableHeaders; track $index) {
       @if(prop.value === 'chat'){
-      <td (click)="navigateToPage('/chat-for-order/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
+      <td (click)="navigateToPage('/chat-for-order/' + htmlContent + '/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
       }@else if (prop.value === 'assignment') {
       <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
       }@else if (prop.value === 'create') {

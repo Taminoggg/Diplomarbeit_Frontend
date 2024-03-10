@@ -13,6 +13,7 @@
 
 export interface AddMessageDto { 
     content?: string | null;
+    from?: string | null;
     attachmentId?: number | null;
 }
 

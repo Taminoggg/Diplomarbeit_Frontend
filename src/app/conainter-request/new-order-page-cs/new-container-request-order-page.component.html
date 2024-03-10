@@ -6,14 +6,6 @@
   <div id="contentToConvert" class="form-content">
     <div class="form-row">
       <div class="form-group">
-        <label>{{'status' | transloco}}</label>
-        <input [ngSignal]="status" type="text">
-        @if(!isStatusValid()){
-        <label class="error-message">{{'error-message-status' | transloco}}</label>
-        }
-      </div>
-
-      <div class="form-group">
         <label>{{'customer' | transloco}}</label>
         <input [ngSignal]="customerName" type="text">
         @if(!isCustomerValid()){
