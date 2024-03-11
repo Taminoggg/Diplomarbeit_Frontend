@@ -20,7 +20,6 @@ export class DataService {
   orderIds: number[] = [];
   approvedBy = new Map<number, boolean>();
   tableHeaders: { label: string; value: (keyof OrderDto | 'approvedBy' | 'articleNumbers' | 'factory' | 'plant' | 'assignment' | 'create' | 'chat') }[] = [];
-
   filteredBy = '';
   filterByCreatedByName = ''
   showFinished = false;

@@ -140,3 +140,11 @@ select {
     background-color: darkred;
   }
 }
+
+.date-error-message {
+  position: absolute;
+  color: red;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 0px;
+}

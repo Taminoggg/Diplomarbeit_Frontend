@@ -35,8 +35,11 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
   myForm!: FormGroup;
 
   setAreArticlesValid() {
+    console.log('setting articles valid');
+    console.log(this.articlesFormArray.length);
     for (let i = 0; i < this.articlesFormArray.length; i++) {
-      if (!this.validationService.isAnyInputValid(this.getFormGroup(i).get('shortText')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('factory')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('nozzle')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('productionOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plannedOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plant')!.value)) {
+      if (!this.validationService.isDateValid(this.getFormGroup(i).get('deliveryDate')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('shortText')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('factory')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('nozzle')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('productionOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plannedOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plant')!.value)) {
+        console.log('IS INVALID');
         this.areArticlesValid.set(false);
         return;
       }
@@ -60,11 +63,14 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
           this.editService.setOrderSignals(this.editService.currOrder());
 
           this.articlesPPService.articlesPPProductionPlanningIdGet(this.editService.currOrder().ppId)
-            .subscribe(x => x.forEach(x => {
-              this.addArticle(x.articleNumber, x.pallets, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
-            }));
+            .subscribe(x => {
+              x.forEach(x => {
+                this.addArticle(x.articleNumber, x.pallets, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
+                this.setAreArticlesValid();
+              });
+            });
 
-            this.productionPlanningService.productionPlanningsIdGet(this.editService.currOrder().ppId)
+          this.productionPlanningService.productionPlanningsIdGet(this.editService.currOrder().ppId)
             .subscribe(x => {
               this.isApprovedByPpPp.set(x.approvedByPpPp);
             });
@@ -109,14 +115,6 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
   saveArticles(): void {
     console.log('saving order');
     for (let i = 0; i < this.articlesFormArray.length; i++) {
-      console.log(this.getFormGroup(i).get('plant')!.value);
-      console.log(this.getFormGroup(i).get('deliveryDate')!.value);
-      console.log(this.getFormGroup(i).get('plannedOrder')!.value);
-      console.log(this.getFormGroup(i).get('productionOrder')!.value);
-      console.log(this.getFormGroup(i).get('shortText')!.value);
-      console.log(this.getFormGroup(i).get('factory')!.value);
-      console.log(this.getFormGroup(i).get('nozzle')!.value);
-
       let article: EditPpPpArticleDto = {
         id: this.getFormGroup(i).get('id')!.value,
         deliveryDate: this.getFormGroup(i).get('deliveryDate')!.value,
@@ -139,7 +137,7 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
 
   publish() {
     this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('edited-by-pp'))
-    .subscribe(_ => _);
+      .subscribe(_ => _);
 
     this.prodcutionPlanningService.productionPlanningsApprovePpPpPut(this.editService.createEditStatusDto(this.editService.currOrder().ppId, true))
       .subscribe(x => this.saveArticles());

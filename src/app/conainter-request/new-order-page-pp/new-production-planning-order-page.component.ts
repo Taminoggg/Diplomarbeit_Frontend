@@ -18,6 +18,7 @@ import { EditService } from '../../edit.service';
 export class NewProductionPlanningOrderPageComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.editService.navigationPath = '/container-request-page/productionPlanningCS';
+    this.setAreArticlesValid();
   }
 
   ngOnInit(): void {
@@ -27,6 +28,7 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
 
     this.editService.navigationPath = '/container-request-page/productionPlanningCS';
     this.addArticle();
+    this.setAreArticlesValid();
   }
 
   editService = inject(EditService);
@@ -70,6 +72,8 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
   });
 
   setAreArticlesValid() {
+    console.log(this.getFormGroup(0).get('desiredDeliveryDate')!.value);
+    console.log(!this.validationService.isDateValid(this.getFormGroup(0).get('desiredDeliveryDate')!.value));
     for (let i = 0; i < this.articlesFormArray.length; i++) {
       if (!(this.getFormGroup(i).get('minHeigthRequired')!.value > 0) || !this.validationService.isDateValid(this.getFormGroup(i).get('desiredDeliveryDate')!.value)) {
         this.areArticlesValid.set(false);

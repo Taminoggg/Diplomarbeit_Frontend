@@ -288,7 +288,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
           .subscribe(x => x);
 
         if(this.isApprovedByTl()){
-          this.tlinquiriesService.tlinquiriesApproveCrTlPut(this.editService.createEditStatusDto(this.editService.currOrder().tlid, true))
+          this.tlinquiriesService.tlinquiriesApproveCrTlPut(this.editService.createEditStatusDto(this.editService.currOrder().tlid, false))
           .subscribe(_ => _);
         }
 

@@ -52,7 +52,7 @@
         <label>{{'excepted-retrieve-week' | transloco}}</label>
         <input type="date" [ngSignal]="expectedRetrieveWeek" format="dd.MM.yyyy">
         @if(!isExpectedRetrieveWeekValid()){
-        <label class="error-message">{{'error-message-date' | transloco}}</label>
+        <label class="date-error-message">{{'error-message-date' | transloco}}</label>
         }
       </div>
 
@@ -60,7 +60,7 @@
         <label>{{'retrieve-date' | transloco}}</label>
         <input type="date" [ngSignal]="retrieveDate" format="dd.MM.yyyy">
         @if(!isRetrieveDateValid()){
-        <label class="error-message">{{'error-message-date' | transloco}}</label>
+        <label class="date-error-message">{{'error-message-date' | transloco}}</label>
         }
       </div>
 
@@ -68,7 +68,7 @@
         <label>{{'invoice-on' | transloco}}</label>
         <input type="date" [ngSignal]="invoiceOn" format="dd.MM.yyyy">
         @if(!isInvoiceOnValid()){
-        <label class="error-message">{{'error-message-date' | transloco}}</label>
+        <label class="date-error-message">{{'error-message-date' | transloco}}</label>
         }
       </div>
 
@@ -76,7 +76,7 @@
         <label>{{'ets' | transloco}}</label>
         <input type="date" [ngSignal]="ets" format="dd.MM.yyyy">
         @if(!isEtsValid()){
-        <label class="error-message">{{'error-message-date' | transloco}}</label>
+        <label class="date-error-message">{{'error-message-date' | transloco}}</label>
         }
       </div>
 
@@ -84,7 +84,7 @@
         <label>{{'eta' | transloco}}</label>
         <input type="date" [ngSignal]="eta" format="dd.MM.yyyy">
         @if(!isEtaValid()){
-        <label class="error-message">{{'error-message-date' | transloco}}</label>
+        <label class="date-error-message">{{'error-message-date' | transloco}}</label>
         }
       </div>
     </div>
@@ -260,7 +260,7 @@
               <div class="form-group">
                 <div class="checkbox-container">
                   <label class="checkbox-label">{{'direct-line' | transloco}}</label>
-                  <input class="checkbox-input" type="checkbox" formControlName="directline" onclick="return false;"
+                  <input [ngSignal]="isDirectLine" class="checkbox-input" type="checkbox" onclick="return false;"
                     onkeydown="return false;">
                 </div>
               </div>
@@ -268,12 +268,12 @@
               <div class="form-group">
                 <div class="checkbox-container">
                   <label class="checkbox-label">{{'fast-line' | transloco}}</label>
-                  <input class="checkbox-input" type="checkbox" formControlName="fastline" onclick="return false;"
+                  <input [ngSignal]="isFastLine" class="checkbox-input" type="checkbox" onclick="return false;"
                     onkeydown="return false;">
                 </div>
               </div>
 
-              @if (getFormGroup($index).get('directline')!.value) {
+              @if (isDirectLine() || isFastLine()) {
               <div class="form-group">
                 <label>{{'pallet-amount' | transloco}}</label>
                 <input readonly type="number" formControlName="palletAmount">

@@ -118,6 +118,14 @@ select {
   margin-top: -10px;
 }
 
+.date-error-message {
+  position: absolute;
+  color: red;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 0px;
+}
+
 .add-article-button {
   padding: 10px 15px;
   border: none;

@@ -129,7 +129,7 @@
         <label>{{'ready-to-load' | transloco}}</label>
         <input [ngSignal]="readyToLoad" type="date" format="dd.MM.yyyy">
         @if (!validationService.isDateValid(readyToLoad())) { <label
-          class="error-message">
+          class="date-error-message">
           {{'error-message-date' | transloco}}</label>
         }
       </div>

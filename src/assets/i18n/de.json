@@ -108,9 +108,7 @@
     "add-checklist": "Checklist hinzufügen",
     "messages-for-order": "Nachrichten pro Bestellung",
     "files-for-order": "Dateien pro Bestellung",
-    "time-to-approve-cr-tl": "Zeit zur Genehmigung durch CR/TL",
-    "time-to-approve-pp-cs": "Zeit zur Genehmigung durch PP/CS",
-    "time-to-approve-pp-pp": "Zeit zur Genehmigung durch PP/PP",
+    "time-to-approve": "Zeit zur Genehmigung durch TL/PP",
     "avg": "Durchschnitt",
     "cancel": "Bestellung abbrechen",
     "finish": "Bestellung abschließen",
@@ -124,5 +122,7 @@
     "tl-in-progress": "In Bearbeitung von Transportlogistik",
     "sent-to-pp": "Gesendet an Produktionsplanung",
     "edited-by-pp": "Von Produktionsplanung bearbeitet",
-    "pp-in-progress": "In Bearbeitung von Produktionsplanung"
+    "pp-in-progress": "In Bearbeitung von Produktionsplanung",
+    "to": "Bis:",
+    "from": "Von:"
 }

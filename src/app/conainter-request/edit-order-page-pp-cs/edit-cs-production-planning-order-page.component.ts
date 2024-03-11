@@ -44,11 +44,9 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   myForm!: FormGroup;
 
   setAreArticlesValid() {
-    console.log(this.getFormGroup(0).get('minHeigthRequired')!.value);
-
     for (let i = 0; i < this.articlesFormArray.length; i++) {
       console.log(this.getFormGroup(i).get('desiredDeliveryDate')!.value);
-      if (!(this.getFormGroup(i).get('minHeigthRequired')!.value > 0) || !this.validationService.isDateValid(this.getFormGroup(i).get('desiredDeliveryDate')!.value)) {
+      if (!(this.getFormGroup(i).get('palletAmount')!.value > 0) || !(this.getFormGroup(i).get('minHeigthRequired')!.value > 0) || !this.validationService.isDateValid(this.getFormGroup(i).get('desiredDeliveryDate')!.value)) {
         this.areArticlesValid.set(false);
         return;
       }

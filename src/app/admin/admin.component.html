@@ -1,31 +1,29 @@
 <div class="container">
+    <label>{{'from' | transloco}}</label>
+    <input (input)="updateOrders()" [ngSignal]="fromDate" format="dd.MM.yyyy" type="date">
+    <label>{{'to' | transloco}}</label>
+    <input (input)="updateOrders()" [ngSignal]="toDate" format="dd.MM.yyyy" type="date">
     <table>
         <tr>
             <th>{{'order' | transloco}}</th>
             <th>{{'messages-for-order' | transloco}}</th>
             <th>{{'files-for-order' | transloco}}</th>
-            <th>{{'time-to-approve-cr-tl' | transloco}}</th>
-            <th>{{'time-to-approve-pp-cs' | transloco}}</th>
-            <th>{{'time-to-approve-pp-pp' | transloco}}</th>
+            <th>{{'time-to-approve' | transloco}}</th>
         </tr>
 
-        @for (order of dataService.allOrders(); track $index) {
+        @for (order of allOrders(); track $index) {
         <tr>
             <td>{{order.id}}</td>
             <td>{{getCountForOrder(order.id, 'messages')}}</td>
             <td>{{getCountForOrder(order.id, 'files')}}</td>
             <td>{{getTimeForApprovedBy(order.id, 'tl')}}</td>
-            <td>{{getTimeForApprovedBy(order.id, 'ppCs')}}</td>
-            <td>{{getTimeForApprovedBy(order.id, 'ppPp')}}</td>
         </tr>
         }
         <tr>
             <td>{{'avg' | transloco}}</td>
             <td>{{getAvgForOrder('messages')}}</td>
             <td>{{getAvgForOrder('files')}}</td>
-            <td>{{getAvgTimeToGetApprovedBy('tl')}}</td>
-            <td>{{getAvgTimeToGetApprovedBy('ppCs')}}</td>
-            <td>{{getAvgTimeToGetApprovedBy('ppPp')}}</td>
+            <td>{{getAvgTimeToGetApprovedBy()}}</td>
         </tr>
     </table>
 
@@ -99,7 +97,6 @@
                     <button [disabled]="selectedStepId() === -1" (click)="editStep()">{{'edit' | transloco}}</button>
                 </div>
             </div>
-
             }
         </div>
     </div>

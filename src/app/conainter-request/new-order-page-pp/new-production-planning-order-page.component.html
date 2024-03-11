@@ -64,7 +64,7 @@
                 <label>{{'desired-delivery-date' | transloco}}</label>
                 <input format="dd.MM.yyyy" (input)="setAreArticlesValid()" type="date" formControlName="desiredDeliveryDate">
                 @if (!validationService.isDateValid(getFormGroup($index).get('desiredDeliveryDate')!.value)) { <label
-                  class="error-message">
+                  class="date-error-message">
                   {{'error-message-date' | transloco}}</label>
                 }
               </div>

@@ -257,6 +257,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   saveTlInquery() {
+    console.log(this.retrieveDate());
     let editedTlInquiry: EditTlInqueryDto =
     {
       id: this.currTlInquiry().id,
@@ -279,6 +280,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       eta: this.eta(),
       boat: this.boat()
     }
+    console.log(editedTlInquiry);
 
     this.tlinquiriesService.tlinquiriesPut(editedTlInquiry)
       .subscribe(_ => this.editService.navigateToPath());

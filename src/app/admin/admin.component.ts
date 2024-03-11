@@ -1,11 +1,11 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { AddChecklistDto, AddStepDto, ChecklistDto, ChecklistsService, FilesService, MessageConversationsService, OrderDto, StepDto, StepsService } from '../shared/swagger';
+import { AddChecklistDto, AddStepDto, ChecklistDto, ChecklistsService, CsinquiriesService, FilesService, MessageConversationsService, OrderDto, OrdersService, ProductionPlanningsService, StepDto, StepsService, TlinquiriesService } from '../shared/swagger';
 import { NgSignalDirective } from '../shared/ngSignal.directive';
 import { TranslocoModule } from '@ngneat/transloco';
 import { EditStepDto } from '../shared/swagger/model/editStepDto';
 import { DataService } from '../shared/data.service';
 import { MatIconModule } from '@angular/material/icon';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, from } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
@@ -15,40 +15,13 @@ import { BehaviorSubject } from 'rxjs';
   styleUrl: './admin.component.scss'
 })
 export class AdminComponent implements OnInit {
-  ngOnInit(): void {
-    this.checklistService.checklistsGeneratedByAdminGet()
-      .subscribe(x => this.allChecklists.set(x));
-
-    this.dataService.allOrders().forEach(order => {
-      this.messageConversationService.messageConversationsConversationIdGet(order.id)
-        .subscribe(x => {
-          const currentMessages = this.messagesForOrder.value;
-          currentMessages.set(order.id, x.length);
-          this.messagesForOrder.next(currentMessages);
-          this.filesForOrder.next(this.filesForOrder.value.set(order.id, 0));
-          x.forEach(x => {
-            if (x.attachmentId !== 0) {
-              this.fileService.filesIdGet(x.attachmentId).subscribe(_ => {
-                const currentFiles = this.filesForOrder.value;
-                currentFiles.set(order.id, currentFiles.get(order.id)! + 1);
-                this.filesForOrder.next(currentFiles);
-              });
-            }
-          });
-        });
-    });
-
-    this.dataService.allOrders().forEach(order => {
-      //this.timeToGetApprovedByTl.next(this.timeToGetApprovedByTl.value.set(order.id, this.calculateDayDiff(order.approvedByCsTime, order.approvedByTlTime)));
-      //this.timeToGetApprovedByPpCs.next(this.timeToGetApprovedByPpCs.value.set(order.id, this.calculateDayDiff(order.approvedByCsTime, order.approvedByPpCsTime)));
-      //this.timeToGetApprovedByPpPp.next(this.timeToGetApprovedByPpPp.value.set(order.id, this.calculateDayDiff(order.approvedByPpCsTime, order.approvedByPpPpTime)));
-    });
-  }
-
-
   checklistService = inject(ChecklistsService);
   stepService = inject(StepsService);
   dataService = inject(DataService);
+  tlinquiryService = inject(TlinquiriesService);
+  csinquiryService = inject(CsinquiriesService);
+  productionPlanningService = inject(ProductionPlanningsService);
+  orderService = inject(OrdersService);
 
   allChecklists = signal<ChecklistDto[]>([]);
   allStepsForChecklist = signal<StepDto[]>([]);
@@ -58,6 +31,78 @@ export class AdminComponent implements OnInit {
   stepNumber = signal(1);
   stepName = signal('Name1');
   stepDescription = signal('Desc1');
+  fromDate = signal('');
+  toDate = signal('');
+  allOrders = signal<OrderDto[]>([]);
+  messagesForOrder = new BehaviorSubject<Map<number, number>>(new Map<number, number>());
+  filesForOrder = new BehaviorSubject<Map<number, number>>(new Map<number, number>());
+  timeToGetApprovedByTl = new BehaviorSubject<Map<number, string>>(new Map<number, string>());
+  timeToGetApprovedByPpPp = new BehaviorSubject<Map<number, string>>(new Map<number, string>());
+
+  messageConversationService = inject(MessageConversationsService);
+  fileService = inject(FilesService);
+
+  ngOnInit(): void {
+    this.checklistService.checklistsGeneratedByAdminGet()
+      .subscribe(x => this.allChecklists.set(x));
+
+    this.updateOrders();
+  }
+
+  updateOrders() {
+    this.orderService.ordersGet()
+      .subscribe(x => {
+        this.allOrders.set(this.dataService.allOrders());
+
+        const fromParts = this.fromDate().split("-");
+        const toParts = this.toDate().split("-");
+
+        const fromDate: Date = new Date(parseInt(fromParts[0]), parseInt(fromParts[1]) - 1, parseInt(fromParts[2]));
+        const toDate: Date = new Date(parseInt(toParts[0]), parseInt(toParts[1]) - 1, parseInt(toParts[2]));
+
+        if(this.fromDate() !== '' && this.toDate() !== ''){
+          this.allOrders.set(this.dataService.allOrders().filter(order => {
+            const lastUpdatedParts = order.lastUpdated.split("-");
+  
+            const lastUpdatedDate: Date = new Date(parseInt(lastUpdatedParts[0]), parseInt(lastUpdatedParts[1]) - 1, parseInt(lastUpdatedParts[2]));
+            return lastUpdatedDate >= fromDate && lastUpdatedDate <= toDate;
+          }));
+        }
+        
+
+        this.allOrders().forEach(order => {
+          this.tlinquiryService.tlinquiriesIdGet(order.tlid)
+            .subscribe(tlinquiry => this.csinquiryService.csinquiriesIdGet(order.csid)
+              .subscribe(csinquiry => this.timeToGetApprovedByTl.next(this.timeToGetApprovedByTl.value.set(order.id, this.calculateDayDiff(csinquiry.approvedByCrCsTime, tlinquiry.approvedByCrTlTime))))
+            );
+
+          this.productionPlanningService.productionPlanningsIdGet(order.ppId)
+            .subscribe(x => this.timeToGetApprovedByPpPp.next(this.timeToGetApprovedByPpPp.value.set(order.id, this.calculateDayDiff(x.approvedByPpCsTime, x.approvedByPpPpTime))));
+        });
+
+        this.allOrders().forEach(order => {
+          this.messagesForOrder = new BehaviorSubject<Map<number, number>>(new Map<number, number>());
+          this.filesForOrder = new BehaviorSubject<Map<number, number>>(new Map<number, number>());
+
+          this.messageConversationService.messageConversationsConversationIdGet(order.id)
+            .subscribe(x => {
+              const currentMessages = this.messagesForOrder.value;
+              currentMessages.set(order.id, x.length);
+              this.messagesForOrder.next(currentMessages);
+              this.filesForOrder.next(this.filesForOrder.value.set(order.id, 0));
+              x.forEach(x => {
+                if (x.attachmentId !== 0) {
+                  this.fileService.filesIdGet(x.attachmentId).subscribe(_ => {
+                    const currentFiles = this.filesForOrder.value;
+                    currentFiles.set(order.id, currentFiles.get(order.id)! + 1);
+                    this.filesForOrder.next(currentFiles);
+                  });
+                }
+              });
+            });
+        });
+      });
+  }
 
   showStepsForChecklist(id: number) {
     if (this.selectedChecklistId() === id) {
@@ -117,19 +162,10 @@ export class AdminComponent implements OnInit {
     this.checklistName.set('');
   }
 
-  messagesForOrder = new BehaviorSubject<Map<number, number>>(new Map<number, number>());
-  filesForOrder = new BehaviorSubject<Map<number, number>>(new Map<number, number>());
-  timeToGetApprovedByTl = new BehaviorSubject<Map<number, string>>(new Map<number, string>());
-  timeToGetApprovedByPpCs = new BehaviorSubject<Map<number, string>>(new Map<number, string>());
-  timeToGetApprovedByPpPp = new BehaviorSubject<Map<number, string>>(new Map<number, string>());
-
-  messageConversationService = inject(MessageConversationsService);
-  fileService = inject(FilesService);
-
   calculateDayDiff(time1: string, time2: string): string {
     if (time1.length > 0 && time2.length > 0) {
-      const [t1Day, t1Month, t1Year] = time1.split(".");
-      const [t2Day, t2Month, t2Year] = time2.split(".");
+      const [t1Year, t1Month, t1Day] = time1.split("-");
+      const [t2Year, t2Month, t2Day] = time2.split("-");
       const newT1Date: Date = new Date(parseInt(t1Year), parseInt(t1Month) - 1, parseInt(t1Day));
       const newT2Date: Date = new Date(parseInt(t2Year), parseInt(t2Month) - 1, parseInt(t2Day));
       const timeDifferenceInMilliseconds = newT2Date.getTime() - newT1Date.getTime();
@@ -151,23 +187,19 @@ export class AdminComponent implements OnInit {
   }
 
   getTimeForApprovedBy(id: number, mapString: string): string {
-    if (mapString == "tl") {
-      return this.timeToGetApprovedByTl.value.get(id) ?? '';
-    } else if (mapString == "ppCs") {
-      return this.timeToGetApprovedByPpCs.value.get(id) ?? '';
-    } else if (mapString == "ppPp") {
-      return this.timeToGetApprovedByPpPp.value.get(id) ?? '';
-    }
-    return '';
+    return this.timeToGetApprovedByTl.value.get(id) ?? this.timeToGetApprovedByPpPp.value.get(id) ?? 'No data';
   }
 
   getAvgForOrder(mapString: string): number {
+    console.log('getAVGForOrder');
     let totalMessages = 0;
     let totalOrders = 0;
     let map = new Map<number, number>();
     if (mapString == "messages") {
+      console.log(this.messagesForOrder.value);
       map = this.messagesForOrder.value;
     } else if (mapString == "files") {
+      console.log(this.filesForOrder.value);
       map = this.filesForOrder.value;
     }
     for (const [order, messagesCount] of map.entries()) {
@@ -180,17 +212,13 @@ export class AdminComponent implements OnInit {
     return Number(avg.toFixed(2));
   }
 
-  getAvgTimeToGetApprovedBy(mapString: string): number {
+  getAvgTimeToGetApprovedBy(): number {
     let totalDays = 0;
     let totalOrders = 0;
-    let map = new Map<number, string>();
-    if (mapString == "tl") {
-      map = this.timeToGetApprovedByTl.value;
-    } else if (mapString == "ppCs") {
-      map = this.timeToGetApprovedByPpCs.value;
-    } else if (mapString == "ppPp") {
-      map = this.timeToGetApprovedByPpPp.value;
-    }
+    let tlMap = this.timeToGetApprovedByTl.value;
+    let ppMap = this.timeToGetApprovedByPpPp.value
+    let map = new Map<number, string>([...tlMap, ...ppMap]);
+
     for (const value of map.values()) {
       if (value !== 'Not approved yet.') {
         totalOrders++;
