@@ -18,6 +18,45 @@ import { EditService } from '../../edit.service';
 export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
 
+  ngOnInit(): void {
+    this.myForm = this.fb.group({
+      articles: this.fb.array([])
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.editService.navigationPath = '/container-request-page/containerRequestCS';
+
+    this.checklistService.checklistsGeneratedByAdminGet()
+      .subscribe(x => this.allChecklists.set(x));
+
+    this.orderService.ordersIdGet(this.id)
+      .subscribe(x => {
+        this.editService.currOrder.set(x);
+        this.editService.setOrderSignals(this.editService.currOrder());
+
+        this.tlinquiriesService.tlinquiriesIdGet(this.editService.tlId())
+          .subscribe(x => {
+            if (x !== null && x !== undefined) {
+              this.currTlInquiry.set(x);
+              this.setTlInquirySignals();
+            }
+          });
+
+        this.articlesCRService.articlesCRCsInquiryIdGet(this.editService.currOrder().csid)
+          .subscribe(x => x.forEach(x => this.addArticle(x.articleNumber, x.pallets, x.id)));
+
+        this.csinquiriesService.csinquiriesIdGet(this.editService.currOrder().csid)
+          .subscribe(x => {
+            this.currCsInquiry.set(x);
+            this.setCsInquirySignals();
+          });
+
+        this.tlinquiryService.tlinquiriesIdGet(this.editService.currOrder().tlid)
+          .subscribe(x => this.isApprovedByTl.set(x.approvedByCrTl));
+      });
+  }
+
   articlesCRService = inject(ArticlesCRService);
   validationService = inject(ValidationService);
   router = inject(Router);
@@ -75,13 +114,10 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       approvedByCrTlTime: ""
     });
 
-  //OrderData
   isApprovedByCs = signal(false);
   isApprovedByTl = signal(false);
   fastLine = signal(false);
   directLine = signal(false);
-
-  //CsData
   container = signal('');
   abnumber = signal(0);
   grossWeightInKg = signal(0);
@@ -93,8 +129,6 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   thctb = signal(false);
   readyToLoad = signal('');
   loadingPlattform = signal('');
-
-  //TlData
   inquiryNumber = signal(0);
   sped = signal('');
   country = signal('');
@@ -113,7 +147,6 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   ets = signal('');
   eta = signal('');
   boat = signal('');
-
   areArticleNumbersValid = signal<boolean>(true);
   isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
   isLoadingPlattfromValid = computed(() => this.validationService.isAnyInputValid(this.loadingPlattform()));
@@ -142,48 +175,10 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       this.isContainerSizeHcValid() &&
       this.areArticleNumbersValid() &&
       !this.editService.currOrder().successfullyFinished &&
-      !this.editService.currOrder().canceled
+      !this.editService.currOrder().canceled &&
+      !(this.fastLine() && this.directLine())
     );
   });
-
-  ngOnInit(): void {
-    this.myForm = this.fb.group({
-      articles: this.fb.array([])
-    });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.editService.navigationPath = '/container-request-page/containerRequestCS';
-
-    this.checklistService.checklistsGeneratedByAdminGet()
-      .subscribe(x => this.allChecklists.set(x));
-
-    this.orderService.ordersIdGet(this.id)
-      .subscribe(x => {
-        this.editService.currOrder.set(x);
-        this.setOrderSignals();
-
-        this.tlinquiriesService.tlinquiriesIdGet(this.editService.tlId())
-            .subscribe(x => {
-              if (x !== null && x !== undefined) {
-                this.currTlInquiry.set(x);
-                this.setTlInquirySignals();
-              }
-            });
-
-        this.articlesCRService.articlesCRCsInquiryIdGet(this.editService.currOrder().csid)
-          .subscribe(x => x.forEach(x => this.addArticle(x.articleNumber, x.pallets, x.id)));
-
-        this.csinquiriesService.csinquiriesIdGet(this.editService.currOrder().csid)
-          .subscribe(x => {
-            this.currCsInquiry.set(x);
-            this.setCsInquirySignals();
-          });
-
-        this.tlinquiryService.tlinquiriesIdGet(this.editService.currOrder().tlid)
-          .subscribe(x => this.isApprovedByTl.set(x.approvedByCrTl));
-      });
-  }
 
   get articlesFormArray() {
     return this.myForm.get('articles') as FormArray;
@@ -216,29 +211,11 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   removeArticle(index: number) {
-    const articleFormGroup = this.getFormGroup(index);
-    const articleId = articleFormGroup.get('id')?.value;
-    this.articlesCRService.articlesCRDelete(articleId).subscribe(x => console.log('article deleted: ' + articleId));
     this.articlesFormArray.removeAt(index);
+    this.setAreArticleNumbersValid();
   }
 
-  saveArticles() {
-    const articles = this.myForm.value.articles;
-    console.log('Entered Articles:', articles);
-  }
-
-  setAreArticleNumbersValid(index: number, btnName: string) {
-    if (index >= 0) {
-      console.log('inside the if1');
-      if (!!this.getFormGroup(index).get('directline')!.value && !!this.getFormGroup(index).get('fastline')!.value) {
-        if (btnName === "directline") {
-          this.getFormGroup(index).get('fastline')!.setValue(false);
-        } else if (btnName === "fastline") {
-          this.getFormGroup(index).get('directline')!.setValue(false);
-        }
-      }
-    }
-
+  setAreArticleNumbersValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
       if (this.getFormGroup(i).get('articleNumber')!.value < 1) {
         this.areArticleNumbersValid.set(false);
@@ -271,7 +248,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.orderService.ordersPut(order)
       .subscribe(x => {
         this.saveCsInquery();
-        this.saveArticlesToDB();
+        this.saveArticles();
         this.editService.navigateToPath();
       });
   }
@@ -282,14 +259,14 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.orderService.ordersPut(order)
       .subscribe(x => {
         this.saveCsInquery();
-        this.saveArticlesToDB();
+        this.saveArticles();
 
         this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('sent-to-tl'))
           .subscribe(x => x);
 
-        if(this.isApprovedByTl()){
+        if (this.isApprovedByTl()) {
           this.tlinquiriesService.tlinquiriesApproveCrTlPut(this.editService.createEditStatusDto(this.editService.currOrder().tlid, false))
-          .subscribe(_ => _);
+            .subscribe(_ => _);
         }
 
         this.csinquiriesService.csinquiriesApproveCrCsPut(this.editService.createEditStatusDto(this.editService.currOrder().csid, true))
@@ -297,7 +274,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       });
   }
 
-  saveArticlesToDB() {
+  saveArticles() {
     this.articlesCRService.articlesCRCsIdDelete(this.currCsInquiry().id)
       .subscribe(x => {
         for (let i = 0; i < this.articlesFormArray.length; i++) {
@@ -335,10 +312,6 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
 
     this.csinquiriesService.csinquiriesPut(editedCsInquery)
       .subscribe(x => console.log('RETURN VALUE OF CSINQUERY SAVE: ' + x.id + x.abnumber + x.freeDetention + x.readyToLoad));
-  }
-
-  setOrderSignals() {
-    this.editService.setOrderSignals(this.editService.currOrder());
   }
 
   setCsInquirySignals() {

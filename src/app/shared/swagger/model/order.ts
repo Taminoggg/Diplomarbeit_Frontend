@@ -30,8 +30,8 @@ export interface Order {
     tlId?: number | null;
     ppId?: number | null;
     additionalInformation?: string | null;
-    checklist?: Checklist;
     readonly messageConversations?: Array<MessageConversation> | null;
+    checklist?: Checklist;
     cs?: Csinquiry;
     tl?: Tlinquiry;
     productionPlanning?: ProductionPlanning;

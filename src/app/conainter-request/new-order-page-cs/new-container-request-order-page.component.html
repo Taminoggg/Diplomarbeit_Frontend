@@ -6,27 +6,45 @@
   <div id="contentToConvert" class="form-content">
     <div class="form-row">
       <div class="form-group">
-        <label>{{'customer' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'customer' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isCustomerValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <input [ngSignal]="customerName" type="text">
-        @if(!isCustomerValid()){
-        <label class="error-message">{{'error-message-customer' | transloco}}</label>
-        }
       </div>
 
       <div class="form-group">
-        <label>{{'created-by' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'created-by' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isCreatedByValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <input [ngSignal]="createdBy" type="text">
-        @if(!isCreatedByValid()){
-        <label class="error-message">{{'error-message-created-by' | transloco}}</label>
-        }
       </div>
 
       <div class="form-group">
-        <label>{{'amount' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'amount' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isAmountValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <input min="1" max="100" [ngSignal]="amount" type="number">
-        @if(!isAmountValid()){
-        <label class="error-message">{{'error-message-amount' | transloco}}</label>
-        }
       </div>
     </div>
 
@@ -41,57 +59,102 @@
       </div>
 
       <div class="form-group">
-        <label>{{'loading-plattform' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'loading-plattform' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isLoadingPlattfromValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <input [ngSignal]="loadingPlattform" type="text">
-        @if(!isLoadingPlattfromValid()){
-        <label class="error-message">{{'error-message-loading-plattform' | transloco}}</label>
-        }
       </div>
 
       <div class="form-group">
-        <label>{{'ab-nr' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'ab-nr' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isAbNumberValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <input [ngSignal]="abnumber" type="number">
-        @if(!isAbNumberValid()){
-        <label class="error-message">{{'error-message-ab-number' | transloco}}</label>
-        }
       </div>
 
       <div class="form-group">
-        <label>{{'gross-weight-in-kg' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'gross-weight-in-kg' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isGrossWeightInKgValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <input [ngSignal]="grossWeightInKg" type="number">
-        @if(!isGrossWeightInKgValid()){
-        <label class="error-message">{{'error-message-gross-weight' | transloco}}</label>
-        }
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label>{{'container-size-a' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'container-size-a' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isContainerSizeAValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <input min="1" [ngSignal]="containersizeA" type="number">
-        @if(!isContainerSizeAValid()){
-        <label class="error-message">{{'error-message-container-size' | transloco}}</label>
-        }
       </div>
 
       <div class="form-group">
-        <label>{{'container-size-b' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'container-size-b' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isContainerSizeBValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <input min="1" [ngSignal]="containersizeB" type="number">
-        @if(!isContainerSizeBValid()){
-        <label class="error-message">{{'error-message-container-size' | transloco}}</label>
-        }
       </div>
 
       <div class="form-group">
-        <label>{{'container-size-hc' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'container-size-hc' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isContainerSizeHcValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <input min="1" [ngSignal]="containersizeHc" type="number">
-        @if(!isContainerSizeHcValid()){
-        <label class="error-message">{{'error-message-container-size' | transloco}}</label>
-        }
       </div>
 
       <div class="form-group">
-        <label>{{'incoterm' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'incoterm' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isIncotermValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <input [ngSignal]="incoterm" type="text">
       </div>
     </div>
@@ -126,12 +189,17 @@
       </div>
 
       <div class="form-group">
-        <label>{{'ready-to-load' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'ready-to-load' | transloco}}</label>
+          </div>
+          <div>
+            @if (!validationService.isDateValid(readyToLoad())) { <label class="error-message">
+              {{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <input [ngSignal]="readyToLoad" type="date" format="dd.MM.yyyy">
-        @if (!validationService.isDateValid(readyToLoad())) { <label
-          class="date-error-message">
-          {{'error-message-date' | transloco}}</label>
-        }
       </div>
 
       <div class="form-group">
@@ -146,20 +214,32 @@
         <div [formGroup]="getFormGroup($index)">
           <div class="form-row">
             <div class="form-group">
-              <label>{{'article-number' | transloco}}</label>
+              <div class="header-container">
+                <div>
+                  <label>{{'article-number' | transloco}}</label>
+                </div>
+                <div>
+                  @if (getFormGroup($index).get('articleNumber')!.value < 1) { <label class="error-message">
+                    {{'simple-error' | transloco}}</label>
+                    }
+                </div>
+              </div>
               <input (change)="setAreArticleNumbersValid()" min="1" type="number" formControlName="articleNumber">
-              @if (getFormGroup($index).get('articleNumber')!.value < 1) { <label class="error-message">
-                {{'error-message-article-number' | transloco}}</label>
-                }
             </div>
 
             @if (fastLine() === true || directLine() === true) {
             <div class="form-group">
-              <label>{{'pallet-amount' | transloco}}</label>
+              <div class="header-container">
+                <div>
+                  <label>{{'pallet-amount' | transloco}}</label>
+                </div>
+                <div>
+                  @if (getFormGroup($index).get('palletAmount')!.value < 1) { <label class="error-message">
+                    {{'simple-error' | transloco}}</label>
+                    }
+                </div>
+              </div>
               <input (change)="setAreArticleNumbersValid()" min="1" type="number" formControlName="palletAmount">
-              @if (getFormGroup($index).get('palletAmount')!.value < 1) { <label class="error-message">
-                {{'error-message-pallet-amount' | transloco}}</label>
-                }
             </div>
             }
             @else {

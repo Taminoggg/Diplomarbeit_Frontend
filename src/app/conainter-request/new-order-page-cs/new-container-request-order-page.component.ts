@@ -71,6 +71,7 @@ export class NewContainerOrderPageComponent implements OnInit {
   directLine = signal(false);
 
   isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
+  isIncotermValid = computed(() => this.validationService.isAnyInputValid(this.incoterm()));
   isLoadingPlattfromValid = computed(() => this.validationService.isAnyInputValid(this.readyToLoad()));
   isCustomerValid = computed(() => this.validationService.isNameStringValid(this.customerName()));
   isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.createdBy()));
@@ -82,6 +83,23 @@ export class NewContainerOrderPageComponent implements OnInit {
   isContainerSizeBValid = computed(() => this.validationService.isNumberValid(this.containersizeB()));
   isContainerSizeHcValid = computed(() => this.validationService.isNumberValid(this.containersizeHc()));
   areArticleNumbersValid = signal<boolean>(true);
+  isAllValid = computed(() => {
+    return (
+      this.isReadyToLoadValid() &&
+      this.isIncotermValid() &&
+      this.isCustomerValid() &&
+      this.isLoadingPlattfromValid() &&
+      this.isCreatedByValid() &&
+      this.isAbNumberValid() &&
+      this.isGrossWeightInKgValid() &&
+      this.isStatusValid() &&
+      this.isAmountValid() &&
+      this.isContainerSizeAValid() &&
+      this.isContainerSizeBValid() &&
+      this.isContainerSizeHcValid() && 
+      this.areArticleNumbersValid()
+    );
+  });
 
   setAreArticleNumbersValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
@@ -97,23 +115,6 @@ export class NewContainerOrderPageComponent implements OnInit {
     }
     this.areArticleNumbersValid.set(true);
   }
-
-  isAllValid = computed(() => {
-    return (
-      this.isReadyToLoadValid() &&
-      this.isCustomerValid() &&
-      this.isLoadingPlattfromValid() &&
-      this.isCreatedByValid() &&
-      this.isAbNumberValid() &&
-      this.isGrossWeightInKgValid() &&
-      this.isStatusValid() &&
-      this.isAmountValid() &&
-      this.isContainerSizeAValid() &&
-      this.isContainerSizeBValid() &&
-      this.isContainerSizeHcValid() && 
-      this.areArticleNumbersValid()
-    );
-  });
 
   get articlesFormArray() {
     return this.myForm.get('articles') as FormArray;
@@ -133,6 +134,7 @@ export class NewContainerOrderPageComponent implements OnInit {
     });
 
     this.articlesFormArray.push(articleGroup);
+    this.setAreArticleNumbersValid();
   }
 
   getFormGroup(index: number): FormGroup {

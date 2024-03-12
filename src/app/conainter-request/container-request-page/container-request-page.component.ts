@@ -19,12 +19,20 @@ import { NgSignalDirective } from '../../shared/ngSignal.directive';
 })
 export class ContainerRequestPageComponent implements OnInit, OnChanges {
   @Input() htmlContent = 'containerRequestTL'
-  filterByCreatedByName = signal('');
-  showFinished = signal(false);
-  showCanceled = signal(false);
+
+  ngOnInit(): void {
+    this.dataService.refreshPage('none', '', this.htmlContent, this.filterByCreatedByName(), this.showFinished(), this.showCanceled());
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     const tableConfig = localStorage.getItem(this.htmlContent + 'tableConfig');
+    //console.log(localStorage.getItem('createdBy') ?? '');
+    if(localStorage.getItem('createdBy') ?? '' !== ''){
+      this.filterByCreatedByName.set(JSON.parse(localStorage.getItem('createdBy') ?? ''));
+    }
+    
+    this.showCanceled.set(JSON.parse(localStorage.getItem('canceledOrders') ?? 'false'));
+    this.showFinished.set(JSON.parse(localStorage.getItem('finishedOrders') ?? 'false'));
 
     if (tableConfig) {   
       this.dataService.tableHeaders = JSON.parse(tableConfig);
@@ -92,16 +100,16 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     localStorage.setItem(this.htmlContent + 'tableConfig', JSON.stringify(this.dataService.tableHeaders));
   }
 
-  ngOnInit(): void {
-    this.dataService.refreshPage('none', '', this.htmlContent, this.filterByCreatedByName(), this.showFinished(), this.showCanceled());
-  }
-
-  selectedFilter = signal<string>('customername');
-  filterValue = signal<string>('');
+  csinquiryService = inject(CsinquiriesService);
   dataService = inject(DataService);
   router = inject(Router);
-  csinquiryService = inject(CsinquiriesService);
   dialogRef = inject(MatDialog);
+
+  filterByCreatedByName = signal('');
+  showFinished = signal(false);
+  showCanceled = signal(false);
+  selectedFilter = signal<string>('customername');
+  filterValue = signal<string>('');
   csinquiry = signal<CsinquiryDto | undefined>(undefined);
   showApprovedByTl = signal(false);
   filterCsByApproved = signal(false);
@@ -116,11 +124,26 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     }
   }
 
+  filterForCanceledOrders(){
+    localStorage.setItem('canceledOrders', JSON.stringify(this.filterByCreatedByName()));
+    this.filterOrders();
+  }
+
+  filterForShowFinishedOrders(){
+    localStorage.setItem('finishedOrders', JSON.stringify(this.filterByCreatedByName()));
+    this.filterOrders();
+  }
+
+  filterForCreatedBy(){
+    localStorage.setItem('createdBy', JSON.stringify(this.filterByCreatedByName()));
+    this.filterOrders();
+  }
+
   getApprovedByForOrder(orderId: number): boolean {
     return this.dataService.approvedBy.get(orderId)!;
   }
 
-  getArticlesForOrder(orderId: number): number[] {
+  getArticlesForOrder(orderId: number): string[] {
     if (this.dataService.articlesForOrder.get(orderId)?.length ?? 0 > 0) {
       return this.dataService.articlesForOrder.get(orderId)!.distinct();
     }

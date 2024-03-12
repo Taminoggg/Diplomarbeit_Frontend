@@ -18,7 +18,6 @@ import { EditService } from '../../edit.service';
 export class NewProductionPlanningOrderPageComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.editService.navigationPath = '/container-request-page/productionPlanningCS';
-    this.setAreArticlesValid();
   }
 
   ngOnInit(): void {
@@ -28,7 +27,6 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
 
     this.editService.navigationPath = '/container-request-page/productionPlanningCS';
     this.addArticle();
-    this.setAreArticlesValid();
   }
 
   editService = inject(EditService);
@@ -47,8 +45,16 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
   createdBy = signal('CreatedBy');
   status = signal('Status');
   additonalInformation = signal('');
-
   areArticlesValid = signal<boolean>(true);
+  isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.editService.customerName()));
+  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdBy()));
+  isAllValid = computed(() => {
+    return (
+      this.isCustomerValid() &&
+      this.isCreatedByValid() &&
+      this.areArticlesValid()
+    );
+  });
 
   setAreArticleNumbersValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
@@ -64,12 +70,6 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
     }
     this.areArticlesValid.set(true);
   }
-
-  isAllValid = computed(() => {
-    return (
-      this.areArticlesValid()
-    );
-  });
 
   setAreArticlesValid() {
     console.log(this.getFormGroup(0).get('desiredDeliveryDate')!.value);
@@ -98,6 +98,7 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
     });
 
     this.articlesFormArray.push(articleGroup);
+    this.setAreArticlesValid();
   }
 
   getFormGroup(index: number): FormGroup {
@@ -109,11 +110,6 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
     this.setAreArticleNumbersValid();
   }
 
-  saveArticles() {
-    const articles = this.myForm.value.articles;
-    console.log('Entered Articles:', articles);
-  }
-
   saveOrder(): void {
     console.log('posted clicked');
 
@@ -121,12 +117,6 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
       .subscribe(productionPlanningObj => {
         console.log(productionPlanningObj);
         for (let i = 0; i < this.articlesFormArray.length; i++) {
-          console.log('article: ');
-          console.log(this.getFormGroup(i).get('minHeigthRequired')!.value);
-          console.log(this.getFormGroup(i).get('inquiryForFixedOrder')!.value);
-          console.log(this.getFormGroup(i).get('inquiryForQuotation')!.value);
-          console.log(this.getFormGroup(i).get('desiredDeliveryDate')!.value);
-          console.log(this.getFormGroup(i).get('minHeigthRequired')!.value);
 
           let article: AddArticlePPDto = {
             articleNumber: this.getFormGroup(i).get('articleNumber')!.value,

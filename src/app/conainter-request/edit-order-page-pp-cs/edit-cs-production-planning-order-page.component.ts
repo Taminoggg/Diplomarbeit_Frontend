@@ -18,58 +18,10 @@ import { EditService } from '../../edit.service';
 export class EditCsProductionPlanningOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
 
-  articlesPPService = inject(ArticlesPPService);
-  fb = inject(FormBuilder);
-  router = inject(Router);
-  orderService = inject(OrdersService);
-  checklistService = inject(ChecklistsService);
-  validationService = inject(ValidationService);
-  editService = inject(EditService);
-  productionPlanningService = inject(ProductionPlanningsService);
-  allChecklists = signal<ChecklistDto[]>([]);
-
-  //OrderData
-  isApprovedByPpCs = signal(false);
-  isApprovedByPpPp = signal(false);
-
-  areArticlesValid = signal<boolean>(true);
-  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editService.status()));
-  isAllValid = computed(() =>
-    this.isStatusValid() &&
-    this.areArticlesValid() &&
-    !this.editService.currOrder().successfullyFinished &&
-    !this.editService.currOrder().canceled
-  );
-
-  myForm!: FormGroup;
-
-  setAreArticlesValid() {
-    for (let i = 0; i < this.articlesFormArray.length; i++) {
-      console.log(this.getFormGroup(i).get('desiredDeliveryDate')!.value);
-      if (!(this.getFormGroup(i).get('palletAmount')!.value > 0) || !(this.getFormGroup(i).get('minHeigthRequired')!.value > 0) || !this.validationService.isDateValid(this.getFormGroup(i).get('desiredDeliveryDate')!.value)) {
-        this.areArticlesValid.set(false);
-        return;
-      }
-    }
-    this.areArticlesValid.set(true);
-  }
-
   ngOnInit(): void {
     this.myForm = this.fb.group({
       articles: this.fb.array([])
     });
-  }
-
-  cancelOrder() {
-    this.orderService.ordersCancelPut(this.editService.createEditStatusDto(this.editService.currOrder().id, true))
-      .subscribe(x => this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('order-canceled'))
-        .subscribe(_ => this.editService.navigateToPath()));
-  }
-
-  finishOrder() {
-    this.orderService.ordersSuccessfullyFinishedPut(this.editService.createEditStatusDto(this.editService.currOrder().id, true))
-      .subscribe(x => this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('order-finished'))
-        .subscribe(_ => this.editService.navigateToPath()));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -99,6 +51,57 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
       });
   }
 
+  articlesPPService = inject(ArticlesPPService);
+  fb = inject(FormBuilder);
+  router = inject(Router);
+  orderService = inject(OrdersService);
+  checklistService = inject(ChecklistsService);
+  validationService = inject(ValidationService);
+  editService = inject(EditService);
+  productionPlanningService = inject(ProductionPlanningsService);
+  allChecklists = signal<ChecklistDto[]>([]);
+
+  isApprovedByPpCs = signal(false);
+  isApprovedByPpPp = signal(false);
+  myForm!: FormGroup;
+  areArticlesValid = signal<boolean>(true);
+  isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.editService.customerName()));
+  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdBy()));
+  isAllValid = computed(() =>
+    this.isCustomerValid() &&
+    this.isCreatedByValid() &&
+    this.areArticlesValid() &&
+    !this.editService.currOrder().successfullyFinished &&
+    !this.editService.currOrder().canceled
+  );
+
+  setAreArticlesValid() {
+    for (let i = 0; i < this.articlesFormArray.length; i++) {
+      console.log(this.getFormGroup(i).get('desiredDeliveryDate')!.value);
+      if (!(this.getFormGroup(i).get('palletAmount')!.value > 0) || !(this.getFormGroup(i).get('minHeigthRequired')!.value > 0) || !this.validationService.isDateValid(this.getFormGroup(i).get('desiredDeliveryDate')!.value)) {
+        this.areArticlesValid.set(false);
+        return;
+      }
+    }
+    this.areArticlesValid.set(true);
+  }
+
+  removeArticle(index: number) {
+    this.articlesFormArray.removeAt(index);
+  }
+
+  cancelOrder() {
+    this.orderService.ordersCancelPut(this.editService.createEditStatusDto(this.editService.currOrder().id, true))
+      .subscribe(x => this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('order-canceled'))
+        .subscribe(_ => this.editService.navigateToPath()));
+  }
+
+  finishOrder() {
+    this.orderService.ordersSuccessfullyFinishedPut(this.editService.createEditStatusDto(this.editService.currOrder().id, true))
+      .subscribe(x => this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('order-finished'))
+        .subscribe(_ => this.editService.navigateToPath()));
+  }
+
   get articlesFormArray() {
     return this.myForm.get('articles') as FormArray;
   }
@@ -122,22 +125,11 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
     });
 
     this.articlesFormArray.push(articleGroup);
-  }
-
-  removeArticle(index: number) {
-    const articleFormGroup = this.getFormGroup(index);
-    const articleId = articleFormGroup.get('id')?.value;
-    this.articlesPPService.articlesPPDelete(articleId).subscribe(x => console.log('article deleted: ' + articleId));
-    this.articlesFormArray.removeAt(index);
+    this.setAreArticlesValid();
   }
 
   getFormGroup(index: number): FormGroup {
     return this.articlesFormArray.at(index) as FormGroup;
-  }
-
-  saveArticles() {
-    const articles = this.myForm.value.articles;
-    console.log('Entered Articles:', articles);
   }
 
   saveOrder(): void {

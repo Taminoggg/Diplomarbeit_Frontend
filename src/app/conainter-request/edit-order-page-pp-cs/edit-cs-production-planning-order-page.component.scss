@@ -115,15 +115,12 @@ select {
   color: red;
   font-size: 14px;
   font-weight: bold;
-  margin-top: -10px;
+  margin-left: 2px;
 }
 
-.date-error-message {
-  position: absolute;
-  color: red;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: 0px;
+.header-container{
+  display: flex;
+  justify-content: flex-start;
 }
 
 .add-article-button {
@@ -153,4 +150,8 @@ select {
   &:hover {
     background-color: darkred;
   }
+}
+
+.not-editable{
+  background-color: #f0f0f0
 }

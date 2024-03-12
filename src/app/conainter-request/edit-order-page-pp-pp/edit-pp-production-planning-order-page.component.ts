@@ -17,36 +17,6 @@ import { EditService } from '../../edit.service';
 export class EditPPProductionPlanningOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
 
-  articlesPPService = inject(ArticlesPPService);
-  fb = inject(FormBuilder);
-  editService = inject(EditService);
-  orderService = inject(OrdersService);
-  checklistService = inject(ChecklistsService);
-  productionPlanningService = inject(ProductionPlanningsService);
-  prodcutionPlanningService = inject(ProductionPlanningsService);
-  validationService = inject(ValidationService);
-  allChecklists = signal<ChecklistDto[]>([]);
-  isApprovedByPpPp = signal(false);
-
-  areArticlesValid = signal<boolean>(true);
-  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editService.status()));
-  isAllValid = computed(() => this.isStatusValid() && this.areArticlesValid() && !this.isApprovedByPpPp());
-
-  myForm!: FormGroup;
-
-  setAreArticlesValid() {
-    console.log('setting articles valid');
-    console.log(this.articlesFormArray.length);
-    for (let i = 0; i < this.articlesFormArray.length; i++) {
-      if (!this.validationService.isDateValid(this.getFormGroup(i).get('deliveryDate')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('shortText')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('factory')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('nozzle')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('productionOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plannedOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plant')!.value)) {
-        console.log('IS INVALID');
-        this.areArticlesValid.set(false);
-        return;
-      }
-    }
-    this.areArticlesValid.set(true);
-  }
-
   ngOnInit(): void {
     this.myForm = this.fb.group({
       articles: this.fb.array([])
@@ -78,6 +48,32 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
       });
   }
 
+  articlesPPService = inject(ArticlesPPService);
+  fb = inject(FormBuilder);
+  editService = inject(EditService);
+  orderService = inject(OrdersService);
+  checklistService = inject(ChecklistsService);
+  productionPlanningService = inject(ProductionPlanningsService);
+  prodcutionPlanningService = inject(ProductionPlanningsService);
+  validationService = inject(ValidationService);
+  allChecklists = signal<ChecklistDto[]>([]);
+
+  isApprovedByPpPp = signal(false);
+  areArticlesValid = signal<boolean>(true);
+  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editService.status()));
+  isAllValid = computed(() => this.isStatusValid() && this.areArticlesValid() && !this.isApprovedByPpPp());
+  myForm!: FormGroup;
+
+  setAreArticlesValid() {
+    for (let i = 0; i < this.articlesFormArray.length; i++) {
+      if (!this.validationService.isDateValid(this.getFormGroup(i).get('deliveryDate')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('shortText')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('factory')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('nozzle')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('productionOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plannedOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plant')!.value)) {
+        this.areArticlesValid.set(false);
+        return;
+      }
+    }
+    this.areArticlesValid.set(true);
+  }
+
   get articlesFormArray() {
     return this.myForm.get('articles') as FormArray;
   }
@@ -89,8 +85,8 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
       id: id,
       minHeigthRequired: [minHeigthRequired],
       desiredDeliveryDate: [desiredDeliveryDate],
-      inquiryForFixedOrder: [inquiryForFixedOrder],
-      inquiryForQuotation: [inquiryForQuotation],
+      inquiryForFixedOrder: [{value: inquiryForFixedOrder, disabled: true}],
+      inquiryForQuotation: [{value: inquiryForQuotation, disabled: true}],
       deliveryDate: [deliveryDate],
       shortText: [shortText],
       factory: [factory],

@@ -81,6 +81,11 @@ select {
   &:hover {
     background-color: #45a049;
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }
 
 .remove-article-button {
@@ -97,12 +102,17 @@ select {
   }
 }
 
-.date-error-message {
+.error-message {
   position: absolute;
   color: red;
   font-size: 14px;
   font-weight: bold;
-  margin-top: 0px;
+  margin-left: 2px;
+}
+
+.header-container{
+  display: flex;
+  justify-content: flex-start;
 }
 
 .add-article-button {

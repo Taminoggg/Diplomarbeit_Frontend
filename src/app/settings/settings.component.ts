@@ -69,22 +69,22 @@ export class SettingsComponent implements OnInit {
       additionalInformation: '',
       ppId: 1
     };
-  
-    let propertiesToCheck:string[] = [];
+
+    let propertiesToCheck: string[] = [];
     if (this.htmlContent === 'productionPlanningPP' || this.htmlContent === 'productionPlanningCS') {
       propertiesToCheck = ['articleNumbers', 'factory', 'plant'];
       console.log('propertiesToCheck', propertiesToCheck);
     }
-  
+
     const filteredProperties = Object.keys(orderDto).filter(key => {
       const value = key as keyof OrderDto;
 
-      if (!value.includes('Time') && !value.toLowerCase().includes('id') && !value.includes('additionalInformation') && !value.includes('approved')) {
+      if (!value.toLowerCase().includes('time') && !value.toLowerCase().includes('id') && !value.toLowerCase().includes('canceled') && !value.toLowerCase().includes('successfullyfinished') && !value.toLowerCase().includes('additionalinformation') && !value.toLowerCase().includes('approved')) {
         return !this.dataService.tableHeaders.some(header => header.value === value);
       }
       return false;
     });
-  
+
     this.orderDtoPropertyNamesNotInTableHeaders.set(filteredProperties);
 
     propertiesToCheck.forEach(prop => {
@@ -92,11 +92,7 @@ export class SettingsComponent implements OnInit {
         this.orderDtoPropertyNamesNotInTableHeaders().push(prop);
       }
     });
-  
-    console.log('test', this.orderDtoPropertyNamesNotInTableHeaders());
   }
-  
-
 
   valueMapping: { [key: string]: string } = {
     'abNumber': 'ab-nr',

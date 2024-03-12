@@ -14,7 +14,7 @@ export class DataService {
   articlePPService = inject(ArticlesPPService);
   allOrders = signal<OrderDto[]>([]);
   lastSortedBy = signal('');
-  articlesForOrder = new Map<number, number[]>();
+  articlesForOrder = new Map<number, string[]>();
   factoriesForOrder = new Map<number, string[]>();
   plantsForOrder = new Map<number, string[]>();
   orderIds: number[] = [];
@@ -291,7 +291,7 @@ export class DataService {
       this.orderIds.push(currOrder.id)
     });
 
-    this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.articlesForOrder.set(order.id, x.map(x => x.articleNumber))));
+    this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.articlesForOrder.set(order.id, x.map(x => x.articleNumber.toString()))));
     this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.plantsForOrder.set(order.id, x.map(x => x.plant))));
     this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.factoriesForOrder.set(order.id, x.map(x => x.factory))));
   }

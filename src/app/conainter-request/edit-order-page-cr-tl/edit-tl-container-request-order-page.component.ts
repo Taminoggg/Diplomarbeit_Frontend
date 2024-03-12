@@ -18,119 +18,6 @@ import { EditService } from '../../edit.service';
 export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
 
-  articlesCRService = inject(ArticlesCRService);
-  fb = inject(FormBuilder);
-  router = inject(Router);
-  orderService = inject(OrdersService);
-  checklistService = inject(ChecklistsService);
-  tlinquiriesService = inject(TlinquiriesService);
-  csinquiriesService = inject(CsinquiriesService);
-  validationService = inject(ValidationService);
-  editService = inject(EditService);
-  allChecklists = signal<ChecklistDto[]>([]);
-  currCsInquiry = signal<CsinquiryDto>({
-    id: 0,
-    container: '',
-    abnumber: 0,
-    grossWeightInKg: 0,
-    incoterm: '',
-    containersizeA: 0,
-    containersizeB: 0,
-    containersizeHc: 0,
-    freeDetention: false,
-    thctb: false,
-    readyToLoad: '',
-    loadingPlattform: '',
-    approvedByCrCs: false,
-    approvedByCrCsTime: "",
-    isFastLine: false,
-    isDirectLine: false
-  });
-  currTlInquiry = signal<TlinquiryDto>(
-    {
-      id: 1,
-      inquiryNumber: 1,
-      sped: 'Loading',
-      country: 'Loading',
-      acceptingPort: 'Loading',
-      expectedRetrieveWeek: '17.12.2023',
-      weightInKg: 1,
-      invoiceOn: '17.12.2023',
-      retrieveDate: '17.12.2023',
-      isContainer40: false,
-      isContainerHc: false,
-      retrieveLocation: 'Loading',
-      debtCapitalGeneralForerunEur: 1,
-      debtCapitalMainDol: 1,
-      debtCapitalTrailingDol: 1,
-      portOfDeparture: 'Loading',
-      ets: '17.12.2023',
-      eta: '17.12.2023',
-      boat: 'Loading',
-      approvedByCrTl: false,
-      approvedByCrTlTime: ""
-    });
-
-  //OrderData
-  isApprovedByCs = signal(false);
-  isApprovedByTl = signal(false);
-  currChecklistname = signal('');
-
-  //CsData
-  container = signal('');
-  abnumber = signal(0);
-  grossWeightInKg = signal(0);
-  incoterm = signal('');
-  containersizeA = signal(0);
-  containersizeB = signal(0);
-  containersizeHc = signal(0);
-  freeDetention = signal(false);
-  thctb = signal(false);
-  readyToLoad = signal('');
-  loadingPlattform = signal('');
-  isFastLine = signal(false);
-  isDirectLine = signal(false);
-
-  //TlData
-  inquiryNumber = signal(0);
-  sped = signal('');
-  country = signal('');
-  acceptingPort = signal('');
-  expectedRetrieveWeek = signal('');
-  weightInKg = signal(0);
-  invoiceOn = signal('');
-  retrieveDate = signal('');
-  isContainer40 = signal(false);
-  isContainerHc = signal(false);
-  retrieveLocation = signal('');
-  debtCapitalGeneralForerunEur = signal(0);
-  debtCapitalMainDol = signal(0);
-  debtCapitalTrailingDol = signal(0);
-  portOfDeparture = signal('');
-  ets = signal('');
-  eta = signal('');
-  boat = signal('');
-
-  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editService.status()));
-  isInquiryNumberValid = computed(() => this.validationService.isNumberValid(this.inquiryNumber()));
-  isSpedValid = computed(() => this.validationService.isAnyInputValid(this.sped()));
-  isCountryValid = computed(() => this.validationService.isNameStringValid(this.country()));
-  isAcceptingPortValid = computed(() => this.validationService.isAnyInputValid(this.acceptingPort()));
-  isExpectedRetrieveWeekValid = computed(() => this.validationService.isDateValid(this.expectedRetrieveWeek()));
-  isWeigthInKgValid = computed(() => this.validationService.isNumberValid(this.weightInKg()));
-  isInvoiceOnValid = computed(() => this.validationService.isDateValid(this.invoiceOn()));
-  isRetrieveDateValid = computed(() => this.validationService.isDateValid(this.retrieveDate()));
-  isRetrieveLocationValid = computed(() => this.validationService.isAnyInputValid(this.retrieveLocation()));
-  isDebtCapitalGeneralForerunEurValid = computed(() => this.validationService.isNumberValid(this.debtCapitalGeneralForerunEur()));
-  isDebtCapitalMainDolValid = computed(() => this.validationService.isNumberValid(this.debtCapitalMainDol()));
-  isDebtCapitalTrailingDolValid = computed(() => this.validationService.isNumberValid(this.debtCapitalTrailingDol()));
-  isPortOfDepartureValid = computed(() => this.validationService.isAnyInputValid(this.portOfDeparture()));
-  isEtsValid = computed(() => this.validationService.isDateValid(this.ets()));
-  isEtaValid = computed(() => this.validationService.isDateValid(this.eta()));
-  isBoatValid = computed(() => this.validationService.isAnyInputValid(this.boat()));
-
-  myForm!: FormGroup;
-
   ngOnInit(): void {
     console.log(),
 
@@ -185,6 +72,111 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       });
   }
 
+  articlesCRService = inject(ArticlesCRService);
+  fb = inject(FormBuilder);
+  router = inject(Router);
+  orderService = inject(OrdersService);
+  checklistService = inject(ChecklistsService);
+  tlinquiriesService = inject(TlinquiriesService);
+  csinquiriesService = inject(CsinquiriesService);
+  validationService = inject(ValidationService);
+  editService = inject(EditService);
+
+  allChecklists = signal<ChecklistDto[]>([]);
+  currCsInquiry = signal<CsinquiryDto>({
+    id: 0,
+    container: '',
+    abnumber: 0,
+    grossWeightInKg: 0,
+    incoterm: '',
+    containersizeA: 0,
+    containersizeB: 0,
+    containersizeHc: 0,
+    freeDetention: false,
+    thctb: false,
+    readyToLoad: '',
+    loadingPlattform: '',
+    approvedByCrCs: false,
+    approvedByCrCsTime: "",
+    isFastLine: false,
+    isDirectLine: false
+  });
+  currTlInquiry = signal<TlinquiryDto>(
+    {
+      id: 1,
+      inquiryNumber: 1,
+      sped: 'Loading',
+      country: 'Loading',
+      acceptingPort: 'Loading',
+      expectedRetrieveWeek: '17.12.2023',
+      weightInKg: 1,
+      invoiceOn: '17.12.2023',
+      retrieveDate: '17.12.2023',
+      isContainer40: false,
+      isContainerHc: false,
+      retrieveLocation: 'Loading',
+      debtCapitalGeneralForerunEur: 1,
+      debtCapitalMainDol: 1,
+      debtCapitalTrailingDol: 1,
+      portOfDeparture: 'Loading',
+      ets: '17.12.2023',
+      eta: '17.12.2023',
+      boat: 'Loading',
+      approvedByCrTl: false,
+      approvedByCrTlTime: ""
+    });
+  isApprovedByCs = signal(false);
+  isApprovedByTl = signal(false);
+  currChecklistname = signal('');
+  container = signal('');
+  abnumber = signal(0);
+  grossWeightInKg = signal(0);
+  incoterm = signal('');
+  containersizeA = signal(0);
+  containersizeB = signal(0);
+  containersizeHc = signal(0);
+  freeDetention = signal(false);
+  thctb = signal(false);
+  readyToLoad = signal('');
+  loadingPlattform = signal('');
+  isFastLine = signal(false);
+  isDirectLine = signal(false);
+  inquiryNumber = signal(0);
+  sped = signal('');
+  country = signal('');
+  acceptingPort = signal('');
+  expectedRetrieveWeek = signal('');
+  weightInKg = signal(0);
+  invoiceOn = signal('');
+  retrieveDate = signal('');
+  isContainer40 = signal(false);
+  isContainerHc = signal(false);
+  retrieveLocation = signal('');
+  debtCapitalGeneralForerunEur = signal(0);
+  debtCapitalMainDol = signal(0);
+  debtCapitalTrailingDol = signal(0);
+  portOfDeparture = signal('');
+  ets = signal('');
+  eta = signal('');
+  boat = signal('');
+  myForm!: FormGroup;
+  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editService.status()));
+  isInquiryNumberValid = computed(() => this.validationService.isNumberValid(this.inquiryNumber()));
+  isSpedValid = computed(() => this.validationService.isAnyInputValid(this.sped()));
+  isCountryValid = computed(() => this.validationService.isNameStringValid(this.country()));
+  isAcceptingPortValid = computed(() => this.validationService.isAnyInputValid(this.acceptingPort()));
+  isExpectedRetrieveWeekValid = computed(() => this.validationService.isDateValid(this.expectedRetrieveWeek()));
+  isWeigthInKgValid = computed(() => this.validationService.isNumberValid(this.weightInKg()));
+  isInvoiceOnValid = computed(() => this.validationService.isDateValid(this.invoiceOn()));
+  isRetrieveDateValid = computed(() => this.validationService.isDateValid(this.retrieveDate()));
+  isRetrieveLocationValid = computed(() => this.validationService.isAnyInputValid(this.retrieveLocation()));
+  isDebtCapitalGeneralForerunEurValid = computed(() => this.validationService.isNumberValid(this.debtCapitalGeneralForerunEur()));
+  isDebtCapitalMainDolValid = computed(() => this.validationService.isNumberValid(this.debtCapitalMainDol()));
+  isDebtCapitalTrailingDolValid = computed(() => this.validationService.isNumberValid(this.debtCapitalTrailingDol()));
+  isPortOfDepartureValid = computed(() => this.validationService.isAnyInputValid(this.portOfDeparture()));
+  isEtsValid = computed(() => this.validationService.isDateValid(this.ets()));
+  isEtaValid = computed(() => this.validationService.isDateValid(this.eta()));
+  isBoatValid = computed(() => this.validationService.isAnyInputValid(this.boat()));
   isAllValid = computed(() => {
     return (
       this.isStatusValid() &&
@@ -207,7 +199,6 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       !this.isApprovedByTl()
     );
   });
-
 
   get articlesFormArray() {
     return this.myForm.get('articles') as FormArray;
@@ -254,6 +245,10 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
           .subscribe(_ => _);
         this.saveTlInquery();
       });
+  }
+
+  removeArticle(index: number) {
+    this.articlesFormArray.removeAt(index);
   }
 
   saveTlInquery() {

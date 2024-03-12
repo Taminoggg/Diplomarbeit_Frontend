@@ -8,12 +8,12 @@
     <div class="form-row">
       <div class="form-group">
         <label>{{'customer' | transloco}}</label>
-        <input readonly [ngSignal]="editService.customerName" type="text">
+        <input class="not-editable" readonly [ngSignal]="editService.customerName" type="text">
       </div>
 
       <div class="form-group">
         <label>{{'created-by' | transloco}}</label>
-        <input readonly [ngSignal]="editService.createdBy" type="text">
+        <input class="not-editable" readonly [ngSignal]="editService.createdBy" type="text">
       </div>
 
       <div class="form-group">
@@ -28,105 +28,145 @@
         <div [formGroup]="getFormGroup($index)">
           <div class="form-row">
             <div class="form-group">
-              <label>{{'delivery-date' | transloco}}</label>
+              <div class="header-container">
+                <div>
+                  <label>{{'delivery-date' | transloco}}</label>
+                </div>
+                <div>
+                  @if (!validationService.isDateValid(getFormGroup($index).get('deliveryDate')!.value)) { <label
+                    class="error-message">
+                    {{'simple-error' | transloco}}</label>
+                  }
+                </div>
+              </div>
               <input (input)="setAreArticlesValid()" type="date" formControlName="deliveryDate" format="dd.MM.yyyy">
-              @if (!validationService.isDateValid(getFormGroup($index).get('deliveryDate')!.value)) { <label
-                class="error-message">
-                {{'error-message-date' | transloco}}</label>
-              }
             </div>
 
             <div class="form-group">
-              <label>{{'short-text' | transloco}}</label>
+              <div class="header-container">
+                <div>
+                  <label>{{'short-text' | transloco}}</label>
+                </div>
+                <div>
+                  @if (!validationService.isAnyInputValid(getFormGroup($index).get('shortText')!.value)) { <label
+                    class="error-message">
+                    {{'simple-error' | transloco}}</label>
+                  }
+                </div>
+              </div>
               <input (input)="setAreArticlesValid()" type="text" formControlName="shortText">
-              @if (!validationService.isAnyInputValid(getFormGroup($index).get('shortText')!.value)) { <label
-                class="error-message">
-                {{'error-message-any-string' | transloco}}</label>
-              }
             </div>
 
             <div class="form-group">
-              <label>{{'factory' | transloco}}</label>
+              <div class="header-container">
+                <div>
+                  <label>{{'factory' | transloco}}</label>
+                </div>
+                <div>
+                  @if (!validationService.isAnyInputValid(getFormGroup($index).get('factory')!.value)) { <label
+                    class="error-message">
+                    {{'simple-error' | transloco}}</label>
+                  }
+                </div>
+              </div>
               <input (input)="setAreArticlesValid()" type="text" formControlName="factory">
-              @if (!validationService.isAnyInputValid(getFormGroup($index).get('factory')!.value)) { <label
-                class="error-message">
-                {{'error-message-any-string' | transloco}}</label>
-              }
             </div>
 
             <div class="form-group">
-              <label>{{'nozzle' | transloco}}</label>
+              <div class="header-container">
+                <div>
+                  <label>{{'nozzle' | transloco}}</label>
+                </div>
+                <div>
+                  @if (!validationService.isAnyInputValid(getFormGroup($index).get('nozzle')!.value)) { <label
+                    class="error-message">
+                    {{'simple-error' | transloco}}</label>
+                  }
+                </div>
+              </div>
               <input (input)="setAreArticlesValid()" type="text" formControlName="nozzle">
-              @if (!validationService.isAnyInputValid(getFormGroup($index).get('nozzle')!.value)) { <label
-                class="error-message">
-                {{'error-message-any-string' | transloco}}</label>
-              }
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>{{'production-order' | transloco}}</label>
+              <div class="header-container">
+                <div>
+                  <label>{{'production-order' | transloco}}</label>
+                </div>
+                <div>
+                  @if (!validationService.isAnyInputValid(getFormGroup($index).get('productionOrder')!.value)) { <label
+                    class="error-message">
+                    {{'simple-error' | transloco}}</label>
+                  }
+                </div>
+              </div>
               <input (input)="setAreArticlesValid()" type="text" formControlName="productionOrder">
-              @if (!validationService.isAnyInputValid(getFormGroup($index).get('productionOrder')!.value)) { <label
-                class="error-message">
-                {{'error-message-any-string' | transloco}}</label>
-              }
             </div>
 
             <div class="form-group">
-              <label>{{'planned-order' | transloco}}</label>
+              <div class="header-container">
+                <div>
+                  <label>{{'planned-order' | transloco}}</label>
+                </div>
+                <div>
+                  @if (!validationService.isAnyInputValid(getFormGroup($index).get('plannedOrder')!.value)) { <label
+                    class="error-message">
+                    {{'simple-error' | transloco}}</label>
+                  }
+                </div>
+              </div>
               <input (input)="setAreArticlesValid()" type="text" formControlName="plannedOrder">
-              @if (!validationService.isAnyInputValid(getFormGroup($index).get('plannedOrder')!.value)) { <label
-                class="error-message">
-                {{'error-message-any-string' | transloco}}</label>
-              }
             </div>
 
             <div class="form-group">
-              <label>{{'plant' | transloco}}</label>
+              <div class="header-container">
+                <div>
+                  <label>{{'plant' | transloco}}</label>
+                </div>
+                <div>
+                  @if (!validationService.isAnyInputValid(getFormGroup($index).get('plant')!.value)) { <label
+                    class="error-message">
+                    {{'simple-error' | transloco}}</label>
+                  }
+                </div>
+              </div>
               <input (input)="setAreArticlesValid()" type="text" formControlName="plant">
-              @if (!validationService.isAnyInputValid(getFormGroup($index).get('plant')!.value)) { <label
-                class="error-message">
-                {{'error-message-any-string' | transloco}}</label>
-              }
             </div>
           </div>
 
           <br>
           <br>
-          <hr>
 
           <div class="form-row">
             <div class="form-group">
               <label>{{'article-number' | transloco}}</label>
-              <input readonly type="number" formControlName="articleNumber">
+              <input class="not-editable" readonly type="number" formControlName="articleNumber">
             </div>
 
             <div class="form-group">
               <label>{{'min-heigth-required' | transloco}}</label>
-              <input readonly type="number" formControlName="minHeigthRequired">
+              <input class="not-editable" readonly type="number" formControlName="minHeigthRequired">
             </div>
 
             <div class="form-group">
               <div class="checkbox-container">
                 <label class="checkbox-label">{{'inquiry-for-fixed-order' | transloco}}</label>
-                <input class="checkbox-input" type="checkbox" formControlName="inquiryForFixedOrder"
-                  onclick="return false;" onkeydown="return false;">
+                <input class="checkbox-input" type="checkbox" formControlName="inquiryForFixedOrder">
               </div>
             </div>
 
             <div class="form-group">
               <div class="checkbox-container">
                 <label class="checkbox-label">{{'inquiry-for-quotation' | transloco}}</label>
-                <input class="checkbox-input" type="checkbox" formControlName="inquiryForQuotation"
-                  onclick="return false;" onkeydown="return false;">
+                <input class="checkbox-input" type="checkbox" formControlName="inquiryForQuotation"><!-- -->
               </div>
             </div>
 
             <div class="form-group">
               <label>{{'desired-delivery-date' | transloco}}</label>
-              <input readonly format="dd.MM.yyyy" type="date" formControlName="desiredDeliveryDate">
+              <input class="not-editable" readonly format="dd.MM.yyyy" type="date"
+                formControlName="desiredDeliveryDate">
             </div>
           </div>
           <hr>

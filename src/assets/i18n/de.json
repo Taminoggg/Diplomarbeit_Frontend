@@ -124,5 +124,7 @@
     "edited-by-pp": "Von Produktionsplanung bearbeitet",
     "pp-in-progress": "In Bearbeitung von Produktionsplanung",
     "to": "Bis:",
-    "from": "Von:"
+    "from": "Von:",
+    "only-select-one": "Es kann nur eines ausgewählt werden",
+    "simple-error": "*"
 }

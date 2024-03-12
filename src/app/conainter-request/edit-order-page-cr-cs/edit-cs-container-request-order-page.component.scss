@@ -109,7 +109,12 @@ select {
   color: red;
   font-size: 14px;
   font-weight: bold;
-  margin-top: -10px;
+  margin-left: 2px;
+}
+
+.header-container{
+  display: flex;
+  justify-content: flex-start;
 }
 
 .add-article-button {
@@ -141,10 +146,15 @@ select {
   }
 }
 
-.date-error-message {
+.checkbox-error-message {
   position: absolute;
   color: red;
   font-size: 14px;
   font-weight: bold;
-  margin-top: 0px;
+  margin-left: 38%;
+  margin-top: 80px;
+}
+
+.not-editable{
+  background-color: #f0f0f0
 }

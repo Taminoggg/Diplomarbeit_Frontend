@@ -66,15 +66,15 @@
   </div>
   <div class="filter-option">
     <label>{{'show-finished-orders' | transloco}}</label>
-    <input (change)="filterOrders()" [ngSignal]="showFinished" type="checkbox">
+    <input (change)="filterForShowFinishedOrders()" [ngSignal]="showFinished" type="checkbox">
   </div>
   <div class="filter-option">
     <label>{{'show-canceled-orders' | transloco}}</label>
-    <input (change)="filterOrders()" [ngSignal]="showCanceled" type="checkbox">
+    <input (change)="filterForCanceledOrders()" [ngSignal]="showCanceled" type="checkbox">
   </div>
   <div class="filter-option">
     <label>{{'created-by' | transloco}}</label>
-    <input class="simple-margin" (change)="filterOrders()" type="text" [ngSignal]="filterByCreatedByName">
+    <input class="simple-margin" (change)="filterForCreatedBy()" type="text" [ngSignal]="filterByCreatedByName">
   </div>
 
   <button class="settings-button" (click)="settingsPage()">
