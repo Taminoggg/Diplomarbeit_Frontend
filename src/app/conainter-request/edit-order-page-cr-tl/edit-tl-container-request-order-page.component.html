@@ -9,43 +9,15 @@
       <div class="form-group">
         <div class="header-container">
           <div>
-            <label>{{'accepting-port' | transloco}}</label>
+            <label>{{'edited-by' | transloco}}</label>
           </div>
           <div>
-            @if(!isAcceptingPortValid()){
+            @if(!isCreatedBySDValid()){
             <label class="error-message">{{'simple-error' | transloco}}</label>
             }
           </div>
         </div>
-        <input type="text" [ngSignal]="acceptingPort">
-      </div>
-
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'boat' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isBoatValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input type="text" [ngSignal]="boat">
-      </div>
-
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'inquery-number' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isInquiryNumberValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input type="number" [ngSignal]="inquiryNumber">
+        <input type="text" [ngSignal]="editService.createdBySD">
       </div>
 
       <div class="form-group">
@@ -75,6 +47,9 @@
         </div>
         <input type="text" [ngSignal]="country">
       </div>
+
+      <div class="form-group"></div>
+      <div class="form-group"></div>
     </div>
 
     <div class="form-row">
@@ -95,20 +70,6 @@
       <div class="form-group">
         <div class="header-container">
           <div>
-            <label>{{'retrieve-date' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isRetrieveDateValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input type="date" [ngSignal]="retrieveDate" format="dd.MM.yyyy">
-      </div>
-
-      <div class="form-group">
-        <div class="header-container">
-          <div>
             <label>{{'invoice-on' | transloco}}</label>
           </div>
           <div>
@@ -123,59 +84,15 @@
       <div class="form-group">
         <div class="header-container">
           <div>
-            <label>{{'ets' | transloco}}</label>
+            <label>{{'retrieve-date' | transloco}}</label>
           </div>
           <div>
-            @if(!isEtsValid()){
+            @if(!isRetrieveDateValid()){
             <label class="error-message">{{'simple-error' | transloco}}</label>
             }
           </div>
         </div>
-        <input type="date" [ngSignal]="ets" format="dd.MM.yyyy">
-      </div>
-
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'eta' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isEtaValid()){
-            <label class="date-error-message">{{'error-message-date' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input type="date" [ngSignal]="eta" format="dd.MM.yyyy">
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'weight-in-kg' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isWeigthInKgValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input type="number" [ngSignal]="weightInKg">
-      </div>
-
-      <div class="form-group">
-        <div class="checkbox-container">
-          <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
-          <input class="checkbox-input" type="checkbox" [ngSignal]="isContainer40">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="checkbox-container">
-          <label class="checkbox-label">{{'is-container-hc' | transloco}}</label>
-          <input class="checkbox-input" type="checkbox" [ngSignal]="isContainerHc">
-        </div>
+        <input type="date" [ngSignal]="retrieveDate" format="dd.MM.yyyy">
       </div>
 
       <div class="form-group">
@@ -197,48 +114,6 @@
       <div class="form-group">
         <div class="header-container">
           <div>
-            <label>{{'debt-capital-general-forerun-eur' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isDebtCapitalGeneralForerunEurValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input type="number" [ngSignal]="debtCapitalGeneralForerunEur">
-      </div>
-
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'debt-capital-main-dol' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isDebtCapitalMainDolValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input type="number" [ngSignal]="debtCapitalMainDol">
-      </div>
-
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'debt-capital-trailing-dol' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isDebtCapitalTrailingDolValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input type="number" [ngSignal]="debtCapitalTrailingDol">
-      </div>
-
-      <div class="form-group">
-        <div class="header-container">
-          <div>
             <label>{{'port-of-departure' | transloco}}</label>
           </div>
           <div>
@@ -248,6 +123,113 @@
           </div>
         </div>
         <input type="text" [ngSignal]="portOfDeparture">
+      </div>
+
+      <div class="form-group">
+        <div class="header-container">
+          <div>
+            <label>{{'accepting-port' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isAcceptingPortValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
+        <input type="text" [ngSignal]="acceptingPort">
+      </div>
+
+      <div class="form-group"></div>
+      <div class="form-group"></div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <div class="header-container">
+          <div>
+            <label>{{'sc-general' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isSCGeneralValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
+        <input type="number" [ngSignal]="scGeneral">
+      </div>
+
+      <div class="form-group">
+        <div class="header-container">
+          <div>
+            <label>{{'sc-main-run' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isSCMainValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
+        <input type="number" [ngSignal]="scMain">
+      </div>
+
+      <div class="form-group">
+        <div class="header-container">
+          <div>
+            <label>{{'sc-trail' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isSCTraiValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
+        <input type="number" [ngSignal]="scTrail">
+      </div>
+
+      <div class="form-group"></div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <div class="header-container">
+          <div>
+            <label>{{'ets' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isEtsValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
+        <input type="date" [ngSignal]="ets" format="dd.MM.yyyy">
+      </div>
+
+      <div class="form-group">
+        <div class="header-container">
+          <div>
+            <label>{{'eta' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isEtaValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
+        <input type="date" [ngSignal]="eta" format="dd.MM.yyyy">
+      </div>
+
+      <div class="form-group">
+        <div class="header-container">
+          <div>
+            <label>{{'boat' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isBoatValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
+        <input type="text" [ngSignal]="boat">
       </div>
 
       <div class="form-group">
@@ -262,35 +244,13 @@
     <div class="csData">
       <div class="form-row">
         <div class="form-group">
+          <label>{{'created-by' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="editService.createdByCS" type="text">
+        </div>
+
+        <div class="form-group">
           <label>{{'customer' | transloco}}</label>
           <input class="not-editable" readonly [ngSignal]="editService.customerName" type="text">
-        </div>
-
-        <div class="form-group">
-          <label>{{'created-by' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="editService.createdBy" type="text">
-        </div>
-
-        <div class="form-group">
-          <label>{{'amount' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="editService.amount" type="number">
-        </div>
-
-        <div class="form-group">
-          <label>{{'ready-to-load' | transloco}}</label>
-          <input class="not-editable" format="dd.MM.yyyy" readonly [ngSignal]="readyToLoad" type="date">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>{{'checklist' | transloco}}</label>
-          <input class="not-editable" readonly type="text" [ngSignal]="currChecklistname">
-        </div>
-
-        <div class="form-group">
-          <label>{{'loading-plattform' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="loadingPlattform" type="text">
         </div>
 
         <div class="form-group">
@@ -299,9 +259,24 @@
         </div>
 
         <div class="form-group">
-          <label>{{'gross-weight-in-kg' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="grossWeightInKg" type="number">
+          <label>{{'incoterm' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="incoterm" type="text">
         </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>{{'loading-plattform' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="loadingPlattform" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>{{'ready-to-load' | transloco}}</label>
+          <input class="not-editable" format="dd.MM.yyyy" readonly [ngSignal]="readyToLoad" type="date">
+        </div>
+
+        <div class="form-group"></div>
+        <div class="form-group"></div>
       </div>
 
       <div class="form-row">
@@ -318,28 +293,47 @@
         <div class="form-group">
           <label>{{'container-size-hc' | transloco}}</label>
           <input class="not-editable" readonly [ngSignal]="containersizeHc" type="number">
-        </div>
-
+        </div>       
+  
         <div class="form-group">
-          <label>{{'incoterm' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="incoterm" type="text">
+          <label>{{'gross-weight-in-kg' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="grossWeightInKg" type="number">
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <div class="checkbox-container">
-            <label class="checkbox-label">{{'free-detention' | transloco}}</label>
-            <input [disabled]="true" class="checkbox-input" [ngSignal]="freeDetention" type="checkbox">
+            <label>{{'free-detention' | transloco}}: {{freeDetention()}} {{'days' | transloco}}</label>
           </div>
         </div>
 
         <div class="form-group">
           <div class="checkbox-container">
-            <label class="checkbox-label">{{'thctb' | transloco}}</label>
-            <input [disabled]="true" [ngSignal]="thctb" type="checkbox">
+            <label class="checkbox-label">{{'direct-line' | transloco}}</label>
+            <input [disabled]="true" [ngSignal]="isDirectLine" class="checkbox-input" type="checkbox">
           </div>
         </div>
+
+        <div class="form-group">
+          <div class="checkbox-container">
+            <label class="checkbox-label">{{'fast-line' | transloco}}</label>
+            <input [disabled]="true" [ngSignal]="isFastLine" class="checkbox-input" type="checkbox">
+          </div>
+        </div>
+
+        <div class="form-group"></div>
+      </div>
+
+      <div class="form-row">
+        <label>{{'thc' | transloco}}
+          @if (thctb()) {
+          {{'tb' | transloco}}
+          }@else {
+          {{'customer' | transloco}}
+          }
+          <input type="checkbox" [disabled]="true" [checked]="true">
+        </label>
       </div>
 
       <form [formGroup]="myForm">
@@ -350,20 +344,6 @@
               <div class="form-group">
                 <label>{{'article-number' | transloco}}</label>
                 <input class="not-editable" readonly type="number" formControlName="articleNumber">
-              </div>
-
-              <div class="form-group">
-                <div class="checkbox-container">
-                  <label class="checkbox-label">{{'direct-line' | transloco}}</label>
-                  <input [disabled]="true" [ngSignal]="isDirectLine" class="checkbox-input" type="checkbox">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <div class="checkbox-container">
-                  <label class="checkbox-label">{{'fast-line' | transloco}}</label>
-                  <input [disabled]="true" [ngSignal]="isFastLine" class="checkbox-input" type="checkbox">
-                </div>
               </div>
 
               @if (isDirectLine() || isFastLine()) {

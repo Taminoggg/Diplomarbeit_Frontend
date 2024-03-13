@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticlesPPService, ChecklistDto, ChecklistsService, EditPpPpArticleDto, OrderDto, OrdersService, ProductionPlanningsService } from '../../shared/swagger';
+import { ArticlesPPService, ChecklistDto, ChecklistsService, EditOrderSDDto, EditPpPpArticleDto, OrderDto, OrdersService, ProductionPlanningsService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { TranslocoModule } from '@ngneat/transloco';
 import { ValidationService } from '../../shared/validation.service';
@@ -42,6 +42,8 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
 
           this.productionPlanningService.productionPlanningsIdGet(this.editService.currOrder().ppId)
             .subscribe(x => {
+              this.customerPriority.set(x.customerPriority);
+              this.recievingCountry.set(x.recievingCountry);
               this.isApprovedByPpPp.set(x.approvedByPpPp);
             });
         }
@@ -58,15 +60,17 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
   validationService = inject(ValidationService);
   allChecklists = signal<ChecklistDto[]>([]);
 
+  recievingCountry = signal('');
+  customerPriority = signal('');
   isApprovedByPpPp = signal(false);
   areArticlesValid = signal<boolean>(true);
-  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editService.status()));
-  isAllValid = computed(() => this.isStatusValid() && this.areArticlesValid() && !this.isApprovedByPpPp());
+  isCreatedBySDValid = computed(() => this.validationService.isNameStringValid(this.editService.createdBySD()));
+  isAllValid = computed(() => this.isCreatedBySDValid() && this.areArticlesValid() && !this.isApprovedByPpPp());
   myForm!: FormGroup;
 
   setAreArticlesValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
-      if (!this.validationService.isDateValid(this.getFormGroup(i).get('deliveryDate')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('shortText')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('factory')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('nozzle')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('productionOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plannedOrder')!.value) || !this.validationService.isAnyInputValid(this.getFormGroup(i).get('plant')!.value)) {
+      if (!this.validationService.isDateValid(this.getFormGroup(i).get('deliveryDate')!.value)) {
         this.areArticlesValid.set(false);
         return;
       }
@@ -85,8 +89,8 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
       id: id,
       minHeigthRequired: [minHeigthRequired],
       desiredDeliveryDate: [desiredDeliveryDate],
-      inquiryForFixedOrder: [{value: inquiryForFixedOrder, disabled: true}],
-      inquiryForQuotation: [{value: inquiryForQuotation, disabled: true}],
+      inquiryForFixedOrder: [{ value: inquiryForFixedOrder, disabled: true }],
+      inquiryForQuotation: [{ value: inquiryForQuotation, disabled: true }],
       deliveryDate: [deliveryDate],
       shortText: [shortText],
       factory: [factory],
@@ -103,23 +107,32 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
     return this.articlesFormArray.at(index) as FormGroup;
   }
 
-  saveOrders() {
+  saveOrder(){
     this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('pp-in-progress'))
       .subscribe(_ => this.saveArticles());
   }
 
   saveArticles(): void {
+    let editOrderSDDto: EditOrderSDDto = {
+      id: this.editService.currOrder().id,
+      additionalInformation: this.editService.additonalInformation(),
+      createdBy: this.editService.createdBySD()
+    }
+
+    this.orderService.ordersOrderSDPut(editOrderSDDto)
+      .subscribe(x => x);
+
     console.log('saving order');
     for (let i = 0; i < this.articlesFormArray.length; i++) {
       let article: EditPpPpArticleDto = {
         id: this.getFormGroup(i).get('id')!.value,
         deliveryDate: this.getFormGroup(i).get('deliveryDate')!.value,
-        plannedOrder: this.getFormGroup(i).get('plannedOrder')!.value,
-        productionOrder: this.getFormGroup(i).get('productionOrder')!.value,
-        shortText: this.getFormGroup(i).get('shortText')!.value,
-        factory: this.getFormGroup(i).get('factory')!.value,
-        nozzle: this.getFormGroup(i).get('nozzle')!.value,
-        plant: this.getFormGroup(i).get('plant')!.value,
+        plannedOrder: this.getFormGroup(i).get('plannedOrder')?.value ?? null,
+        productionOrder: this.getFormGroup(i).get('productionOrder')?.value ?? null,
+        shortText: this.getFormGroup(i).get('shortText')?.value ?? null,
+        factory: this.getFormGroup(i).get('factory')?.value ?? null,
+        nozzle: this.getFormGroup(i).get('nozzle')?.value ?? null,
+        plant: this.getFormGroup(i).get('plant')?.value ?? null,
       };
 
       console.log('edited articles: ');

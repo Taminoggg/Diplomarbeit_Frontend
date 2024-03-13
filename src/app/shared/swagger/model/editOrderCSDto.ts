@@ -11,13 +11,10 @@
  */
 
 
-export interface AddOrderDto { 
-    customerName: string;
+export interface EditOrderCSDto { 
+    id: number;
     additionalInformation?: string | null;
+    customerName: string;
     createdBy: string;
-    checklistId?: number | null;
-    csId?: number | null;
-    tlId?: number | null;
-    ppId?: number | null;
 }
 

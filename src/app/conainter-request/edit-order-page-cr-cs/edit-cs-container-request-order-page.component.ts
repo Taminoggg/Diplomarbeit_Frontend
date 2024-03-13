@@ -1,6 +1,6 @@
-import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, OnInit, computed } from '@angular/core';
+import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, OnInit, computed, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddArticleCRDto, ArticlesCRService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditCsinquiryDto, EditOrderDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { AddArticleCRDto, ArticlesCRService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditCsinquiryDto, EditOrderCSDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -80,7 +80,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       containersizeA: 1,
       containersizeB: 1,
       containersizeHc: 1,
-      freeDetention: false,
+      freeDetention: 1,
       thctb: false,
       readyToLoad: '01.01.1999',
       loadingPlattform: 'Loading',
@@ -92,20 +92,16 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   currTlInquiry = signal<TlinquiryDto>(
     {
       id: 1,
-      inquiryNumber: 1,
       sped: 'Loading',
       country: 'Loading',
       acceptingPort: 'Loading',
       expectedRetrieveWeek: '17.12.2023',
-      weightInKg: 1,
       invoiceOn: '17.12.2023',
       retrieveDate: '17.12.2023',
-      isContainer40: false,
-      isContainerHc: false,
       retrieveLocation: 'Loading',
-      debtCapitalGeneralForerunEur: 1,
-      debtCapitalMainDol: 1,
-      debtCapitalTrailingDol: 1,
+      scGeneral: 1,
+      scMain: 1,
+      scTrail: 1,
       portOfDeparture: 'Loading',
       ets: '17.12.2023',
       eta: '17.12.2023',
@@ -114,6 +110,12 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       approvedByCrTlTime: ""
     });
 
+  durations = [10, 14, 21, 0];
+  thcs = [true, false];
+  lines = [0,1,2];
+  selectedThc: boolean = this.thcs[0];
+  selectedFreeDetention: number = this.durations[0];
+  selectedLine: number = this.lines[0];
   isApprovedByCs = signal(false);
   isApprovedByTl = signal(false);
   fastLine = signal(false);
@@ -125,24 +127,18 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   containersizeA = signal(0);
   containersizeB = signal(0);
   containersizeHc = signal(0);
-  freeDetention = signal(false);
-  thctb = signal(false);
   readyToLoad = signal('');
   loadingPlattform = signal('');
-  inquiryNumber = signal(0);
   sped = signal('');
   country = signal('');
   acceptingPort = signal('');
   expectedRetrieveWeek = signal('');
-  weightInKg = signal(0);
   invoiceOn = signal('');
   retrieveDate = signal('');
-  isContainer40 = signal(false);
-  isContainerHc = signal(false);
   retrieveLocation = signal('');
-  debtCapitalGeneralForerunEur = signal(0);
-  debtCapitalMainDol = signal(0);
-  debtCapitalTrailingDol = signal(0);
+  scGeneral = signal(0);
+  scMain = signal(0);
+  scTrail = signal(0);
   portOfDeparture = signal('');
   ets = signal('');
   eta = signal('');
@@ -151,11 +147,10 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
   isLoadingPlattfromValid = computed(() => this.validationService.isAnyInputValid(this.loadingPlattform()));
   isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.editService.customerName()));
-  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdBy()));
+  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdByCS()));
   isAbNumberValid = computed(() => this.validationService.isNumberValid(this.abnumber()));
   isGrossWeightInKgValid = computed(() => this.validationService.isNumberValid(this.grossWeightInKg()));
   isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editService.status()));
-  isAmountValid = computed(() => this.validationService.isNumberValid(this.editService.amount()));
   isContainerSizeAValid = computed(() => this.validationService.isNumberValid(this.containersizeA()));
   isContainerSizeBValid = computed(() => this.validationService.isNumberValid(this.containersizeB()));
   isContainerSizeHcValid = computed(() => this.validationService.isNumberValid(this.containersizeHc()));
@@ -169,14 +164,12 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       this.isAbNumberValid() &&
       this.isGrossWeightInKgValid() &&
       this.isStatusValid() &&
-      this.isAmountValid() &&
       this.isContainerSizeAValid() &&
       this.isContainerSizeBValid() &&
       this.isContainerSizeHcValid() &&
       this.areArticleNumbersValid() &&
       !this.editService.currOrder().successfullyFinished &&
-      !this.editService.currOrder().canceled &&
-      !(this.fastLine() && this.directLine())
+      !this.editService.currOrder().canceled
     );
   });
 
@@ -222,7 +215,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
         return;
       }
 
-      if ((this.getFormGroup(i).get('directline')!.value === true || this.getFormGroup(i).get('fastline')!.value === true) && this.getFormGroup(i).get('palletAmount')!.value < 1) {
+      if ((this.selectedLine === 2 || this.selectedLine === 1) && this.getFormGroup(i).get('palletAmount')!.value < 1) {
         this.areArticleNumbersValid.set(false);
         return;
       }
@@ -231,10 +224,9 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   prepareSaveOrder() {
-    const order: EditOrderDto = {
+    const order: EditOrderCSDto = {
       customerName: this.editService.customerName(),
-      createdBy: this.editService.createdBy(),
-      amount: this.editService.amount(),
+      createdBy: this.editService.createdByCS(),
       id: this.id,
       additionalInformation: this.editService.additonalInformation() === '' ? null : this.editService.additonalInformation()
     };
@@ -245,7 +237,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   saveOrder(): void {
     let order = this.prepareSaveOrder();
 
-    this.orderService.ordersPut(order)
+    this.orderService.ordersOrderCSPut(order)
       .subscribe(x => {
         this.saveCsInquery();
         this.saveArticles();
@@ -256,7 +248,7 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   publish() {
     let order = this.prepareSaveOrder();
 
-    this.orderService.ordersPut(order)
+    this.orderService.ordersOrderCSPut(order)
       .subscribe(x => {
         this.saveCsInquery();
         this.saveArticles();
@@ -293,6 +285,14 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   saveCsInquery() {
+    let isDirectLine = false;
+    let isFastLine = false;
+    if(this.selectedLine === 1){
+      isFastLine = true;
+    }else if(this.selectedLine === 2){
+      isDirectLine = true;
+    }
+
     let editedCsInquery: EditCsinquiryDto = {
       id: this.currCsInquiry().id,
       container: this.container(),
@@ -302,12 +302,12 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
       containersizeA: this.containersizeA(),
       containersizeB: this.containersizeB(),
       containersizeHc: this.containersizeHc(),
-      freeDetention: this.freeDetention(),
-      thctb: this.thctb(),
+      freeDetention: this.selectedFreeDetention,
+      thctb: this.selectedThc,
       readyToLoad: this.readyToLoad(),
       loadingPlattform: this.loadingPlattform(),
-      isDirectLine: this.fastLine(),
-      isFastLine: this.directLine()
+      isDirectLine: isDirectLine,
+      isFastLine: isFastLine
     }
 
     this.csinquiriesService.csinquiriesPut(editedCsInquery)
@@ -322,8 +322,8 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.containersizeA.set(this.currCsInquiry().containersizeA);
     this.containersizeB.set(this.currCsInquiry().containersizeB);
     this.containersizeHc.set(this.currCsInquiry().containersizeHc);
-    this.freeDetention.set(this.currCsInquiry().freeDetention);
-    this.thctb.set(this.currCsInquiry().thctb);
+    this.selectedThc = this.currCsInquiry().thctb;
+    this.selectedFreeDetention = this.currCsInquiry().freeDetention;
     this.readyToLoad.set(this.currCsInquiry().readyToLoad);
     this.loadingPlattform.set(this.currCsInquiry().loadingPlattform);
     this.fastLine.set(this.currCsInquiry().isFastLine);
@@ -332,20 +332,16 @@ export class EditCsContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   setTlInquirySignals(): void {
-    this.inquiryNumber.set(this.currTlInquiry().inquiryNumber);
     this.sped.set(this.currTlInquiry().sped);
     this.country.set(this.currTlInquiry().country);
     this.acceptingPort.set(this.currTlInquiry().acceptingPort);
     this.expectedRetrieveWeek.set(this.currTlInquiry().expectedRetrieveWeek);
-    this.weightInKg.set(this.currTlInquiry().weightInKg);
     this.invoiceOn.set(this.currTlInquiry().invoiceOn);
     this.retrieveDate.set(this.currTlInquiry().retrieveDate);
-    this.isContainer40.set(this.currTlInquiry().isContainer40);
-    this.isContainerHc.set(this.currTlInquiry().isContainerHc);
     this.retrieveLocation.set(this.currTlInquiry().retrieveLocation);
-    this.debtCapitalGeneralForerunEur.set(this.currTlInquiry().debtCapitalGeneralForerunEur);
-    this.debtCapitalMainDol.set(this.currTlInquiry().debtCapitalMainDol);
-    this.debtCapitalTrailingDol.set(this.currTlInquiry().debtCapitalTrailingDol);
+    this.scGeneral.set(this.currTlInquiry().scGeneral);
+    this.scMain.set(this.currTlInquiry().scMain);
+    this.scTrail.set(this.currTlInquiry().scTrail);
     this.portOfDeparture.set(this.currTlInquiry().portOfDeparture);
     this.ets.set(this.currTlInquiry().ets);
     this.eta.set(this.currTlInquiry().eta);

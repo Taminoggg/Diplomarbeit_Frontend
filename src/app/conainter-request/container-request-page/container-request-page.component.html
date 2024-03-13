@@ -85,43 +85,49 @@
 <div class="orderBox">
   <table>
     <tr>
-      <th *ngFor="let header of dataService.tableHeaders" (click)="orderOrders(header.value)">{{header.label |
-        transloco}}</th>
-    </tr>
-    @for (currOrder of dataService.allOrders(); track $index) {
-    <tr>
-      @for (prop of dataService.tableHeaders; track $index) {
-      @if(prop.value === 'chat'){
-      <td (click)="navigateToPage('/chat-for-order/' + htmlContent + '/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
-      }@else if (prop.value === 'assignment') {
-      <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
-      }@else if (prop.value === 'create') {
-      <td (click)="navigateToEditPage(currOrder.id)"><mat-icon>create</mat-icon></td>
-      }@else {
-      <td>
-        @if (prop.value === 'articleNumbers') {
-        {{getArticlesForOrder(currOrder.id)}}
-        }@else if(prop.value === 'factory') {
-        {{getFactoriesForOrder(currOrder.id)}}
-        }@else if(prop.value === 'plant'){
-        {{getPlantsForOrder(currOrder.id)}}
-        }@else if(prop.value === 'approvedBy'){
-        @if(getApprovedByForOrder(currOrder.id)){
-        {{'yes' | transloco}}
-        }@else {
-        {{'no' | transloco}}
-        }
-        }@else if(prop.value === 'lastUpdated' || prop.value === 'readyToLoad'){
-        {{currOrder[prop.value] | date:'dd.MM.yyyy'}}
-        }@else if(prop.value === 'status'){
-        {{currOrder[prop.value] | transloco}}
-        }@else {
-        {{currOrder[prop.value]}}
-        }
-      </td>
-      }
+      @for (header of dataService.tableHeaders; track $index) {
+      <th (click)="orderOrders(header.value)">{{header.label | transloco}}</th>
       }
     </tr>
+
+    @if (this.dataService.dataLoading()) {
+    <label>{{'loading' | transloco}}</label>
+    }@else {
+      @for (currOrder of dataService.allOrders(); track $index) {
+        <tr>
+          @for (prop of dataService.tableHeaders; track $index) {
+          @if(prop.value === 'chat'){
+          <td (click)="navigateToPage('/chat-for-order/' + htmlContent + '/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
+          }@else if (prop.value === 'assignment') {
+          <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
+          }@else if (prop.value === 'create') {
+          <td (click)="navigateToEditPage(currOrder.id)"><mat-icon>create</mat-icon></td>
+          }@else {
+          <td>
+            @if (prop.value === 'articleNumbers') {
+            {{getArticlesForOrder(currOrder.id)}}
+            }@else if(prop.value === 'factory') {
+            {{getFactoriesForOrder(currOrder.id)}}
+            }@else if(prop.value === 'plant'){
+            {{getPlantsForOrder(currOrder.id)}}
+            }@else if(prop.value === 'approvedBy'){
+            @if(getApprovedByForOrder(currOrder.id)){
+            {{'yes' | transloco}}
+            }@else {
+            {{'no' | transloco}}
+            }
+            }@else if(prop.value === 'lastUpdated' || prop.value === 'readyToLoad'){
+            {{currOrder[prop.value] | date:'dd.MM.yyyy'}}
+            }@else if(prop.value === 'status'){
+            {{currOrder[prop.value] | transloco}}
+            }@else {
+            {{currOrder[prop.value]}}
+            }
+          </td>
+          }
+          }
+        </tr>
+        }
     }
   </table>
 </div>

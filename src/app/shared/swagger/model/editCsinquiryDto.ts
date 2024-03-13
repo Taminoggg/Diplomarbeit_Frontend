@@ -20,7 +20,7 @@ export interface EditCsinquiryDto {
     containersizeA: number;
     containersizeB: number;
     containersizeHc: number;
-    freeDetention: boolean;
+    freeDetention: number;
     thctb: boolean;
     readyToLoad: string;
     loadingPlattform: string;

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, computed, inject, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddOrderDto, ChecklistsService, OrdersService, ProductionPlanningsService, AddArticlePPDto, ArticlesPPService } from '../../shared/swagger';
+import { AddOrderDto, ChecklistsService, OrdersService, ProductionPlanningsService, AddArticlePPDto, ArticlesPPService, ProductionPlanningDto, AddProductionPlanningDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { TranslocoModule } from '@ngneat/transloco';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -40,18 +40,19 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
   productionPlanningService = inject(ProductionPlanningsService);
   cdr = inject(ChangeDetectorRef);
 
-  orderId = signal(1);
-  customerName = signal('Customer');
-  createdBy = signal('CreatedBy');
-  status = signal('Status');
-  additonalInformation = signal('');
+  customerPriority = signal('');
+  recievingCountry = signal('');
   areArticlesValid = signal<boolean>(true);
   isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.editService.customerName()));
-  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdBy()));
+  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdByCS()));
+  isCustomerPriortityValid = computed(() => this.customerPriority().length === 1);
+  isRecievingCountryValid = computed(() => this.validationService.isAnyInputValid(this.recievingCountry()));
   isAllValid = computed(() => {
     return (
       this.isCustomerValid() &&
       this.isCreatedByValid() &&
+      this.isCustomerPriortityValid() &&
+      this.isRecievingCountryValid() &&
       this.areArticlesValid()
     );
   });
@@ -112,8 +113,12 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
 
   saveOrder(): void {
     console.log('posted clicked');
+    let prodcutionPlanningDto: AddProductionPlanningDto = {
+      customerPriority: this.customerPriority(),
+      recievingCountry: this.recievingCountry()
+    }
 
-    this.productionPlanningService.productionPlanningsPost()
+    this.productionPlanningService.productionPlanningsPost(prodcutionPlanningDto)
       .subscribe(productionPlanningObj => {
         console.log(productionPlanningObj);
         for (let i = 0; i < this.articlesFormArray.length; i++) {
@@ -138,20 +143,18 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
         }
         let order: AddOrderDto;
 
-        if (this.additonalInformation() === '') {
+        if (this.editService.additonalInformation() === '') {
           order = {
-            customerName: this.customerName(),
-            createdBy: this.createdBy(),
-            amount: 1,
+            customerName: this.editService.customerName(),
+            createdBy: this.editService.createdByCS(),
             ppId: productionPlanningObj.id,
           };
         } else {
           order = {
-            customerName: this.customerName(),
-            createdBy: this.createdBy(),
-            amount: 1,
+            customerName: this.editService.customerName(),
+            createdBy: this.editService.createdByCS(),
             ppId: productionPlanningObj.id,
-            additionalInformation: this.additonalInformation()
+            additionalInformation: this.editService.additonalInformation()
           };
         }
 
@@ -160,9 +163,9 @@ export class NewProductionPlanningOrderPageComponent implements OnInit, OnChange
 
         this.orderService.ordersPost(order)
           .subscribe(x => {
-            this.orderId.set(x.id);
+            console.log('ORDER POSTED');
             this.editService.navigateToPath();
-          });
+          } );
       });
   }
 }

@@ -17,6 +17,8 @@ export interface ProductionPlanning {
     id?: number;
     approvedByPpCs?: boolean;
     approvedByPpPp?: boolean;
+    recievingCountry?: string | null;
+    customerPriority?: string;
     approvedByPpCsTime?: string | null;
     approvedByPpPpTime?: string | null;
     readonly articles?: Array<ArticlePP> | null;

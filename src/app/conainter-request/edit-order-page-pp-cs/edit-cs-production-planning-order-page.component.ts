@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddArticlePPDto, ArticlesPPService, ChecklistDto, ChecklistsService, EditOrderDto, EditPpPpArticleDto, OrderDto, OrdersService, ProductionPlanningsService } from '../../shared/swagger';
+import { AddArticlePPDto, ArticlesPPService, ChecklistDto, ChecklistsService, EditOrderCSDto, EditPpPpArticleDto, EditProductionPlanningDto, OrderDto, OrdersService, ProductionPlanningsService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -31,7 +31,6 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
       .subscribe(x => {
         if (x !== null && x !== undefined) {
           this.editService.currOrder.set(x);
-
           this.setOrderSignals();
           this.articlesPPService.articlesPPProductionPlanningIdGet(this.editService.currOrder().ppId)
             .subscribe(x => console.log(x));
@@ -61,12 +60,16 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   productionPlanningService = inject(ProductionPlanningsService);
   allChecklists = signal<ChecklistDto[]>([]);
 
+  customerPriority = signal('');
+  recievingCountry = signal('');
   isApprovedByPpCs = signal(false);
   isApprovedByPpPp = signal(false);
   myForm!: FormGroup;
   areArticlesValid = signal<boolean>(true);
+  isCustomerPriortityValid = computed(() => this.customerPriority().length === 1);
+  isRecievingCountryValid = computed(() => this.validationService.isAnyInputValid(this.recievingCountry()));
   isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.editService.customerName()));
-  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdBy()));
+  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdByCS()));
   isAllValid = computed(() =>
     this.isCustomerValid() &&
     this.isCreatedByValid() &&
@@ -133,6 +136,15 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   }
 
   saveOrder(): void {
+    let editProductionPlanning: EditProductionPlanningDto = {
+      customerPriority: this.customerPriority(),
+      recievingCountry: this.recievingCountry(),
+      id: this.editService.currOrder().ppId
+    }
+
+    this.productionPlanningService.productionPlanningsPut(editProductionPlanning)
+      .subscribe(_ => _);
+
     this.articlesPPService.articlesPPProductionPlanningIdDelete(this.editService.currOrder().ppId)
       .subscribe(x => {
         for (let i = 0; i < this.articlesFormArray.length; i++) {
@@ -212,14 +224,14 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
         }
       });
 
-    let editOrderDto: EditOrderDto = {
+    let editOrderDto: EditOrderCSDto = {
       id: this.editService.currOrder().id,
       customerName: this.editService.customerName(),
-      createdBy: this.editService.createdBy(),
+      createdBy: this.editService.createdByCS(),
       additionalInformation: this.editService.additonalInformation()
     }
 
-    this.orderService.ordersPut(editOrderDto)
+    this.orderService.ordersOrderCSPut(editOrderDto)
       .subscribe(_ => _);
   }
 
@@ -243,6 +255,8 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
   setProductionPlanningSignal() {
     this.productionPlanningService.productionPlanningsIdGet(this.editService.currOrder().ppId)
       .subscribe(x => {
+        this.customerPriority.set(x.customerPriority);
+        this.recievingCountry.set(x.recievingCountry);
         this.isApprovedByPpCs.set(x.approvedByPpCs);
         this.isApprovedByPpPp.set(x.approvedByPpPp);
       });

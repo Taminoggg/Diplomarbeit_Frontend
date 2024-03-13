@@ -3,6 +3,7 @@
     <input (input)="updateOrders()" [ngSignal]="fromDate" format="dd.MM.yyyy" type="date">
     <label>{{'to' | transloco}}</label>
     <input (input)="updateOrders()" [ngSignal]="toDate" format="dd.MM.yyyy" type="date">
+    @if (allOrders().length > 0) {
     <table>
         <tr>
             <th>{{'order' | transloco}}</th>
@@ -19,13 +20,19 @@
             <td>{{getTimeForApprovedBy(order.id, 'tl')}}</td>
         </tr>
         }
+
         <tr>
             <td>{{'avg' | transloco}}</td>
             <td>{{getAvgForOrder('messages')}}</td>
             <td>{{getAvgForOrder('files')}}</td>
             <td>{{getAvgTimeToGetApprovedBy()}}</td>
         </tr>
+
     </table>
+    }@else {
+    <br>
+    <label>{{'no-orders-found' | transloco}}</label>
+    }
 
     <div class="table-row">
         <div class="table-group">

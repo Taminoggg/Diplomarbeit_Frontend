@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArticlesCRService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditOrderDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
+import { ArticlesCRService, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, EditOrderCSDto, EditOrderSDDto, EditTlInqueryDto, OrderDto, OrdersService, TlinquiriesService, TlinquiryDto } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -38,13 +38,13 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
       .subscribe(x => {
         if (x !== null && x !== undefined) {
           this.editService.currOrder.set(x);
-          console.log(this.editService.currOrder());
           this.setOrderSignals();
           this.tlinquiriesService.tlinquiriesIdGet(this.editService.tlId())
             .subscribe(x => {
               if (x !== null && x !== undefined) {
                 this.currTlInquiry.set(x);
                 this.setTlInquirySignals();
+                console.log('approved:' + this.currTlInquiry().approvedByCrTl);
               }
             });
 
@@ -92,7 +92,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     containersizeA: 0,
     containersizeB: 0,
     containersizeHc: 0,
-    freeDetention: false,
+    freeDetention: 0,
     thctb: false,
     readyToLoad: '',
     loadingPlattform: '',
@@ -104,20 +104,16 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   currTlInquiry = signal<TlinquiryDto>(
     {
       id: 1,
-      inquiryNumber: 1,
       sped: 'Loading',
       country: 'Loading',
       acceptingPort: 'Loading',
       expectedRetrieveWeek: '17.12.2023',
-      weightInKg: 1,
       invoiceOn: '17.12.2023',
       retrieveDate: '17.12.2023',
-      isContainer40: false,
-      isContainerHc: false,
       retrieveLocation: 'Loading',
-      debtCapitalGeneralForerunEur: 1,
-      debtCapitalMainDol: 1,
-      debtCapitalTrailingDol: 1,
+      scGeneral: 1,
+      scMain: 1,
+      scTrail: 1,
       portOfDeparture: 'Loading',
       ets: '17.12.2023',
       eta: '17.12.2023',
@@ -135,63 +131,55 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   containersizeA = signal(0);
   containersizeB = signal(0);
   containersizeHc = signal(0);
-  freeDetention = signal(false);
+  freeDetention = signal(0);
   thctb = signal(false);
   readyToLoad = signal('');
   loadingPlattform = signal('');
   isFastLine = signal(false);
   isDirectLine = signal(false);
-  inquiryNumber = signal(0);
   sped = signal('');
   country = signal('');
   acceptingPort = signal('');
   expectedRetrieveWeek = signal('');
-  weightInKg = signal(0);
   invoiceOn = signal('');
   retrieveDate = signal('');
-  isContainer40 = signal(false);
-  isContainerHc = signal(false);
   retrieveLocation = signal('');
-  debtCapitalGeneralForerunEur = signal(0);
-  debtCapitalMainDol = signal(0);
-  debtCapitalTrailingDol = signal(0);
+  scGeneral = signal(0);
+  scMain = signal(0);
+  scTrail = signal(0);
   portOfDeparture = signal('');
   ets = signal('');
   eta = signal('');
   boat = signal('');
   myForm!: FormGroup;
-  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.editService.status()));
-  isInquiryNumberValid = computed(() => this.validationService.isNumberValid(this.inquiryNumber()));
+  isCreatedBySDValid = computed(() => this.validationService.isNameStringValid(this.editService.createdBySD()));
   isSpedValid = computed(() => this.validationService.isAnyInputValid(this.sped()));
   isCountryValid = computed(() => this.validationService.isNameStringValid(this.country()));
   isAcceptingPortValid = computed(() => this.validationService.isAnyInputValid(this.acceptingPort()));
   isExpectedRetrieveWeekValid = computed(() => this.validationService.isDateValid(this.expectedRetrieveWeek()));
-  isWeigthInKgValid = computed(() => this.validationService.isNumberValid(this.weightInKg()));
   isInvoiceOnValid = computed(() => this.validationService.isDateValid(this.invoiceOn()));
   isRetrieveDateValid = computed(() => this.validationService.isDateValid(this.retrieveDate()));
   isRetrieveLocationValid = computed(() => this.validationService.isAnyInputValid(this.retrieveLocation()));
-  isDebtCapitalGeneralForerunEurValid = computed(() => this.validationService.isNumberValid(this.debtCapitalGeneralForerunEur()));
-  isDebtCapitalMainDolValid = computed(() => this.validationService.isNumberValid(this.debtCapitalMainDol()));
-  isDebtCapitalTrailingDolValid = computed(() => this.validationService.isNumberValid(this.debtCapitalTrailingDol()));
+  isSCGeneralValid = computed(() => this.validationService.isNumberValid(this.scGeneral()));
+  isSCMainValid = computed(() => this.validationService.isNumberValid(this.scMain()));
+  isSCTraiValid = computed(() => this.validationService.isNumberValid(this.scTrail()));
   isPortOfDepartureValid = computed(() => this.validationService.isAnyInputValid(this.portOfDeparture()));
   isEtsValid = computed(() => this.validationService.isDateValid(this.ets()));
   isEtaValid = computed(() => this.validationService.isDateValid(this.eta()));
   isBoatValid = computed(() => this.validationService.isAnyInputValid(this.boat()));
   isAllValid = computed(() => {
     return (
-      this.isStatusValid() &&
-      this.isInquiryNumberValid() &&
+      this.isCreatedBySDValid() &&
       this.isSpedValid() &&
       this.isCountryValid() &&
       this.isAcceptingPortValid() &&
       this.isExpectedRetrieveWeekValid() &&
-      this.isWeigthInKgValid() &&
       this.isInvoiceOnValid() &&
       this.isRetrieveDateValid() &&
       this.isRetrieveLocationValid() &&
-      this.isDebtCapitalGeneralForerunEurValid() &&
-      this.isDebtCapitalMainDolValid() &&
-      this.isDebtCapitalTrailingDolValid() &&
+      this.isSCGeneralValid() &&
+      this.isSCMainValid() &&
+      this.isSCTraiValid() &&
       this.isPortOfDepartureValid() &&
       this.isEtsValid() &&
       this.isEtaValid() &&
@@ -225,26 +213,22 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   prepareSaveOrder() {
-    const order: EditOrderDto = {
-      customerName: this.editService.customerName(),
-      createdBy: this.editService.createdBy(),
-      amount: this.editService.amount(),
-      id: this.id,
-      additionalInformation: this.editService.additonalInformation() === '' ? undefined : this.editService.additonalInformation()
-    };
+    let editOrderSDDto: EditOrderSDDto = {
+      id: this.editService.currOrder().id,
+      additionalInformation: this.editService.additonalInformation(),
+      createdBy: this.editService.createdBySD()
+    }
 
-    return order;
+    this.orderService.ordersOrderSDPut(editOrderSDDto)
+      .subscribe(x => x);
   }
 
   saveOrder(): void {
-    let order = this.prepareSaveOrder();
+    this.prepareSaveOrder();
 
-    this.orderService.ordersPut(order)
-      .subscribe(x => {
-        this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('tl-in-progress'))
-          .subscribe(_ => _);
-        this.saveTlInquery();
-      });
+    this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('tl-in-progress'))
+      .subscribe(_ => _);
+    this.saveTlInquery();
   }
 
   removeArticle(index: number) {
@@ -252,24 +236,19 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   saveTlInquery() {
-    console.log(this.retrieveDate());
     let editedTlInquiry: EditTlInqueryDto =
     {
       id: this.currTlInquiry().id,
-      inquiryNumber: this.inquiryNumber(),
       sped: this.sped(),
       country: this.country(),
       acceptingPort: this.acceptingPort(),
       expectedRetrieveWeek: this.expectedRetrieveWeek(),
-      weightInKg: this.weightInKg(),
       invoiceOn: this.invoiceOn(),
       retrieveDate: this.retrieveDate(),
-      isContainer40: this.isContainer40(),
-      isContainerHc: this.isContainerHc(),
       retrieveLocation: this.retrieveLocation(),
-      debtCapitalGeneralForerunEur: this.debtCapitalGeneralForerunEur(),
-      debtCapitalMainDol: this.debtCapitalMainDol(),
-      debtCapitalTrailingDol: this.debtCapitalTrailingDol(),
+      scGeneral: this.scGeneral(),
+      scMain: this.scMain(),
+      scTrail: this.scTrail(),
       portOfDeparture: this.portOfDeparture(),
       ets: this.ets(),
       eta: this.eta(),
@@ -282,16 +261,13 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   publish() {
-    let order = this.prepareSaveOrder();
+    this.prepareSaveOrder();
 
-    this.orderService.ordersPut(order)
-      .subscribe(_ => {
-        this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('edited-by-tl'))
-          .subscribe(_ => _);
-        this.saveTlInquery();
-        this.tlinquiriesService.tlinquiriesApproveCrTlPut(this.editService.createEditStatusDto(this.editService.currOrder().tlid, true))
-          .subscribe(x => this.editService.navigateToPath());
-      });
+    this.orderService.ordersStatusPut(this.editService.createEditOrderStatusDto('edited-by-tl'))
+      .subscribe(_ => _);
+    this.saveTlInquery();
+    this.tlinquiriesService.tlinquiriesApproveCrTlPut(this.editService.createEditStatusDto(this.editService.currOrder().tlid, true))
+      .subscribe(x => this.editService.navigateToPath());
   }
 
   setOrderSignals(): void {
@@ -315,20 +291,17 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   }
 
   setTlInquirySignals(): void {
-    this.inquiryNumber.set(this.currTlInquiry().inquiryNumber);
+    this.isApprovedByTl.set(this.currTlInquiry().approvedByCrTl);
     this.sped.set(this.currTlInquiry().sped);
     this.country.set(this.currTlInquiry().country);
     this.acceptingPort.set(this.currTlInquiry().acceptingPort);
     this.expectedRetrieveWeek.set(this.currTlInquiry().expectedRetrieveWeek);
-    this.weightInKg.set(this.currTlInquiry().weightInKg);
     this.invoiceOn.set(this.currTlInquiry().invoiceOn);
     this.retrieveDate.set(this.currTlInquiry().retrieveDate);
-    this.isContainer40.set(this.currTlInquiry().isContainer40);
-    this.isContainerHc.set(this.currTlInquiry().isContainerHc);
     this.retrieveLocation.set(this.currTlInquiry().retrieveLocation);
-    this.debtCapitalGeneralForerunEur.set(this.currTlInquiry().debtCapitalGeneralForerunEur);
-    this.debtCapitalMainDol.set(this.currTlInquiry().debtCapitalMainDol);
-    this.debtCapitalTrailingDol.set(this.currTlInquiry().debtCapitalTrailingDol);
+    this.scGeneral.set(this.currTlInquiry().scGeneral);
+    this.scMain.set(this.currTlInquiry().scMain);
+    this.scTrail.set(this.currTlInquiry().scTrail);
     this.portOfDeparture.set(this.currTlInquiry().portOfDeparture);
     this.ets.set(this.currTlInquiry().ets);
     this.eta.set(this.currTlInquiry().eta);

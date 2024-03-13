@@ -14,20 +14,16 @@ import { Order } from './order';
 
 export interface Tlinquiry { 
     id?: number;
-    inquiryNumber?: number;
     sped?: string | null;
     country?: string | null;
     acceptingPort?: string | null;
     expectedRetrieveWeek?: string | null;
-    weightInKg?: number;
     invoiceOn?: string | null;
     retrieveDate?: string | null;
-    isContainer40?: boolean;
-    isContainerHc?: boolean;
     retrieveLocation?: string | null;
-    debtCapitalGeneralForerunEur?: number;
-    debtCapitalMainDol?: number;
-    debtCapitalTrailingDol?: number;
+    scGeneral?: number;
+    scMainRun?: number;
+    scTrail?: number;
     portOfDeparture?: string | null;
     ets?: string | null;
     eta?: string | null;

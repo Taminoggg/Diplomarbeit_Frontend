@@ -23,11 +23,11 @@ export interface ArticlePP {
     nozzle?: string | null;
     productionOrder?: string | null;
     plannedOrder?: string | null;
+    plant?: string | null;
     inquiryForFixedOrder?: boolean;
     inquiryForQuotation?: boolean;
     pallets?: number;
     productionPlanningId?: number;
-    plant?: string | null;
     productionPlanning?: ProductionPlanning;
 }
 

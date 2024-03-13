@@ -56,8 +56,10 @@ export class SettingsComponent implements OnInit {
       canceled: false,
       status: 'Test',
       customerName: 'Test',
-      createdBy: 'Test',
-      amount: 1,
+      createdByCS: 'Test',
+      createdBySD: 'Test',
+      finishedOn: '',
+      createdOn: '',
       lastUpdated: 'Test',
       checklistId: 1,
       csid: 1,
@@ -78,9 +80,16 @@ export class SettingsComponent implements OnInit {
 
     const filteredProperties = Object.keys(orderDto).filter(key => {
       const value = key as keyof OrderDto;
-
       if (!value.toLowerCase().includes('time') && !value.toLowerCase().includes('id') && !value.toLowerCase().includes('canceled') && !value.toLowerCase().includes('successfullyfinished') && !value.toLowerCase().includes('additionalinformation') && !value.toLowerCase().includes('approved')) {
-        return !this.dataService.tableHeaders.some(header => header.value === value);
+        if (this.htmlContent === 'productionPlanningPP' || this.htmlContent === 'productionPlanningCS') {
+          if(!value.toLowerCase().includes('amount') && !value.toLowerCase().includes('sped') && !value.toLowerCase().includes('country')&& !value.toLowerCase().includes('abnumber') && !value.toLowerCase().includes('readytoload')){
+            return !this.dataService.tableHeaders.some(header => header.value === value);
+          }else{
+            return false;
+          }
+        } else {
+          return !this.dataService.tableHeaders.some(header => header.value === value);
+        }
       }
       return false;
     });

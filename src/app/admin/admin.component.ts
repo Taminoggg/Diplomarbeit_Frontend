@@ -38,7 +38,6 @@ export class AdminComponent implements OnInit {
   filesForOrder = new BehaviorSubject<Map<number, number>>(new Map<number, number>());
   timeToGetApprovedByTl = new BehaviorSubject<Map<number, string>>(new Map<number, string>());
   timeToGetApprovedByPpPp = new BehaviorSubject<Map<number, string>>(new Map<number, string>());
-
   messageConversationService = inject(MessageConversationsService);
   fileService = inject(FilesService);
 
@@ -52,7 +51,7 @@ export class AdminComponent implements OnInit {
   updateOrders() {
     this.orderService.ordersGet()
       .subscribe(x => {
-        this.allOrders.set(this.dataService.allOrders());
+        this.allOrders.set(x);
 
         const fromParts = this.fromDate().split("-");
         const toParts = this.toDate().split("-");

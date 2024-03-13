@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, EventEmitter, inject, OnInit, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AddArticleCRDto, AddCsinquiryDto, AddOrderDto, ChecklistDto, ChecklistsService, CsinquiriesService, CsinquiryDto, OrdersService, TlinquiriesService, AddChecklistDto, StepsService, AddStepDto, ArticlesCRService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
@@ -7,6 +7,7 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ValidationService } from '../../shared/validation.service';
+import { EditService } from '../../edit.service';
 
 @Component({
   selector: 'app-new-order-page',
@@ -20,13 +21,14 @@ export class NewContainerOrderPageComponent implements OnInit {
     this.checklistService.checklistsGeneratedByAdminGet()
       .subscribe(x => {
         this.allCheckliststs.set(x);
-        this.checklistId.set(this.allCheckliststs().first().id);
-      } );
+        this.editService.checklistId.set(this.allCheckliststs().first().id);
+      });
 
     this.myForm = this.fb.group({
       articles: this.fb.array([])
     });
 
+    this.editService.navigationPath = '/container-request-page/containerRequestCS';
     this.addArticle();
   }
 
@@ -38,22 +40,13 @@ export class NewContainerOrderPageComponent implements OnInit {
   stepsService = inject(StepsService);
   validationService = inject(ValidationService);
   checklistService = inject(ChecklistsService);
+  editService = inject(EditService);
   csInquiryService = inject(CsinquiriesService);
   articlesCRService = inject(ArticlesCRService);
   tlInquiryService = inject(TlinquiriesService);
   cdr = inject(ChangeDetectorRef);
 
   allCheckliststs = signal<ChecklistDto[]>([]);
-
-  orderId = signal(1);
-  csId = signal(1);
-  tlId = signal(1);
-  customerName = signal('Customer');
-  createdBy = signal('CreatedBy');
-  status = signal('Status');
-  amount = signal(1);
-  checklistId = signal(1);
-  additonalInformation = signal('');
 
   //CsData
   container = signal('Test');
@@ -63,8 +56,6 @@ export class NewContainerOrderPageComponent implements OnInit {
   containersizeA = signal(1);
   containersizeB = signal(1);
   containersizeHc = signal(1);
-  freeDetention = signal(false);
-  thctb = signal(false);
   readyToLoad = signal('17.12.2023');
   loadingPlattform = signal('Test');
   fastLine = signal(false);
@@ -73,15 +64,13 @@ export class NewContainerOrderPageComponent implements OnInit {
   isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
   isIncotermValid = computed(() => this.validationService.isAnyInputValid(this.incoterm()));
   isLoadingPlattfromValid = computed(() => this.validationService.isAnyInputValid(this.readyToLoad()));
-  isCustomerValid = computed(() => this.validationService.isNameStringValid(this.customerName()));
-  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.createdBy()));
+  isCustomerValid = computed(() => this.validationService.isNameStringValid(this.editService.customerName()));
+  isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdByCS()));
   isAbNumberValid = computed(() => this.validationService.isNumberValid(this.abnumber()));
   isGrossWeightInKgValid = computed(() => this.validationService.isNumberValid(this.grossWeightInKg()));
-  isStatusValid = computed(() => this.validationService.isAnyInputValid(this.status()));
-  isAmountValid = computed(() => this.validationService.isNumberValid(this.amount()));
-  isContainerSizeAValid = computed(() => this.validationService.isNumberValid(this.containersizeA()));
-  isContainerSizeBValid = computed(() => this.validationService.isNumberValid(this.containersizeB()));
-  isContainerSizeHcValid = computed(() => this.validationService.isNumberValid(this.containersizeHc()));
+  isContainerSizeAValid = computed(() => this.containersizeA() >= 0);
+  isContainerSizeBValid = computed(() => this.containersizeB() >= 0);
+  isContainerSizeHcValid = computed(() => this.containersizeHc() >= 0);
   areArticleNumbersValid = signal<boolean>(true);
   isAllValid = computed(() => {
     return (
@@ -92,11 +81,9 @@ export class NewContainerOrderPageComponent implements OnInit {
       this.isCreatedByValid() &&
       this.isAbNumberValid() &&
       this.isGrossWeightInKgValid() &&
-      this.isStatusValid() &&
-      this.isAmountValid() &&
       this.isContainerSizeAValid() &&
       this.isContainerSizeBValid() &&
-      this.isContainerSizeHcValid() && 
+      this.isContainerSizeHcValid() &&
       this.areArticleNumbersValid()
     );
   });
@@ -108,7 +95,7 @@ export class NewContainerOrderPageComponent implements OnInit {
         return;
       }
 
-      if ((this.fastLine() === true && this.getFormGroup(i).get('palletAmount')!.value < 1) || this.directLine() === true && this.getFormGroup(i).get('palletAmount')!.value < 1) {
+      if ((this.fastLine() === true && this.getFormGroup(i).get('palletAmount')!.value < 1) || (this.directLine() === true && this.getFormGroup(i).get('palletAmount')!.value < 1)) {
         this.areArticleNumbersValid.set(false);
         return;
       }
@@ -151,13 +138,29 @@ export class NewContainerOrderPageComponent implements OnInit {
     console.log('Entered Articles:', articles);
   }
 
-  containerRequestPage(): void {
-    this.router.navigateByUrl('/container-request-page/containerRequestCS');
+  @Output() freeDurationSelected = new EventEmitter<number>();
+  @Output() thcSelected = new EventEmitter<boolean>();
+  durations = [10, 14, 21, 0];
+  thcs = [true, false];
+  selectedThc: boolean;
+  freeDetention: number;
+
+  constructor() {
+    this.freeDetention = this.durations[0];
+    this.selectedThc = this.thcs[0];
+    this.emitDuration();
+  }
+
+  emitThcs() {
+    this.thcSelected.emit(this.selectedThc);
+  }
+
+  emitDuration() {
+    this.freeDurationSelected.emit(this.freeDetention);
   }
 
   saveOrder(): void {
-    console.log('posted clicked');
-    console.log(this.readyToLoad().toString());
+    console.log('saving order');
 
     let csInquiry: AddCsinquiryDto = {
       container: this.container(),
@@ -167,8 +170,8 @@ export class NewContainerOrderPageComponent implements OnInit {
       containersizeA: this.containersizeA(),
       containersizeB: this.containersizeB(),
       containersizeHc: this.containersizeHc(),
-      freeDetention: this.freeDetention(),
-      thctb: this.thctb(),
+      freeDetention: this.freeDetention,
+      thctb: this.selectedThc,
       readyToLoad: this.readyToLoad(),
       loadingPlattform: this.loadingPlattform(),
       isDirectLine: this.directLine(),
@@ -196,65 +199,60 @@ export class NewContainerOrderPageComponent implements OnInit {
           .subscribe(tlInquiryObj => {
             let order: AddOrderDto;
 
-            let checklistDto:AddChecklistDto = {
-              id: this.checklistId(),
+            let checklistDto: AddChecklistDto = {
+              id: this.editService.checklistId(),
               generatedByAdmin: false,
-              checklistname: this.allCheckliststs().single(x => x.id == this.checklistId()).checklistname
+              checklistname: this.allCheckliststs().single(x => x.id == this.editService.checklistId()).checklistname
             }
 
             this.checklistService.checklistsPost(checklistDto)
-            .subscribe(currChecklist => {
-              console.log(csInquiryObj.id);
-              if(this.additonalInformation() === ''){
-                order = {
-                  customerName: this.customerName(),
-                  createdBy: this.createdBy(),
-                  amount: this.amount(),
-                  checklistId: currChecklist.id,
-                  csId: csInquiryObj.id,
-                  tlId: tlInquiryObj.id
-                };
-              }else{
-                order = {
-                  customerName: this.customerName(),
-                  createdBy: this.createdBy(),
-                  amount: this.amount(),
-                  checklistId: this.checklistId(),
-                  csId: csInquiryObj.id,
-                  tlId: tlInquiryObj.id,
-                  additionalInformation: this.additonalInformation()
-                };
-              }
-  
-              console.log('Posting order');
+              .subscribe(currChecklist => {
+                console.log('customerName:');
+                console.log(this.editService.customerName());
+                console.log(this.editService.createdByCS());
+                if (this.editService.additonalInformation() === '') {
+                  order = {
+                    customerName: this.editService.customerName(),
+                    createdBy: this.editService.createdByCS(),
+                    checklistId: currChecklist.id,
+                    csId: csInquiryObj.id,
+                    tlId: tlInquiryObj.id
+                  };
+                } else {
+                  order = {
+                    customerName: this.editService.customerName(),
+                    createdBy: this.editService.createdByCS(),
+                    checklistId: this.editService.checklistId(),
+                    csId: csInquiryObj.id,
+                    tlId: tlInquiryObj.id,
+                    additionalInformation: this.editService.additonalInformation()
+                  };
+                }
 
-              console.log('Checklist:');
-              console.log(currChecklist.checklistname);
-              console.log(currChecklist.id);
+                console.log('Checklist:');
+                console.log(currChecklist.checklistname);
+                console.log(currChecklist.id);
 
-              this.stepsService.stepsIdGet(currChecklist.id)
-              .subscribe(x => x.forEach(x => console.log(x)));
+                this.stepsService.stepsIdGet(currChecklist.id)
+                  .subscribe(x => x.forEach(x => console.log(x)));
 
-              this.stepsService.stepsIdGet(this.checklistId())
-              .subscribe(checklistArray => checklistArray.forEach(step => {
-                let addStepDto:AddStepDto = {
-                  stepNumber:step.stepNumber!,
-                  stepName: step.stepName!,
-                  stepDescription: step.stepDescription!,
-                  checklistId: currChecklist.id
-                };
-                console.log('Step to add to checklist:');
-                console.log(addStepDto);
-                this.stepsService.stepsPost(addStepDto)
-                .subscribe(() => console.log('new steps posted'));
-              }));
-  
-              this.orderService.ordersPost(order)
-                .subscribe(x => {
-                  this.orderId.set(x.id);
-                  this.containerRequestPage();
-                });
-            });
+                this.stepsService.stepsIdGet(this.editService.checklistId())
+                  .subscribe(checklistArray => checklistArray.forEach(step => {
+                    let addStepDto: AddStepDto = {
+                      stepNumber: step.stepNumber!,
+                      stepName: step.stepName!,
+                      stepDescription: step.stepDescription!,
+                      checklistId: currChecklist.id
+                    };
+                    console.log('Step to add to checklist:');
+                    console.log(addStepDto);
+                    this.stepsService.stepsPost(addStepDto)
+                      .subscribe(() => console.log('new steps posted'));
+                  }));
+
+                this.orderService.ordersPost(order)
+                  .subscribe(x => this.editService.navigateToPath());
+              });
           });
       });
   }

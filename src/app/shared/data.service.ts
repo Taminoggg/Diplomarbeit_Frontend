@@ -24,19 +24,10 @@ export class DataService {
   filterByCreatedByName = ''
   showFinished = false;
   showCanceled = false;
+  dataLoading = signal(false);
 
   getOrdersOrderedBy(orderString: string): void {
     switch (orderString) {
-
-      case "amount":
-        if (this.lastSortedBy() === "amount") {
-          this.lastSortedBy.set('');
-          this.allOrders().orderByDescending(x => x.amount);
-        } else {
-          this.lastSortedBy.set('amount');
-          this.allOrders().orderBy(x => x.amount);
-        }
-        break;
 
       case "sped":
         if (this.lastSortedBy() === "sped") {
@@ -48,7 +39,7 @@ export class DataService {
         }
         break;
 
-      case "customer":
+      case "customerName":
         if (this.lastSortedBy() === "customer") {
           this.lastSortedBy.set('');
           this.allOrders().orderByDescending(x => x.customerName);
@@ -58,23 +49,23 @@ export class DataService {
         }
         break;
 
-      case "createdBy":
-        if (this.lastSortedBy() === "createdBy") {
-          this.lastSortedBy.set('');
-          this.allOrders().orderByDescending(x => x.createdBy);
-        } else {
-          this.lastSortedBy.set('createdBy');
-          this.allOrders().orderBy(x => x.createdBy);
-        }
-        break;
-
-      case "status":
+        case "status":
         if (this.lastSortedBy() === "status") {
           this.lastSortedBy.set('');
           this.allOrders().orderByDescending(x => x.status);
         } else {
           this.lastSortedBy.set('status');
           this.allOrders().orderBy(x => x.status);
+        }
+        break;
+
+      case "createdBy":
+        if (this.lastSortedBy() === "createdBy") {
+          this.lastSortedBy.set('');
+          this.allOrders().orderByDescending(x => x.createdByCS);
+        } else {
+          this.lastSortedBy.set('createdBy');
+          this.allOrders().orderBy(x => x.createdByCS);
         }
         break;
 
@@ -88,7 +79,7 @@ export class DataService {
         }
         break;
 
-      case "abNr":
+      case "abNumber":
         if (this.lastSortedBy() === "abNr") {
           this.lastSortedBy.set('');
           this.allOrders().orderByDescending(x => x.abNumber);
@@ -111,6 +102,7 @@ export class DataService {
   }
 
   refreshPage(selectedFilter: string, value: string, filteredBy: string, filterByCreatedByName: string, showFinished: boolean, showCanceled: boolean): void {
+    this.dataLoading.set(true);
     console.log("GETTING ORDERS: selectedFilter: " + selectedFilter + " value: " + value);
     if (value === "") {
       selectedFilter = 'none';
@@ -219,13 +211,6 @@ export class DataService {
             this.getDetailsForOrder(x);
           });
         break;
-      case "amount":
-        console.log('case amount');
-        this.orderService.ordersAmountGet(parseInt(value))
-          .subscribe(x => {
-            this.getDetailsForOrder(x);
-          });
-        break;
       case "lastUpdated":
         console.log('case last udpated');
         this.orderService.ordersLastUpdatedGet(value)
@@ -257,7 +242,7 @@ export class DataService {
     this.orderIds = [];
     this.allOrders.set(x);
 
-    this.allOrders.set(this.allOrders().filter(x => x.createdBy.toLowerCase().includes(this.filterByCreatedByName.toLowerCase())));
+    this.allOrders.set(this.allOrders().filter(x => x.createdByCS.toLowerCase().includes(this.filterByCreatedByName.toLowerCase())));
 
     if (!this.showCanceled) {
       this.allOrders.set(this.allOrders().filter(x => x.canceled === false));
@@ -294,6 +279,8 @@ export class DataService {
     this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.articlesForOrder.set(order.id, x.map(x => x.articleNumber.toString()))));
     this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.plantsForOrder.set(order.id, x.map(x => x.plant))));
     this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.factoriesForOrder.set(order.id, x.map(x => x.factory))));
+
+    this.dataLoading.set(false);
   }
 
   filterForApprovedByPpCs() {

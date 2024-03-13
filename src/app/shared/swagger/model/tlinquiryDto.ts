@@ -13,20 +13,16 @@
 
 export interface TlinquiryDto { 
     id: number;
-    inquiryNumber: number;
     sped: string;
     country: string;
     acceptingPort: string;
     expectedRetrieveWeek: string;
-    weightInKg: number;
     invoiceOn: string;
     retrieveDate: string;
-    isContainer40: boolean;
-    isContainerHc: boolean;
     retrieveLocation: string;
-    debtCapitalGeneralForerunEur: number;
-    debtCapitalMainDol: number;
-    debtCapitalTrailingDol: number;
+    scGeneral: number;
+    scMain: number;
+    scTrail: number;
     portOfDeparture: string;
     ets: string;
     eta: string;

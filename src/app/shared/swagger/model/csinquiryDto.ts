@@ -20,7 +20,7 @@ export interface CsinquiryDto {
     containersizeA: number;
     containersizeB: number;
     containersizeHc: number;
-    freeDetention: boolean;
+    freeDetention: number;
     thctb: boolean;
     isFastLine: boolean;
     isDirectLine: boolean;

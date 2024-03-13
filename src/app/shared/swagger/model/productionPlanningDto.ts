@@ -17,5 +17,7 @@ export interface ProductionPlanningDto {
     approvedByPpPp: boolean;
     approvedByPpCsTime: string;
     approvedByPpPpTime: string;
+    recievingCountry: string;
+    customerPriority: string;
 }
 

@@ -16,6 +16,11 @@
   margin-bottom: 15px;
 }
 
+.simple-row {
+  display: flex;
+  margin-bottom: 15px;
+}
+
 .form-group {
   flex: 1;
   margin-right: 10px;
@@ -157,4 +162,13 @@ select {
 
 .not-editable{
   background-color: #f0f0f0
+}
+
+.simple-margin{
+  margin-left: 5%;
+}
+
+.simple-margin-with-top{
+  margin-top: 1%;
+  margin-left: 5%;
 }

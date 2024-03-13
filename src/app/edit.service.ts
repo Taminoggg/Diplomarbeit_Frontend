@@ -15,20 +15,22 @@ export class EditService {
   csId = signal(0);
   tlId = signal(0);
   customerName = signal('');
-  createdBy = signal('');
+  createdByCS = signal('');
+  createdBySD = signal('');
   status = signal('');
-  amount = signal(0);
   checklistId = signal(0);
   isApprovedByPpPp = signal(false);
   additonalInformation = signal('');
+  createdOn = signal('');
+  finishedOn = signal('');
   navigationPath = '';
   currOrder = signal<OrderDto>(
     {
       id: 1,
       status: 'Test',
       customerName: 'Test',
-      createdBy: 'Test',
-      amount: 0,
+      createdByCS: 'Test',
+      createdBySD: 'Test',
       successfullyFinished: false,
       canceled: false,
       lastUpdated: 'Test',
@@ -40,7 +42,9 @@ export class EditService {
       abNumber: 1,
       country: 'Test',
       sped: 'Test',
-      additionalInformation: ''
+      additionalInformation: '',
+      createdOn: '',
+      finishedOn: ''
     });
 
   navigateToPath(): void {
@@ -69,14 +73,18 @@ export class EditService {
     this.csId.set(currOrder.csid);
     this.tlId.set(currOrder.tlid);
     this.customerName.set(currOrder.customerName);
-    this.createdBy.set(currOrder.createdBy);
+    this.createdByCS.set(currOrder.createdByCS);
+    this.createdBySD.set(currOrder.createdBySD);
     this.status.set(currOrder.status);
-    this.amount.set(currOrder.amount);
+    this.createdOn.set(currOrder.createdOn);
+    this.finishedOn.set(currOrder.finishedOn);
     this.checklistId.set(currOrder.checklistId);
     let additonalInformation = currOrder.additionalInformation
     if (additonalInformation != null && additonalInformation != undefined) {
       this.additonalInformation.set(additonalInformation);
     }
+    console.log('orderID:');
+    console.log(this.currOrder().id);
   }
 
   createEditStatusDto(id:number, status:boolean): EditStatusDto {

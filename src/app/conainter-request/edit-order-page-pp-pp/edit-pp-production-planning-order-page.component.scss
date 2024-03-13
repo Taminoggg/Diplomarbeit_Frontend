@@ -110,6 +110,13 @@ select {
   margin-top: 15px;
 }
 
+.border {
+  padding: 10px; 
+  border-color: #3498db; 
+  border-style: solid;
+  border-width: 100px;
+}
+
 .error-message {
   position: absolute;
   color: red;

@@ -9,6 +9,20 @@
       <div class="form-group">
         <div class="header-container">
           <div>
+            <label>{{'created-by' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isCreatedByValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
+        <input [ngSignal]="editService.createdByCS" type="text">
+      </div>
+
+      <div class="form-group">
+        <div class="header-container">
+          <div>
             <label>{{'customer' | transloco}}</label>
           </div>
           <div>
@@ -18,59 +32,6 @@
           </div>
         </div>
         <input [ngSignal]="editService.customerName" type="text">
-      </div>
-
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'created-by' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isCreatedByValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input [ngSignal]="editService.createdBy" type="text">
-      </div>
-
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'amount' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isAmountValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input min="1" max="100" [ngSignal]="editService.amount" type="number">
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label>{{'checklist' | transloco}}</label>
-        <select #currChecklist (change)="editService.checklistId.set(+currChecklist.value)">
-          @for (currChecklist of allChecklists(); track $index) {
-          <option value="{{currChecklist.id}}">{{currChecklist.checklistname}}</option>
-          }
-        </select>
-      </div>
-
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'loading-plattform' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isLoadingPlattfromValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input [ngSignal]="loadingPlattform" type="text">
       </div>
 
       <div class="form-group">
@@ -90,15 +51,59 @@
       <div class="form-group">
         <div class="header-container">
           <div>
-            <label>{{'gross-weight-in-kg' | transloco}}</label>
+            <label>{{'incoterm' | transloco}}</label>
           </div>
           <div>
-            @if(!isGrossWeightInKgValid()){
+            @if(!isIncotermValid()){
             <label class="error-message">{{'simple-error' | transloco}}</label>
             }
           </div>
         </div>
-        <input [ngSignal]="grossWeightInKg" type="number">
+        <input [ngSignal]="incoterm" type="text">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>{{'checklist' | transloco}}</label>
+        <select #currChecklist (change)="editService.checklistId.set(+currChecklist.value)">
+          @for (currChecklist of allChecklists(); track $index) {
+          <option value="{{currChecklist.id}}">{{currChecklist.checklistname}}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <div class="header-container">
+          <div>
+            <label>{{'ready-to-load' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isReadyToLoadValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
+        <input [ngSignal]="readyToLoad" type="date" format="dd.MM.yyyy">
+      </div>
+
+      <div class="form-group">
+        <div class="header-container">
+          <div>
+            <label>{{'loading-plattform' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isLoadingPlattfromValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
+        <input [ngSignal]="loadingPlattform" type="text">
+      </div>
+
+      <div class="form-group">
+        <label>{{'additional-text' | transloco}}</label>
+        <input [ngSignal]="editService.additonalInformation" type="text">
       </div>
     </div>
 
@@ -148,68 +153,64 @@
       <div class="form-group">
         <div class="header-container">
           <div>
-            <label>{{'incoterm' | transloco}}</label>
+            <label>{{'gross-weight-in-kg' | transloco}}</label>
           </div>
           <div>
-            @if(!isIncotermValid()){
+            @if(!isGrossWeightInKgValid()){
             <label class="error-message">{{'simple-error' | transloco}}</label>
             }
           </div>
         </div>
-        <input [ngSignal]="incoterm" type="text">
+        <input [ngSignal]="grossWeightInKg" type="number">
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <div class="checkbox-container">
-          <label class="checkbox-label">{{'free-detention' | transloco}}</label>
-          <input class="checkbox-input" [ngSignal]="freeDetention" type="checkbox">
-        </div>
+    <div class="simple-row">
+      <div>
+        <label>{{'free-detention' | transloco}}</label>
       </div>
 
-      <div class="form-group">
-        <div class="checkbox-container">
-          <label class="checkbox-label">{{'thctb' | transloco}}</label>
-          <input class="checkbox-input" [ngSignal]="thctb" type="checkbox">
-        </div>
+      @for (duration of durations; track $index) {
+      <div class="simple-margin">
+        <label>{{ duration }} {{'days' | transloco}} <input type="radio" name="duration" [value]="duration"
+            [(ngModel)]="selectedFreeDetention"></label>
       </div>
-
-      <div class="form-group">
-        <div class="checkbox-container">
-          <label class="checkbox-label">{{'fast-line' | transloco}}</label>
-          <input class="checkbox-input" [ngSignal]="fastLine" type="checkbox">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="checkbox-container">
-          <label class="checkbox-label">{{'direct-line' | transloco}}</label>
-          <input class="checkbox-input" [ngSignal]="directLine" type="checkbox">
-        </div>
-      </div>
-
-      @if (directLine() && fastLine()) {
-      <label class="checkbox-error-message">{{'only-select-one' | transloco}}</label>
       }
+    </div>
 
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'ready-to-load' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isReadyToLoadValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input [ngSignal]="readyToLoad" type="date" format="dd.MM.yyyy">
+    <div class="simple-row">
+      <div>
+        <label class="checkbox-label">{{'thc' | transloco}}</label>
       </div>
 
-      <div class="form-group">
-        <label>{{'additional-text' | transloco}}</label>
-        <input [ngSignal]="editService.additonalInformation" type="text">
+      <div class="simple-margin">
+        <label>{{'tb' | transloco}} <input type="radio" name="thc" [value]="true" [(ngModel)]="selectedThc"></label>
+      </div>
+
+      <div class="simple-margin">
+        <label>{{'customer' | transloco}} <input type="radio" name="thc" [value]="false"
+            [(ngModel)]="selectedThc"></label>
+      </div>
+    </div>
+
+    <div class="simple-row">
+      <div>
+        <button class="add-article-button" (click)="addArticle(1,1,1)">{{'add-article' | transloco}}</button>
+      </div>
+
+      <div class="simple-margin-with-top">
+        <label>{{'none' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
+            [value]="0" [(ngModel)]="selectedLine"></label>
+      </div>
+
+      <div class="simple-margin-with-top">
+        <label>{{'fast-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
+            [value]="1" [(ngModel)]="selectedLine"></label>
+      </div>
+
+      <div class="simple-margin-with-top">
+        <label>{{'direct-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
+            [value]="2" [(ngModel)]="selectedLine"></label>
       </div>
     </div>
 
@@ -232,7 +233,7 @@
               <input (change)="setAreArticleNumbersValid()" min="1" type="number" formControlName="articleNumber">
             </div>
 
-            @if (directLine() == true || fastLine() == true) {
+            @if (selectedLine === 1 || selectedLine === 2) {
             <div class="form-group">
               <div class="header-container">
                 <div>
@@ -259,9 +260,6 @@
         </div>
         }
       </div>
-
-      <button class="add-article-button" (click)="addArticle(1,1,1)">{{'add-article' |
-        transloco}}</button>
     </form>
 
     @if (isApprovedByTl()) {
@@ -270,11 +268,6 @@
 
     <div class="tlData">
       <div class="form-row">
-        <div class="form-group">
-          <label>{{'inquery-number' | transloco}}</label>
-          <input class="not-editable" readonly type="number" [ngSignal]="inquiryNumber">
-        </div>
-
         <div class="form-group">
           <label>{{'sped' | transloco}}</label>
           <input class="not-editable" readonly type="text" [ngSignal]="sped">
@@ -285,30 +278,24 @@
           <input class="not-editable" readonly type="text" [ngSignal]="country">
         </div>
 
-        <div class="form-group">
-          <label>{{'accepting-port' | transloco}}</label>
-          <input class="not-editable" readonly type="text" [ngSignal]="acceptingPort">
-        </div>
+        <div class="form-group"></div>
+        <div class="form-group"></div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label>{{'weight-in-kg' | transloco}}</label>
-          <input class="not-editable" readonly type="number" [ngSignal]="weightInKg">
+          <label>{{'excepted-retrieve-week' | transloco}}</label>
+          <input class="not-editable" readonly type="date" [ngSignal]="expectedRetrieveWeek" format="dd.MM.yyyy">
         </div>
 
         <div class="form-group">
-          <div class="checkbox-container">
-            <label class="checkbox-label">{{'is-container-40' | transloco}}</label>
-            <input [disabled]="true" class="checkbox-input" type="checkbox" [ngSignal]="isContainer40">
-          </div>
+          <label>{{'invoice-on' | transloco}}</label>
+          <input class="not-editable" readonly type="date" [ngSignal]="invoiceOn" format="dd.MM.yyyy">
         </div>
 
         <div class="form-group">
-          <div class="checkbox-container">
-            <label class="checkbox-label">{{'is-container-hc' | transloco}}</label>
-            <input [disabled]="true" class="checkbox-input" type="checkbox" [ngSignal]="isContainerHc">
-          </div>
+          <label>{{'retrieve-date' | transloco}}</label>
+          <input class="not-editable" readonly type="date" [ngSignal]="retrieveDate" format="dd.MM.yyyy">
         </div>
 
         <div class="form-group">
@@ -319,29 +306,36 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label>{{'debt-capital-general-forerun-eur' | transloco}}</label>
-          <input class="not-editable" readonly type="number" [ngSignal]="debtCapitalGeneralForerunEur">
-        </div>
-
-        <div class="form-group">
-          <label>{{'debt-capital-main-dol' | transloco}}</label>
-          <input class="not-editable" readonly type="number" [ngSignal]="debtCapitalMainDol">
-        </div>
-
-        <div class="form-group">
-          <label>{{'debt-capital-trailing-dol' | transloco}}</label>
-          <input class="not-editable" readonly type="number" [ngSignal]="debtCapitalTrailingDol">
-        </div>
-
-        <div class="form-group">
           <label>{{'port-of-departure' | transloco}}</label>
           <input class="not-editable" readonly type="text" [ngSignal]="portOfDeparture">
         </div>
 
         <div class="form-group">
-          <label>{{'boat' | transloco}}</label>
-          <input class="not-editable" readonly type="text" [ngSignal]="boat">
+          <label>{{'accepting-port' | transloco}}</label>
+          <input class="not-editable" readonly type="text" [ngSignal]="acceptingPort">
         </div>
+
+        <div class="form-group"></div>
+        <div class="form-group"></div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>{{'sc-general' | transloco}}</label>
+          <input class="not-editable" readonly type="number" [ngSignal]="scGeneral">
+        </div>
+
+        <div class="form-group">
+          <label>{{'sc-main-run' | transloco}}</label>
+          <input class="not-editable" readonly type="number" [ngSignal]="scMain">
+        </div>
+
+        <div class="form-group">
+          <label>{{'sc-trail' | transloco}}</label>
+          <input class="not-editable" readonly type="number" [ngSignal]="scTrail">
+        </div>
+
+        <div class="form-group"></div>
       </div>
 
       <div class="form-row">
@@ -356,19 +350,11 @@
         </div>
 
         <div class="form-group">
-          <label>{{'retrieve-date' | transloco}}</label>
-          <input class="not-editable" readonly type="date" [ngSignal]="retrieveDate" format="dd.MM.yyyy">
+          <label>{{'boat' | transloco}}</label>
+          <input class="not-editable" readonly type="text" [ngSignal]="boat">
         </div>
 
-        <div class="form-group">
-          <label>{{'invoice-on' | transloco}}</label>
-          <input class="not-editable" readonly type="date" [ngSignal]="invoiceOn" format="dd.MM.yyyy">
-        </div>
-
-        <div class="form-group">
-          <label>{{'excepted-retrieve-week' | transloco}}</label>
-          <input class="not-editable" readonly type="date" [ngSignal]="expectedRetrieveWeek" format="dd.MM.yyyy">
-        </div>
+        <div class="form-group"></div>
       </div>
     </div>
     }
@@ -383,10 +369,14 @@
         transloco}}</button>
     </div>
     <div class="form-group">
-      <button [disabled]="!isApprovedByTl() || editService.currOrder().successfullyFinished || editService.currOrder().canceled" class="save-button" (click)="finishOrder()">{{'finish' |
+      <button
+        [disabled]="!isApprovedByTl() || editService.currOrder().successfullyFinished || editService.currOrder().canceled"
+        class="save-button" (click)="finishOrder()">{{'finish' |
         transloco}}</button>
     </div>
     <div class="form-group">
-      <button class="save-button" [disabled]="editService.currOrder().successfullyFinished || editService.currOrder().canceled" (click)="cancelOrder()">{{'cancel' | transloco}}</button>
+      <button class="save-button"
+        [disabled]="editService.currOrder().successfullyFinished || editService.currOrder().canceled"
+        (click)="cancelOrder()">{{'cancel' | transloco}}</button>
     </div>
   </div>

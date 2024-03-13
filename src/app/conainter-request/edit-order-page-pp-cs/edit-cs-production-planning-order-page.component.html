@@ -32,7 +32,35 @@
               }
             </div>
           </div>
-          <input [ngSignal]="editService.createdBy" type="text">
+          <input [ngSignal]="editService.createdByCS" type="text">
+        </div>
+
+        <div class="form-group">
+          <div class="header-container">
+            <div>
+              <label>{{'recieving-country' | transloco}}</label>
+            </div>
+            <div>
+              @if(!isRecievingCountryValid()){
+              <label class="error-message">{{'simple-error' | transloco}}</label>
+              }
+            </div>
+          </div>
+          <input [ngSignal]="recievingCountry" type="text">
+        </div>
+
+        <div class="form-group">
+          <div class="header-container">
+            <div>
+              <label>{{'customer-priority' | transloco}}</label>
+            </div>
+            <div>
+              @if(!isCustomerPriortityValid()){
+              <label class="error-message">{{'simple-error' | transloco}}</label>
+              }
+            </div>
+          </div>
+          <input [ngSignal]="customerPriority" type="text">
         </div>
 
         <div class="form-group">

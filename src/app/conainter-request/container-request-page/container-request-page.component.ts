@@ -26,11 +26,9 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     const tableConfig = localStorage.getItem(this.htmlContent + 'tableConfig');
-    //console.log(localStorage.getItem('createdBy') ?? '');
     if(localStorage.getItem('createdBy') ?? '' !== ''){
       this.filterByCreatedByName.set(JSON.parse(localStorage.getItem('createdBy') ?? ''));
     }
-    
     this.showCanceled.set(JSON.parse(localStorage.getItem('canceledOrders') ?? 'false'));
     this.showFinished.set(JSON.parse(localStorage.getItem('finishedOrders') ?? 'false'));
 
@@ -40,13 +38,11 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     }
     else if (this.htmlContent === "containerRequestCS") {
       this.dataService.tableHeaders = [
-        { label: 'order', value: 'id' },
-        { label: 'customer', value: 'customerName' },
-        { label: 'created-by', value: 'createdBy' },
         { label: 'ab-nr', value: 'abNumber' },
+        { label: 'customer', value: 'customerName' },
+        { label: 'created-by', value: 'createdByCS' },
         { label: 'status', value: 'status' },
         { label: 'approved', value: 'approvedBy' },
-        { label: 'amount', value: 'amount' },
         { label: 'country', value: 'country' },
         { label: 'ready-to-load', value: 'readyToLoad' },
         { label: 'last-updated', value: 'lastUpdated' },
@@ -60,7 +56,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
         { label: 'ab-nr', value: 'abNumber' },
         { label: 'ready-to-load', value: 'readyToLoad' },
         { label: 'customer', value: 'customerName' },
-        { label: 'created-by', value: 'createdBy' },
+        { label: 'created-by', value: 'createdByCS' },
         { label: 'status', value: 'status' },
         { label: 'approved', value: 'approvedBy' },
         { label: 'last-updated', value: 'lastUpdated' },
@@ -72,7 +68,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
       this.dataService.tableHeaders = [
         { label: 'order', value: 'id' },
         { label: 'customer', value: 'customerName' },
-        { label: 'created-by', value: 'createdBy' },
+        { label: 'created-by', value: 'createdByCS' },
         { label: 'article', value: 'articleNumbers' },
         { label: 'status', value: 'status' },
         { label: 'approved', value: 'approvedBy' },
@@ -86,7 +82,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
       this.dataService.tableHeaders = [
         { label: 'order', value: 'id' },
         { label: 'customer', value: 'customerName' },
-        { label: 'created-by', value: 'createdBy' },
+        { label: 'created-by', value: 'createdByCS' },
         { label: 'article', value: 'articleNumbers' },
         { label: 'status', value: 'status' },
         { label: 'approved', value: 'approvedBy' },
@@ -125,12 +121,12 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   }
 
   filterForCanceledOrders(){
-    localStorage.setItem('canceledOrders', JSON.stringify(this.filterByCreatedByName()));
+    localStorage.setItem('canceledOrders', JSON.stringify(this.showCanceled()));
     this.filterOrders();
   }
 
   filterForShowFinishedOrders(){
-    localStorage.setItem('finishedOrders', JSON.stringify(this.filterByCreatedByName()));
+    localStorage.setItem('finishedOrders', JSON.stringify(this.showFinished()));
     this.filterOrders();
   }
 

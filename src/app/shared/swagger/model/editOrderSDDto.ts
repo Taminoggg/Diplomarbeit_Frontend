@@ -11,13 +11,9 @@
  */
 
 
-export interface AddOrderDto { 
-    customerName: string;
+export interface EditOrderSDDto { 
+    id: number;
     additionalInformation?: string | null;
     createdBy: string;
-    checklistId?: number | null;
-    csId?: number | null;
-    tlId?: number | null;
-    ppId?: number | null;
 }
 

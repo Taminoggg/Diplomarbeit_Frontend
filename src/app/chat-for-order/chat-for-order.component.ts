@@ -42,27 +42,27 @@ export class ChatForOrderComponent implements OnInit {
           if (message.attachmentId !== 1) {
             this.filesService.filesIdGet(message.attachmentId)
               .subscribe(x => {
-                if(x !== null){
+                if (x !== null) {
                   const fileDto: FileByteDto = {
                     fileName: x.fileName,
                     fileContent: x.fileContent,
                     fileType: x.fileType
                   };
-  
+
                   const binaryData = atob(fileDto.fileContent);
-  
+
                   const arrayBuffer = new ArrayBuffer(binaryData.length);
                   const view = new Uint8Array(arrayBuffer);
                   for (let i = 0; i < binaryData.length; i++) {
                     view[i] = binaryData.charCodeAt(i);
                   }
-  
+
                   const mimeType = this.getMimeType(fileDto.fileType);
-  
+
                   const blob = new Blob([arrayBuffer], { type: mimeType });
-  
+
                   const file = new File([blob], fileDto.fileName);
-  
+
                   this.fileForMessage.set(message.id, file);
                 }
               });
@@ -72,7 +72,7 @@ export class ChatForOrderComponent implements OnInit {
   }
 
   fileForMessageExsits(id: number): boolean {
-    
+
     let file = this.fileForMessage.get(id);
     if (file !== undefined) {
       return true;
@@ -125,15 +125,13 @@ export class ChatForOrderComponent implements OnInit {
   sendMessage(): void {
     let from = '';
 
-    if(this.htmlContent === "containerRequestCS"){
-      from = 'CRCS';
-    }else if(this.htmlContent === "containerRequestTL"){
-      from = 'CRTL';
-    }else if(this.htmlContent === "productionPlanningCS"){
-      from = 'PPCS';
-    }else if(this.htmlContent === "productionPlanningPP"){
-      from = 'PPPP';
-    }else{
+    if (this.htmlContent === "containerRequestCS" || this.htmlContent === "productionPlanningCS") {
+      from = 'CS';
+    } else if (this.htmlContent === "containerRequestTL") {
+      from = 'TL';
+    } else if (this.htmlContent === "productionPlanningPP") {
+      from = 'PP';
+    } else {
       from = 'unknown';
     }
 
@@ -198,6 +196,6 @@ export class ChatForOrderComponent implements OnInit {
   }
 
   navigateBack() {
-    this.router.navigateByUrl('/container-request-page/'+this.htmlContent);
+    this.router.navigateByUrl('/container-request-page/' + this.htmlContent);
   }
 }

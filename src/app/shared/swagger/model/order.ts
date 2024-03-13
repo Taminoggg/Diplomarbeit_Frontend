@@ -22,9 +22,11 @@ export interface Order {
     successfullyFinished?: boolean;
     status?: string | null;
     customerName?: string | null;
-    createdBy?: string | null;
-    amount?: number;
-    lastUpdated?: string;
+    createdByCS?: string | null;
+    createdBySD?: string | null;
+    lastUpdatedOn?: string;
+    createdOn?: string;
+    finishedOn?: string | null;
     checklistId?: number | null;
     csId?: number | null;
     tlId?: number | null;

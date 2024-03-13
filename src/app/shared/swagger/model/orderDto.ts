@@ -15,12 +15,14 @@ export interface OrderDto {
     id: number;
     status: string;
     customerName: string;
-    createdBy: string;
+    createdBySD: string;
+    createdByCS: string;
     canceled: boolean;
     successfullyFinished: boolean;
-    amount: number;
     additionalInformation: string;
     lastUpdated: string;
+    createdOn: string;
+    finishedOn: string;
     checklistId: number;
     sped: string;
     country: string;
