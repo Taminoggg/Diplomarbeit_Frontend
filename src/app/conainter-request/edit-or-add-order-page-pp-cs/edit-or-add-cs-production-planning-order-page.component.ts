@@ -1,6 +1,6 @@
 import { Component, Input, inject, numberAttribute, signal, OnChanges, SimpleChanges, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddArticlePPDto, ArticlesPPService, ChecklistDto, ChecklistsService, EditOrderCSDto, EditPpPpArticleDto, EditProductionPlanningDto, OrderDto, OrdersService, ProductionPlanningsService } from '../../shared/swagger';
+import { AddArticlePPDto, AddOrderDto, AddProductionPlanningDto, ArticlesPPService, ChecklistDto, ChecklistsService, EditOrderCSDto, EditPpPpArticleDto, EditProductionPlanningDto, OrderDto, OrdersService, ProductionPlanningsService } from '../../shared/swagger';
 import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -12,42 +12,53 @@ import { EditService } from '../../edit.service';
   selector: 'app-edit-order-page',
   standalone: true,
   imports: [CommonModule, NgSignalDirective, TranslocoModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './edit-cs-production-planning-order-page.component.html',
-  styleUrl: './edit-cs-production-planning-order-page.component.scss'
+  templateUrl: './edit-or-add-cs-production-planning-order-page.component.html',
+  styleUrl: './edit-or-add-cs-production-planning-order-page.component.scss'
 })
-export class EditCsProductionPlanningOrderPageComponent implements OnChanges, OnInit {
+export class EditOrAddCsProductionPlanningOrderPageComponent implements OnChanges, OnInit {
   @Input({ transform: numberAttribute }) id = 0;
+  @Input() actionType = '';
 
   ngOnInit(): void {
     this.myForm = this.fb.group({
       articles: this.fb.array([])
     });
+
+    if(this.actionType === 'new'){
+      this.addArticle(1, 1, 1, 1, '', '', '', '', '', '', '', '', 1);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.editService.navigationPath = '/container-request-page/productionPlanningCS';
 
-    this.orderService.ordersIdGet(this.id)
-      .subscribe(x => {
-        if (x !== null && x !== undefined) {
-          this.editService.currOrder.set(x);
-          this.setOrderSignals();
-          this.articlesPPService.articlesPPProductionPlanningIdGet(this.editService.currOrder().ppId)
-            .subscribe(x => console.log(x));
+    if (this.actionType === 'edit') {
+      this.orderService.ordersIdGet(this.id)
+        .subscribe(x => {
+          if (x !== null && x !== undefined) {
+            this.editService.currOrder.set(x);
+            this.setOrderSignals();
+            this.articlesPPService.articlesPPProductionPlanningIdGet(this.editService.currOrder().ppId)
+              .subscribe(x => console.log(x));
 
-          this.articlesPPService.articlesPPProductionPlanningIdGet(this.editService.currOrder().ppId)
-            .subscribe(x => x.forEach(x => {
-              if (x.minHeigthRequired !== 0 && x.desiredDeliveryDate !== null) {
-                this.addArticle(x.articleNumber, x.pallets, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
-              } else {
-                console.log('null');
-                this.addArticle(1, 1, 1, 1, '', false, false, '', '', '', '', '', '', '');
-              }
-            }));
+            this.articlesPPService.articlesPPProductionPlanningIdGet(this.editService.currOrder().ppId)
+              .subscribe(x => x.forEach(x => {
+                if (x.minHeigthRequired !== 0 && x.desiredDeliveryDate !== null) {
+                  let selectedInquiry = 0;
+                  if (x.inquiryForNonFixedOrder === true) {
+                    selectedInquiry = 1;
+                  } else if (x.inquiryForQuotation === true) {
+                    selectedInquiry = 2;
+                  }
 
-          this.setProductionPlanningSignal();
-        }
-      });
+                  this.addArticle(x.articleNumber, x.pallets, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant, selectedInquiry);
+                }
+              }));
+
+            this.setProductionPlanningSignal();
+          }
+        });
+    }
   }
 
   articlesPPService = inject(ArticlesPPService);
@@ -91,6 +102,7 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
 
   removeArticle(index: number) {
     this.articlesFormArray.removeAt(index);
+    this.setAreArticlesValid();
   }
 
   cancelOrder() {
@@ -109,15 +121,14 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, id: number, minHeigthRequired: number, desiredDeliveryDate: string, inquiryForFixedOrder: boolean, inquiryForQuotation: boolean, deliveryDate: string, shortText: string, factory: string, nozzle: string, productionOrder: string, plannedOrder: string, plant: string) {
+  addArticle(articleNumber: number, palletAmount: number, id: number, minHeigthRequired: number, desiredDeliveryDate: string, deliveryDate: string, shortText: string, factory: string, nozzle: string, productionOrder: string, plannedOrder: string, plant: string, selectedInquiry: number) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber, Validators.required],
       palletAmount: [palletAmount, Validators.required],
       id: id,
       minHeigthRequired: [minHeigthRequired],
       desiredDeliveryDate: [desiredDeliveryDate],
-      inquiryForFixedOrder: [inquiryForFixedOrder],
-      inquiryForQuotation: [inquiryForQuotation],
+      selectedInquiry: [selectedInquiry],
       deliveryDate: [deliveryDate],
       shortText: [shortText],
       factory: [factory],
@@ -129,6 +140,10 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
 
     this.articlesFormArray.push(articleGroup);
     this.setAreArticlesValid();
+  }
+
+  test() {
+    console.log(this.getFormGroup(0).get('selectedInquiry')!.value);
   }
 
   getFormGroup(index: number): FormGroup {
@@ -148,12 +163,24 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
     this.articlesPPService.articlesPPProductionPlanningIdDelete(this.editService.currOrder().ppId)
       .subscribe(x => {
         for (let i = 0; i < this.articlesFormArray.length; i++) {
+          let inquiryForFixedOrder = false;
+          let inquiryForNonFixedOrder = false;
+          let inquiryForQuotation = false;
+          if (this.getFormGroup(i).get('selectedInquiry')!.value === 0) {
+            inquiryForFixedOrder = true;
+          } else if (this.getFormGroup(i).get('selectedInquiry')!.value === 1) {
+            inquiryForNonFixedOrder = true;
+          } else if (this.getFormGroup(i).get('selectedInquiry')!.value === 2) {
+            inquiryForQuotation = true;
+          }
+
           let article: AddArticlePPDto = {
             productionPlanningId: this.editService.currOrder().ppId,
             minHeigthRequired: this.getFormGroup(i).get('minHeigthRequired')!.value,
             desiredDeliveryDate: this.getFormGroup(i).get('desiredDeliveryDate')!.value,
-            inquiryForFixedOrder: this.getFormGroup(i).get('inquiryForFixedOrder')!.value,
-            inquiryForQuotation: this.getFormGroup(i).get('inquiryForQuotation')!.value,
+            inquiryForFixedOrder: inquiryForFixedOrder,
+            inquiryForNonFixedOrder: inquiryForNonFixedOrder,
+            inquiryForQuotation: inquiryForQuotation,
             articleNumber: this.getFormGroup(i).get('articleNumber')!.value,
             pallets: this.getFormGroup(i).get('palletAmount')!.value,
           };
@@ -233,6 +260,77 @@ export class EditCsProductionPlanningOrderPageComponent implements OnChanges, On
 
     this.orderService.ordersOrderCSPut(editOrderDto)
       .subscribe(_ => _);
+  }
+
+  saveNewOrder(): void {
+    console.log('posted clicked');
+    let prodcutionPlanningDto: AddProductionPlanningDto = {
+      customerPriority: this.customerPriority(),
+      recievingCountry: this.recievingCountry()
+    }
+    console.log("🚀 ~ EditCsProductionPlanningOrderPageComponent ~ saveNewOrder ~ prodcutionPlanningDto:", prodcutionPlanningDto)
+
+    this.productionPlanningService.productionPlanningsPost(prodcutionPlanningDto)
+      .subscribe(productionPlanningObj => {
+        console.log("🚀 ~ EditCsProductionPlanningOrderPageComponent ~ saveNewOrder ~ productionPlanningObj:", productionPlanningObj)
+
+        for (let i = 0; i < this.articlesFormArray.length; i++) {
+          let inquiryForFixedOrder = false;
+          let inquiryForNonFixedOrder = false;
+          let inquiryForQuotation = false;
+          if (this.getFormGroup(i).get('selectedInquiry')!.value === 0) {
+            inquiryForFixedOrder = true;
+          } else if (this.getFormGroup(i).get('selectedInquiry')!.value === 1) {
+            inquiryForNonFixedOrder = true;
+          } else if (this.getFormGroup(i).get('selectedInquiry')!.value === 2) {
+            inquiryForQuotation = true;
+          }
+
+          let article: AddArticlePPDto = {
+            articleNumber: this.getFormGroup(i).get('articleNumber')!.value,
+            productionPlanningId: productionPlanningObj.id,
+            pallets: this.getFormGroup(i).get('palletAmount')!.value,
+            minHeigthRequired: this.getFormGroup(i).get('minHeigthRequired')!.value,
+            inquiryForFixedOrder: inquiryForFixedOrder,
+            inquiryForNonFixedOrder: inquiryForNonFixedOrder,
+            inquiryForQuotation: inquiryForQuotation,
+            desiredDeliveryDate: this.getFormGroup(i).get('desiredDeliveryDate')!.value
+          };
+          console.log('all articles: ');
+          console.log(article);
+
+          this.articlesPPService.articlesPPPost(article).subscribe(x => {
+            console.log('article posted: ' + x.id);
+            console.log(x);
+          }
+          );
+        }
+        let order: AddOrderDto;
+
+        if (this.editService.additonalInformation() === '') {
+          order = {
+            customerName: this.editService.customerName(),
+            createdBy: this.editService.createdByCS(),
+            ppId: productionPlanningObj.id,
+          };
+        } else {
+          order = {
+            customerName: this.editService.customerName(),
+            createdBy: this.editService.createdByCS(),
+            ppId: productionPlanningObj.id,
+            additionalInformation: this.editService.additonalInformation()
+          };
+        }
+
+        console.log('order');
+        console.log(order);
+
+        this.orderService.ordersPost(order)
+          .subscribe(x => {
+            console.log('ORDER POSTED');
+            this.editService.navigateToPath();
+          });
+      });
   }
 
   publish() {

@@ -19,6 +19,7 @@ export interface ArticlePPDto {
     minHeigthRequired: number;
     desiredDeliveryDate: string;
     inquiryForFixedOrder: boolean;
+    inquiryForNonFixedOrder: boolean;
     inquiryForQuotation: boolean;
     deliveryDate: string;
     shortText: string;

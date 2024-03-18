@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { ArticlesPPService, CsinquiriesService, OrderDto, OrdersService, ProductionPlanningsService, TlinquiriesService } from './swagger';
+import { ArticlesPPService, CsinquiriesService, OrderDto, OrderOrdersDto, OrdersService, ProductionPlanningsService, TlinquiriesService } from './swagger';
 import { HttpBackend, HttpClient, HttpRequest, HttpResponse } from '@angular/common/http';
 
 @Injectable({
@@ -15,29 +15,23 @@ export class DataService {
   allOrders = signal<OrderDto[]>([]);
   lastSortedBy = signal('');
   articlesForOrder = new Map<number, string[]>();
+  abNumberForOrder = new Map<number, number>();
+  readyToLoadForOrder = new Map<number, string>();
+  countryForOrder = new Map<number, string>();
+  spedForOrder = new Map<number, string>();
   factoriesForOrder = new Map<number, string[]>();
   plantsForOrder = new Map<number, string[]>();
   orderIds: number[] = [];
   approvedBy = new Map<number, boolean>();
-  tableHeaders: { label: string; value: (keyof OrderDto | 'approvedBy' | 'articleNumbers' | 'factory' | 'plant' | 'assignment' | 'create' | 'chat') }[] = [];
+  tableHeaders: { label: string; value: (keyof OrderDto | 'readyToLoad' | 'country' | 'abNumber' | 'sped' | 'approvedBy' | 'articleNumbers' | 'factory' | 'plant' | 'assignment' | 'create' | 'chat') }[] = [];
   filteredBy = '';
-  filterByCreatedByName = ''
+  filterByName = ''
   showFinished = false;
   showCanceled = false;
   dataLoading = signal(false);
 
   getOrdersOrderedBy(orderString: string): void {
     switch (orderString) {
-
-      case "sped":
-        if (this.lastSortedBy() === "sped") {
-          this.lastSortedBy.set('');
-          this.allOrders().orderByDescending(x => x.sped);
-        } else {
-          this.lastSortedBy.set('sped');
-          this.allOrders().orderBy(x => x.sped);
-        }
-        break;
 
       case "customerName":
         if (this.lastSortedBy() === "customer") {
@@ -49,7 +43,7 @@ export class DataService {
         }
         break;
 
-        case "status":
+      case "status":
         if (this.lastSortedBy() === "status") {
           this.lastSortedBy.set('');
           this.allOrders().orderByDescending(x => x.status);
@@ -59,13 +53,23 @@ export class DataService {
         }
         break;
 
-      case "createdBy":
-        if (this.lastSortedBy() === "createdBy") {
+      case "createdByCS":
+        if (this.lastSortedBy() === "createdByCS") {
           this.lastSortedBy.set('');
           this.allOrders().orderByDescending(x => x.createdByCS);
         } else {
-          this.lastSortedBy.set('createdBy');
+          this.lastSortedBy.set('createdByCS');
           this.allOrders().orderBy(x => x.createdByCS);
+        }
+        break;
+
+        case "createdBySD":
+        if (this.lastSortedBy() === "createdBySD") {
+          this.lastSortedBy.set('');
+          this.allOrders().orderByDescending(x => x.createdBySD);
+        } else {
+          this.lastSortedBy.set('createdBySD');
+          this.allOrders().orderBy(x => x.createdBySD);
         }
         break;
 
@@ -79,29 +83,84 @@ export class DataService {
         }
         break;
 
-      case "abNumber":
-        if (this.lastSortedBy() === "abNr") {
+      case "sped":
+        let orderOrdersSpedDto: OrderOrdersDto;
+        if (this.lastSortedBy() === "sped") {
           this.lastSortedBy.set('');
-          this.allOrders().orderByDescending(x => x.abNumber);
+          orderOrdersSpedDto = {
+            orderIds: this.allOrders().map(x => x.id),
+            asc: true
+          }
         } else {
-          this.lastSortedBy.set('abNr');
-          this.allOrders().orderBy(x => x.abNumber);
+          this.lastSortedBy.set('sped');
+          orderOrdersSpedDto = {
+            orderIds: this.allOrders().map(x => x.id),
+            asc: false
+          }
         }
+        this.orderService.ordersOrderedBySpedPut(orderOrdersSpedDto).subscribe(x => this.allOrders.set(x));
+        break;
+
+      case "country":
+        console.log('country clicked');
+        let orderOrdersCountryDto: OrderOrdersDto;
+        if (this.lastSortedBy() === "country") {
+          this.lastSortedBy.set('');
+          orderOrdersCountryDto = {
+            orderIds: this.allOrders().map(x => x.id),
+            asc: true
+          }
+        } else {
+          this.lastSortedBy.set('country');
+          orderOrdersCountryDto = {
+            orderIds: this.allOrders().map(x => x.id),
+            asc: false
+          }
+        }
+        console.log(orderOrdersCountryDto);
+        this.orderService.ordersOrderedByCountryPut(orderOrdersCountryDto).subscribe(x => this.allOrders.set(x));
         break;
 
       case "readyToLoad":
+        let orderOrdersReadyToLoadDto: OrderOrdersDto;
         if (this.lastSortedBy() === "readyToLoad") {
           this.lastSortedBy.set('');
-          this.allOrders().orderByDescending(x => x.readyToLoad);
+          orderOrdersReadyToLoadDto = {
+            orderIds: this.allOrders().map(x => x.id),
+            asc: true
+          }
         } else {
           this.lastSortedBy.set('readyToLoad');
-          this.allOrders().orderBy(x => x.readyToLoad);
+          orderOrdersReadyToLoadDto = {
+            orderIds: this.allOrders().map(x => x.id),
+            asc: false
+          }
         }
+        this.orderService.ordersOrderedByReadyToLoadPut(orderOrdersReadyToLoadDto).subscribe(x => this.allOrders.set(x));
         break;
+
+      case "abNumber":
+        let orderOrdersAbnumberDto: OrderOrdersDto;
+        if (this.lastSortedBy() === "abNumber") {
+          this.lastSortedBy.set('');
+          orderOrdersAbnumberDto = {
+            orderIds: this.allOrders().map(x => x.id),
+            asc: true
+          }
+        } else {
+          this.lastSortedBy.set('abNumber');
+          orderOrdersAbnumberDto = {
+            orderIds: this.allOrders().map(x => x.id),
+            asc: false
+          }
+        }
+        this.orderService.ordersOrderedByAbnumberPut(orderOrdersAbnumberDto).subscribe(x => this.allOrders.set(x));
+        break;
+        //add for artilcenumbers, factory...
     }
   }
 
-  refreshPage(selectedFilter: string, value: string, filteredBy: string, filterByCreatedByName: string, showFinished: boolean, showCanceled: boolean): void {
+  refreshPage(selectedFilter: string, value: string, filteredBy: string, filterByName: string, showFinished: boolean, showCanceled: boolean): void {
     this.dataLoading.set(true);
     console.log("GETTING ORDERS: selectedFilter: " + selectedFilter + " value: " + value);
     if (value === "") {
@@ -109,7 +168,7 @@ export class DataService {
     }
 
     this.filteredBy = filteredBy;
-    this.filterByCreatedByName = filterByCreatedByName;
+    this.filterByName = filterByName;
     this.showCanceled = showCanceled;
     this.showFinished = showFinished;
 
@@ -218,13 +277,6 @@ export class DataService {
             this.getDetailsForOrder(x);
           });
         break;
-      case "country":
-        console.log('case country');
-        this.orderService.ordersCountryGet(value)
-          .subscribe(x => {
-            this.getDetailsForOrder(x);
-          });
-        break;
       case "sped":
         console.log('case sped');
         this.orderService.ordersSpedGet(value)
@@ -242,8 +294,6 @@ export class DataService {
     this.orderIds = [];
     this.allOrders.set(x);
 
-    this.allOrders.set(this.allOrders().filter(x => x.createdByCS.toLowerCase().includes(this.filterByCreatedByName.toLowerCase())));
-
     if (!this.showCanceled) {
       this.allOrders.set(this.allOrders().filter(x => x.canceled === false));
     }
@@ -253,7 +303,12 @@ export class DataService {
     }
 
     if (this.filteredBy === "containerRequestCS" || this.filteredBy === "containerRequestTL") {
+      this.allOrders.set(this.allOrders().filter(x => x.createdByCS.toLowerCase().includes(this.filterByName.toLowerCase())));
       this.allOrders.set(this.allOrders().filter(x => x.csid > 0 && x.tlid > 0));
+      this.allOrders().forEach(order => this.csinquiryService.csinquiriesIdGet(order.csid).subscribe(x => this.countryForOrder.set(order.id, x.country)));
+      this.allOrders().forEach(order => this.csinquiryService.csinquiriesIdGet(order.csid).subscribe(x => this.abNumberForOrder.set(order.id, x.abnumber)));
+      this.allOrders().forEach(order => this.csinquiryService.csinquiriesIdGet(order.csid).subscribe(x => this.readyToLoadForOrder.set(order.id, x.readyToLoad)));
+      this.allOrders().forEach(order => this.tlinquiryService.tlinquiriesIdGet(order.tlid).subscribe(x => this.spedForOrder.set(order.id, x.sped)));
       if (this.filteredBy === "containerRequestCS") {
         this.allOrders().forEach(order => this.csinquiryService.csinquiriesIdGet(order.csid).subscribe(x => this.approvedBy.set(order.id, x.approvedByCrCs)));
       } else {
@@ -262,7 +317,11 @@ export class DataService {
         return;
       }
     } else if (this.filteredBy === "productionPlanningCS" || this.filteredBy === "productionPlanningPP") {
+      this.allOrders.set(this.allOrders().filter(x => x.createdBySD.toLowerCase().includes(this.filterByName.toLowerCase())));
       this.allOrders.set(this.allOrders().filter(x => x.ppId > 0));
+      this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.articlesForOrder.set(order.id, x.map(x => x.articleNumber.toString()))));
+      this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.plantsForOrder.set(order.id, x.map(x => x.plant))));
+      this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.factoriesForOrder.set(order.id, x.map(x => x.factory))));
       if (this.filteredBy === "productionPlanningCS") {
         this.allOrders().forEach(order => this.productionService.productionPlanningsIdGet(order.ppId).subscribe(x => this.approvedBy.set(order.id, x.approvedByPpCs)));
       } else {
@@ -275,10 +334,6 @@ export class DataService {
     this.allOrders().forEach(currOrder => {
       this.orderIds.push(currOrder.id)
     });
-
-    this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.articlesForOrder.set(order.id, x.map(x => x.articleNumber.toString()))));
-    this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.plantsForOrder.set(order.id, x.map(x => x.plant))));
-    this.allOrders().forEach(order => this.articlePPService.articlesPPProductionPlanningIdGet(order.ppId).subscribe(x => this.factoriesForOrder.set(order.id, x.map(x => x.factory))));
 
     this.dataLoading.set(false);
   }

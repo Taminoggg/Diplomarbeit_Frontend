@@ -13,12 +13,12 @@
 
 export interface EditPpPpArticleDto { 
     id: number;
-    shortText: string;
+    shortText?: string | null;
     deliveryDate: string;
-    nozzle: string;
-    factory: string;
-    productionOrder: string;
-    plannedOrder: string;
-    plant: string;
+    nozzle?: string | null;
+    factory?: string | null;
+    productionOrder?: string | null;
+    plannedOrder?: string | null;
+    plant?: string | null;
 }
 

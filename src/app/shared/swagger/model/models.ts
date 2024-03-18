@@ -34,6 +34,7 @@ export * from './messageDto';
 export * from './modelFile';
 export * from './order';
 export * from './orderDto';
+export * from './orderOrdersDto';
 export * from './productionPlanning';
 export * from './productionPlanningDto';
 export * from './step';

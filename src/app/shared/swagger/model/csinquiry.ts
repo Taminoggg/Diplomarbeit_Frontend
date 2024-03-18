@@ -15,17 +15,17 @@ import { ArticleCR } from './articleCR';
 
 export interface Csinquiry { 
     id?: number;
-    container?: string | null;
     abnumber?: number;
     grossWeightInKg?: number;
+    country?: string | null;
     incoterm?: string | null;
     containersizeA?: number;
     containersizeB?: number;
     containersizeHc?: number;
     freeDetention?: number;
     thctb?: boolean;
+    thcc?: boolean;
     readyToLoad?: string;
-    loadingPlattform?: string | null;
     approvedByCrCs?: boolean;
     approvedByCrCsTime?: string | null;
     isDirectLine?: boolean;

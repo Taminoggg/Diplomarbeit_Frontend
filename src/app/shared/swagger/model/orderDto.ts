@@ -24,10 +24,6 @@ export interface OrderDto {
     createdOn: string;
     finishedOn: string;
     checklistId: number;
-    sped: string;
-    country: string;
-    readyToLoad: string;
-    abNumber: number;
     csid: number;
     tlid: number;
     ppId: number;

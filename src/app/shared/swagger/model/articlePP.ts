@@ -25,6 +25,7 @@ export interface ArticlePP {
     plannedOrder?: string | null;
     plant?: string | null;
     inquiryForFixedOrder?: boolean;
+    inquiryForNonFixedOrder?: boolean;
     inquiryForQuotation?: boolean;
     pallets?: number;
     productionPlanningId?: number;

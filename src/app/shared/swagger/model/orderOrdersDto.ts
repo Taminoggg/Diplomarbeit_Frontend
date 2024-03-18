@@ -11,19 +11,8 @@
  */
 
 
-export interface EditTlInqueryDto { 
-    id: number;
-    sped: string;
-    acceptingPort: string;
-    invoiceOn: string;
-    retrieveDate: string;
-    retrieveLocation: string;
-    scGeneral: number;
-    scMain: number;
-    scTrail: number;
-    portOfDeparture: string;
-    ets: string;
-    eta: string;
-    boat: string;
+export interface OrderOrdersDto { 
+    orderIds: Array<number>;
+    asc: boolean;
 }
 

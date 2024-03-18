@@ -11,16 +11,12 @@ import { DataService } from '../shared/data.service';
     styleUrls: ['./function-overview-page.component.scss'],
     imports: [CommonModule, ContainerToolFunctionComponent]
 })
-export class FunctionOverviewPageComponent implements OnInit {
+export class FunctionOverviewPageComponent {
     router = inject(Router);
     dataService = inject(DataService);
 
     goToUrl() {
         this.router.ngOnDestroy();
         window.location.href = 'http://www.teufelberger.com/';
-    }
-
-    ngOnInit(): void {
-        this.dataService.refreshPage('none', '', '', '', false, false);
     }
 }

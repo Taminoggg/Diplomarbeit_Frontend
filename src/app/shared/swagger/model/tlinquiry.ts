@@ -15,9 +15,7 @@ import { Order } from './order';
 export interface Tlinquiry { 
     id?: number;
     sped?: string | null;
-    country?: string | null;
     acceptingPort?: string | null;
-    expectedRetrieveWeek?: string | null;
     invoiceOn?: string | null;
     retrieveDate?: string | null;
     retrieveLocation?: string | null;

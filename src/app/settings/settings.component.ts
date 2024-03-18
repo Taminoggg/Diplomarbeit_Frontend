@@ -21,8 +21,7 @@ export class SettingsComponent implements OnInit {
   dataService = inject(DataService);
   router = inject(Router);
 
-  orderDtoPropertyNamesNotInTableHeaders = signal<string[]>([]);
-  approvedMapping = '';
+
 
   moveItemUp(index: number) {
     if (index > 0) {
@@ -49,7 +48,11 @@ export class SettingsComponent implements OnInit {
     this.router.navigateByUrl('/container-request-page/' + this.htmlContent);
   }
 
+  orderDtoPropertyNamesNotInTableHeaders = signal<string[]>([]);
+  approvedMapping = '';
+
   setPropertiesNotInTableHeaders() {
+    console.log("🚀 ~ SettingsComponent ~ setPropertiesNotInTableHeaders ~ setPropertiesNotInTableHeaders:")
     let orderDto: OrderDto = {
       id: 1,
       successfullyFinished: false,
@@ -64,39 +67,41 @@ export class SettingsComponent implements OnInit {
       checklistId: 1,
       csid: 1,
       tlid: 1,
-      sped: 'Test',
-      country: 'Test',
-      abNumber: 1,
-      readyToLoad: 'Test',
       additionalInformation: '',
       ppId: 1
     };
 
-    let propertiesToCheck: string[] = [];
+    let propertiesToCheckPP: string[] = [];
     if (this.htmlContent === 'productionPlanningPP' || this.htmlContent === 'productionPlanningCS') {
-      propertiesToCheck = ['articleNumbers', 'factory', 'plant'];
-      console.log('propertiesToCheck', propertiesToCheck);
+      propertiesToCheckPP = ['articleNumbers', 'factory', 'plant'];
+      console.log('propertiesToCheck', propertiesToCheckPP);
     }
 
+    let propertiesToCheckCS: string[] = [];
+    if (this.htmlContent === 'containerRequestTL' || this.htmlContent === 'containerRequestCS') {
+      propertiesToCheckCS = ['sped', 'abNumber', 'readyToLoad', 'country'];
+      console.log('propertiesToCheck', propertiesToCheckCS);
+    }
+
+    console.log('gettingFilteredProperties');
     const filteredProperties = Object.keys(orderDto).filter(key => {
       const value = key as keyof OrderDto;
       if (!value.toLowerCase().includes('time') && !value.toLowerCase().includes('id') && !value.toLowerCase().includes('canceled') && !value.toLowerCase().includes('successfullyfinished') && !value.toLowerCase().includes('additionalinformation') && !value.toLowerCase().includes('approved')) {
-        if (this.htmlContent === 'productionPlanningPP' || this.htmlContent === 'productionPlanningCS') {
-          if(!value.toLowerCase().includes('amount') && !value.toLowerCase().includes('sped') && !value.toLowerCase().includes('country')&& !value.toLowerCase().includes('abnumber') && !value.toLowerCase().includes('readytoload')){
-            return !this.dataService.tableHeaders.some(header => header.value === value);
-          }else{
-            return false;
-          }
-        } else {
-          return !this.dataService.tableHeaders.some(header => header.value === value);
-        }
+        console.log(value);
+        return !this.dataService.tableHeaders.some(header => header.value === value);
       }
       return false;
     });
 
     this.orderDtoPropertyNamesNotInTableHeaders.set(filteredProperties);
 
-    propertiesToCheck.forEach(prop => {
+    propertiesToCheckCS.forEach(prop => {
+      if (!this.dataService.tableHeaders.some(header => header.value === prop)) {
+        this.orderDtoPropertyNamesNotInTableHeaders().push(prop);
+      }
+    });
+
+    propertiesToCheckPP.forEach(prop => {
       if (!this.dataService.tableHeaders.some(header => header.value === prop)) {
         this.orderDtoPropertyNamesNotInTableHeaders().push(prop);
       }
@@ -107,19 +112,22 @@ export class SettingsComponent implements OnInit {
     'abNumber': 'ab-nr',
     'readyToLoad': 'ready-to-load',
     'customerName': 'customer',
-    'createdBy': 'created-by',
+    'createdByCS': 'created-by',
+    'createdBySD': 'edited-by',
     'status': 'status',
     'lastUpdated': 'last-updated',
     'sped': 'sped',
     'amount': 'amount',
     'country': 'country',
+    'finishedOn': 'finished-on',
+    'createdOn': 'created-on',
     'plant': 'plant',
     'factory': 'factory',
     'articleNumbers': 'article-numbers'
   };
 
   add(nameNotInTableHeader: string) {
-    const newItem = { label: this.valueMapping[nameNotInTableHeader], value: nameNotInTableHeader as keyof OrderDto | "articleNumbers" | "factory" | "plant" | "assignment" | "create" | "chat" };
+    const newItem = { label: this.valueMapping[nameNotInTableHeader], value: nameNotInTableHeader as keyof OrderDto | 'readyToLoad' | 'sped' | 'abNumber' | 'country' | "articleNumbers" | "factory" | "plant" | "assignment" | "create" | "chat" };
     this.dataService.tableHeaders.push(newItem);
     this.setPropertiesNotInTableHeaders();
   }

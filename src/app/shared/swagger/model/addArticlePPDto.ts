@@ -18,6 +18,7 @@ export interface AddArticlePPDto {
     minHeigthRequired: number;
     desiredDeliveryDate: string;
     inquiryForFixedOrder: boolean;
+    inquiryForNonFixedOrder: boolean;
     inquiryForQuotation: boolean;
 }
 

@@ -13,7 +13,6 @@
 
 export interface EditCsinquiryDto { 
     id: number;
-    container: string;
     abnumber: number;
     grossWeightInKg: number;
     incoterm: string;
@@ -22,8 +21,9 @@ export interface EditCsinquiryDto {
     containersizeHc: number;
     freeDetention: number;
     thctb: boolean;
+    thcc: boolean;
     readyToLoad: string;
-    loadingPlattform: string;
+    country: string;
     isFastLine: boolean;
     isDirectLine: boolean;
 }

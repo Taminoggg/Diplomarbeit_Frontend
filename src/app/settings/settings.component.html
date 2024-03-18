@@ -18,7 +18,7 @@
                         <button class="hidden-button"><mat-icon>keyboard_arrow_down</mat-icon></button>
                         }
                         @if (!header.label.includes('approved') && !header.label.includes('chat') &&
-                        !header.label.includes('edit')
+                        header.label !== 'edit'
                         &&
                         !header.label.includes('checklist') ) {
                         <button (click)="remove($index)"><mat-icon>remove_circle_outline</mat-icon></button>
@@ -35,14 +35,14 @@
             <label>{{'add-information-to-overview' | transloco}}</label>
             <div class="border">
                 @if (orderDtoPropertyNamesNotInTableHeaders().length > 0) {
-                    @for (nameNotInTableHeaders of orderDtoPropertyNamesNotInTableHeaders(); track $index) {
+                @for (nameNotInTableHeaders of orderDtoPropertyNamesNotInTableHeaders(); track $index) {
                 <div class="added-information">
                     <label class="information-name">{{valueMapping[nameNotInTableHeaders] | transloco}}</label>
                     <button (click)="add(nameNotInTableHeaders)"><mat-icon>add_circle_outline</mat-icon></button>
                 </div>
                 }
                 }@else {
-                    <label>{{'no-informations-available' | transloco}}</label>
+                <label>{{'no-informations-available' | transloco}}</label>
                 }
             </div>
         </div>

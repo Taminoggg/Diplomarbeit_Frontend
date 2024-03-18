@@ -13,19 +13,19 @@
 
 export interface CsinquiryDto { 
     id: number;
-    container: string;
     abnumber: number;
     grossWeightInKg: number;
     incoterm: string;
     containersizeA: number;
+    country: string;
     containersizeB: number;
     containersizeHc: number;
     freeDetention: number;
     thctb: boolean;
+    thcc: boolean;
     isFastLine: boolean;
     isDirectLine: boolean;
     readyToLoad: string;
-    loadingPlattform: string;
     approvedByCrCs: boolean;
     approvedByCrCsTime: string;
 }

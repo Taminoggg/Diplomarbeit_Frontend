@@ -38,10 +38,6 @@ export class EditService {
       csid: 1,
       tlid: 1,
       ppId: 1,
-      readyToLoad: 'Test',
-      abNumber: 1,
-      country: 'Test',
-      sped: 'Test',
       additionalInformation: '',
       createdOn: '',
       finishedOn: ''

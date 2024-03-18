@@ -34,39 +34,11 @@
         <input type="text" [ngSignal]="sped">
       </div>
 
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'country' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isCountryValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input type="text" [ngSignal]="country">
-      </div>
-
       <div class="form-group"></div>
       <div class="form-group"></div>
     </div>
 
     <div class="form-row">
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'excepted-retrieve-week' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isExpectedRetrieveWeekValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input type="date" [ngSignal]="expectedRetrieveWeek" format="dd.MM.yyyy">
-      </div>
-
       <div class="form-group">
         <div class="header-container">
           <div>
@@ -108,6 +80,8 @@
         </div>
         <input type="text" [ngSignal]="retrieveLocation">
       </div>
+
+      <div class="form-group"></div>
     </div>
 
     <div class="form-row">
@@ -254,25 +228,25 @@
         </div>
 
         <div class="form-group">
-          <label>{{'ab-nr' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="abnumber" type="number">
+          <label>{{'country' | transloco}}</label>
+          <input class="not-editable" readonly type="text" [ngSignal]="country">
         </div>
 
         <div class="form-group">
-          <label>{{'incoterm' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="incoterm" type="text">
+          <label>{{'ab-nr' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="abnumber" type="number">
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label>{{'loading-plattform' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="loadingPlattform" type="text">
+          <label>{{'ready-to-load' | transloco}}</label>
+          <input class="not-editable" format="dd.MM.yyyy" readonly [ngSignal]="readyToLoad" type="date">
         </div>
 
         <div class="form-group">
-          <label>{{'ready-to-load' | transloco}}</label>
-          <input class="not-editable" format="dd.MM.yyyy" readonly [ngSignal]="readyToLoad" type="date">
+          <label>{{'incoterm' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="incoterm" type="text">
         </div>
 
         <div class="form-group"></div>
@@ -293,8 +267,8 @@
         <div class="form-group">
           <label>{{'container-size-hc' | transloco}}</label>
           <input class="not-editable" readonly [ngSignal]="containersizeHc" type="number">
-        </div>       
-  
+        </div>
+
         <div class="form-group">
           <label>{{'gross-weight-in-kg' | transloco}}</label>
           <input class="not-editable" readonly [ngSignal]="grossWeightInKg" type="number">
@@ -304,7 +278,13 @@
       <div class="form-row">
         <div class="form-group">
           <div class="checkbox-container">
-            <label>{{'free-detention' | transloco}}: {{freeDetention()}} {{'days' | transloco}}</label>
+            <label>{{'free-detention' | transloco}}:
+              @if(freeDetention() === 0){
+              {{'no-free-detention' | transloco}}
+              }@else {
+              {{freeDetention()}} {{'days' | transloco}}
+              }
+            </label>
           </div>
         </div>
 
@@ -323,17 +303,28 @@
         </div>
 
         <div class="form-group"></div>
+        <div class="form-group"></div>
       </div>
 
       <div class="form-row">
-        <label>{{'thc' | transloco}}
-          @if (thctb()) {
-          {{'tb' | transloco}}
-          }@else {
-          {{'customer' | transloco}}
-          }
-          <input type="checkbox" [disabled]="true" [checked]="true">
-        </label>
+        <label>{{'thc' | transloco}}</label>
+        <div class="form-group">
+          <div class="checkbox-container">
+            <label class="checkbox-label">{{'tb' | transloco}}</label>
+            <input [disabled]="true" [ngSignal]="thctb" class="checkbox-input" type="checkbox">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-container">
+            <label class="checkbox-label">{{'customer' | transloco}}</label>
+            <input [disabled]="true" [ngSignal]="thcc" class="checkbox-input" type="checkbox">
+          </div>
+        </div>
+
+        <div class="form-group"></div>
+        <div class="form-group"></div>
+        <div class="form-group"></div>
       </div>
 
       <form [formGroup]="myForm">

@@ -21,13 +21,13 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   @Input() htmlContent = 'containerRequestTL'
 
   ngOnInit(): void {
-    this.dataService.refreshPage('none', '', this.htmlContent, this.filterByCreatedByName(), this.showFinished(), this.showCanceled());
+    this.dataService.refreshPage('none', '', this.htmlContent, this.filterByName(), this.showFinished(), this.showCanceled());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     const tableConfig = localStorage.getItem(this.htmlContent + 'tableConfig');
     if(localStorage.getItem('createdBy') ?? '' !== ''){
-      this.filterByCreatedByName.set(JSON.parse(localStorage.getItem('createdBy') ?? ''));
+      this.filterByName.set(JSON.parse(localStorage.getItem('createdBy') ?? ''));
     }
     this.showCanceled.set(JSON.parse(localStorage.getItem('canceledOrders') ?? 'false'));
     this.showFinished.set(JSON.parse(localStorage.getItem('finishedOrders') ?? 'false'));
@@ -96,12 +96,16 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     localStorage.setItem(this.htmlContent + 'tableConfig', JSON.stringify(this.dataService.tableHeaders));
   }
 
+  test(){
+    console.log(this.dataService.tableHeaders);
+  }
+
   csinquiryService = inject(CsinquiriesService);
   dataService = inject(DataService);
   router = inject(Router);
   dialogRef = inject(MatDialog);
 
-  filterByCreatedByName = signal('');
+  filterByName = signal('');
   showFinished = signal(false);
   showCanceled = signal(false);
   selectedFilter = signal<string>('customername');
@@ -112,11 +116,11 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
 
   setSelectedFilter(value: string) {
     this.filterValue.set('');
-    this.dataService.refreshPage(this.selectedFilter(), this.filterValue(), this.htmlContent, this.filterByCreatedByName(), this.showFinished(), this.showCanceled());
+    this.dataService.refreshPage(this.selectedFilter(), this.filterValue(), this.htmlContent, this.filterByName(), this.showFinished(), this.showCanceled());
 
     this.selectedFilter.set(value);
     if (this.selectedFilter() === 'approvedByPp' || this.selectedFilter() === 'approvedByCs' || this.selectedFilter() === 'approvedByTl' || this.selectedFilter() === 'approvedByPpCs') {
-      this.dataService.refreshPage(this.selectedFilter(), 'false', this.htmlContent, this.filterByCreatedByName(), this.showFinished(), this.showCanceled());
+      this.dataService.refreshPage(this.selectedFilter(), 'false', this.htmlContent, this.filterByName(), this.showFinished(), this.showCanceled());
     }
   }
 
@@ -131,7 +135,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
   }
 
   filterForCreatedBy(){
-    localStorage.setItem('createdBy', JSON.stringify(this.filterByCreatedByName()));
+    localStorage.setItem('createdBy', JSON.stringify(this.filterByName()));
     this.filterOrders();
   }
 
@@ -160,12 +164,37 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     return [];
   }
 
+  getCountryForOrder(orderId: number): string {
+    if (this.dataService.countryForOrder.get(orderId)?.length ?? 0 > 0) {
+      return this.dataService.countryForOrder.get(orderId)!;
+    }
+    return '';
+  }
+
+  getAbNumberForOrder(orderId: number): number {
+      return this.dataService.abNumberForOrder.get(orderId)!;
+  }
+
+  getReadyToLoadForOrder(orderId: number): string {
+    if (this.dataService.readyToLoadForOrder.get(orderId)?.length ?? 0 > 0) {
+      return this.dataService.readyToLoadForOrder.get(orderId)!;
+    }
+    return '';
+  }
+
+  getSpedForOrder(orderId: number): string {
+    if (this.dataService.spedForOrder.get(orderId)?.length ?? 0 > 0) {
+      return this.dataService.spedForOrder.get(orderId)!;
+    }
+    return '';
+  }
+
   orderOrders(orderString: string): void {
     this.dataService.getOrdersOrderedBy(orderString);
   }
 
   filterOrders() {
-    this.dataService.refreshPage(this.selectedFilter(), this.filterValue(), this.htmlContent, this.filterByCreatedByName(), this.showFinished(), this.showCanceled());
+    this.dataService.refreshPage(this.selectedFilter(), this.filterValue(), this.htmlContent, this.filterByName(), this.showFinished(), this.showCanceled());
   }
 
   openDialog(id: number) {
@@ -189,14 +218,14 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
 
     switch (this.htmlContent) {
       case 'containerRequestCS':
-        editPagePath = '/edit-cs-container-order-page/' + orderId;
+        editPagePath = '/cs-container-order-page/edit/' + orderId;
         break;
       case 'containerRequestTL':
         editPagePath = '/edit-tl-container-order-page/' + orderId;
         console.log(editPagePath);
         break;
       case 'productionPlanningCS':
-        editPagePath = '/edit-cs-production-planning-order-page/' + orderId;
+        editPagePath = '/cs-production-planning-order-page/edit/' + orderId;
         break;
       case 'productionPlanningPP':
         editPagePath = '/edit-pp-production-planning-order-page/' + orderId;

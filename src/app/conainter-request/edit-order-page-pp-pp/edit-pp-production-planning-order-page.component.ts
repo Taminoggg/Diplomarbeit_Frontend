@@ -35,7 +35,7 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
           this.articlesPPService.articlesPPProductionPlanningIdGet(this.editService.currOrder().ppId)
             .subscribe(x => {
               x.forEach(x => {
-                this.addArticle(x.articleNumber, x.pallets, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
+                this.addArticle(x.articleNumber, x.pallets, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForNonFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
                 this.setAreArticlesValid();
               });
             });
@@ -82,14 +82,15 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, id: number, minHeigthRequired: number, desiredDeliveryDate: string, inquiryForFixedOrder: boolean, inquiryForQuotation: boolean, deliveryDate: string, shortText: string, factory: string, nozzle: string, productionOrder: string, plannedOrder: string, plant: string) {
+  addArticle(articleNumber: number, palletAmount: number, id: number, minHeigthRequired: number, desiredDeliveryDate: string, inquiryForFixedOrder: boolean, inquiryForNonFixedOrder: boolean,  inquiryForQuotation: boolean, deliveryDate: string, shortText: string, factory: string, nozzle: string, productionOrder: string, plannedOrder: string, plant: string) {
     const articleGroup = this.fb.group({
-      articleNumber: [articleNumber, Validators.required],
-      palletAmount: [palletAmount, Validators.required],
+      articleNumber: [articleNumber],
+      palletAmount: [palletAmount],
       id: id,
       minHeigthRequired: [minHeigthRequired],
       desiredDeliveryDate: [desiredDeliveryDate],
       inquiryForFixedOrder: [{ value: inquiryForFixedOrder, disabled: true }],
+      inquiryForNonFixedOrder: [{ value: inquiryForNonFixedOrder, disabled: true }],
       inquiryForQuotation: [{ value: inquiryForQuotation, disabled: true }],
       deliveryDate: [deliveryDate],
       shortText: [shortText],

@@ -14,9 +14,7 @@
 export interface TlinquiryDto { 
     id: number;
     sped: string;
-    country: string;
     acceptingPort: string;
-    expectedRetrieveWeek: string;
     invoiceOn: string;
     retrieveDate: string;
     retrieveLocation: string;

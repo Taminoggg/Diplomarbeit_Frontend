@@ -6,11 +6,11 @@
     | transloco }}
   </h1>
   @if (htmlContent === 'containerRequestCS') {
-  <button (click)="navigateToPage('/new-container-order-page')">
+  <button (click)="navigateToPage('/cs-container-order-page/new/')">
     <h2>{{'new' | transloco}}</h2>
   </button>
   }@else if (htmlContent === 'productionPlanningCS') {
-  <button (click)="navigateToPage('/new-production-planning-page')">
+  <button (click)="navigateToPage('/cs-production-planning-order-page/new/')">
     <h2>{{'new' | transloco}}</h2>
   </button>
   }
@@ -65,16 +65,33 @@
     }
   </div>
   <div class="filter-option">
-    <label>{{'show-finished-orders' | transloco}}</label>
+    <label>
+      @if (htmlContent === 'containerRequestCS' || htmlContent === 'containerRequestTL') {
+      {{'show-finished-orders-cs' | transloco}}
+      }@else if (htmlContent === 'productionPlanningPP' || htmlContent === 'productionPlanningCS') {
+      {{'show-finished-orders-pp' | transloco}}
+      }
+    </label>
     <input (change)="filterForShowFinishedOrders()" [ngSignal]="showFinished" type="checkbox">
   </div>
   <div class="filter-option">
-    <label>{{'show-canceled-orders' | transloco}}</label>
+    <label>
+      @if (htmlContent === 'containerRequestCS' || htmlContent === 'containerRequestTL') {
+      {{'show-canceled-orders-cs' | transloco}}
+      }@else if (htmlContent === 'productionPlanningPP' || htmlContent === 'productionPlanningCS') {
+      {{'show-finished-orders-pp' | transloco}}
+      }
+    </label>
     <input (change)="filterForCanceledOrders()" [ngSignal]="showCanceled" type="checkbox">
   </div>
   <div class="filter-option">
+    @if (htmlContent === 'containerRequestCS' || htmlContent === 'containerRequestTL') {
     <label>{{'created-by' | transloco}}</label>
-    <input class="simple-margin" (change)="filterForCreatedBy()" type="text" [ngSignal]="filterByCreatedByName">
+    }@else if(htmlContent === 'productionPlanningPP' || htmlContent === 'productionPlanningCS') {
+    <label>{{'edited-by' | transloco}}</label>
+    }
+    <input class="simple-margin" (change)="filterForCreatedBy()" type="text" [ngSignal]="filterByName">
+
   </div>
 
   <button class="settings-button" (click)="settingsPage()">
@@ -93,41 +110,51 @@
     @if (this.dataService.dataLoading()) {
     <label>{{'loading' | transloco}}</label>
     }@else {
-      @for (currOrder of dataService.allOrders(); track $index) {
-        <tr>
-          @for (prop of dataService.tableHeaders; track $index) {
-          @if(prop.value === 'chat'){
-          <td (click)="navigateToPage('/chat-for-order/' + htmlContent + '/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
-          }@else if (prop.value === 'assignment') {
-          <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
-          }@else if (prop.value === 'create') {
-          <td (click)="navigateToEditPage(currOrder.id)"><mat-icon>create</mat-icon></td>
-          }@else {
-          <td>
-            @if (prop.value === 'articleNumbers') {
-            {{getArticlesForOrder(currOrder.id)}}
-            }@else if(prop.value === 'factory') {
-            {{getFactoriesForOrder(currOrder.id)}}
-            }@else if(prop.value === 'plant'){
-            {{getPlantsForOrder(currOrder.id)}}
-            }@else if(prop.value === 'approvedBy'){
-            @if(getApprovedByForOrder(currOrder.id)){
-            {{'yes' | transloco}}
-            }@else {
-            {{'no' | transloco}}
-            }
-            }@else if(prop.value === 'lastUpdated' || prop.value === 'readyToLoad'){
-            {{currOrder[prop.value] | date:'dd.MM.yyyy'}}
-            }@else if(prop.value === 'status'){
-            {{currOrder[prop.value] | transloco}}
-            }@else {
-            {{currOrder[prop.value]}}
-            }
-          </td>
-          }
-          }
-        </tr>
+    @for (currOrder of dataService.allOrders(); track $index) {
+    <tr>
+      @for (prop of dataService.tableHeaders; track $index) {
+      @if(prop.value === 'chat'){
+      <td (click)="navigateToPage('/chat-for-order/' + htmlContent + '/' + currOrder.id)"><mat-icon>chat</mat-icon></td>
+      }@else if (prop.value === 'assignment') {
+      <td (click)="openDialog(currOrder.checklistId)"><mat-icon>assignment</mat-icon></td>
+      }@else if (prop.value === 'create') {
+      <td (click)="navigateToEditPage(currOrder.id)"><mat-icon>create</mat-icon></td>
+      }@else {
+      <td>
+        @if (prop.value === 'articleNumbers') {
+        {{getArticlesForOrder(currOrder.id)}}
+        }@else if(prop.value === 'factory') {
+        {{getFactoriesForOrder(currOrder.id)}}
+        }@else if(prop.value === 'plant'){
+        {{getPlantsForOrder(currOrder.id)}}
+        }@else if(prop.value === 'sped'){
+        {{getSpedForOrder(currOrder.id)}}
+        }@else if(prop.value === 'country'){
+        {{getCountryForOrder(currOrder.id)}}
+        }@else if(prop.value === 'abNumber'){
+        {{getAbNumberForOrder(currOrder.id)}}
+        }@else if(prop.value === 'readyToLoad'){
+        {{getReadyToLoadForOrder(currOrder.id) | date:'dd.MM.yyyy'}}
+        }@else if(prop.value === 'approvedBy'){
+        @if(getApprovedByForOrder(currOrder.id)){
+        {{'yes' | transloco}}
+        }@else {
+        {{'no' | transloco}}
         }
+        }@else if(prop.value === 'lastUpdated' || prop.value === 'finishedOn' || prop.value === 'createdOn'){
+        {{currOrder[prop.value] | date:'dd.MM.yyyy'}}
+        }@else if(prop.value === 'status'){
+        {{currOrder[prop.value] | transloco}}
+        }@else {
+        {{currOrder[prop.value]}}
+        }
+      </td>
+      }
+      }
+    </tr>
+    }
     }
   </table>
 </div>
+
+<button (click)="test()">Test</button>

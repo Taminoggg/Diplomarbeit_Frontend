@@ -78,12 +78,15 @@
               </div>
 
               <div class="form-group">
+                <label>{{'plant' | transloco}}</label>
+                <input (input)="setAreArticlesValid()" type="text" formControlName="plant">
+              </div>
+
+              <div class="form-group">
                 <label>{{'nozzle' | transloco}}</label>
                 <input (input)="setAreArticlesValid()" type="text" formControlName="nozzle">
               </div>
-            </div>
 
-            <div class="form-row">
               <div class="form-group">
                 <label>{{'production-order' | transloco}}</label>
                 <input (input)="setAreArticlesValid()" type="text" formControlName="productionOrder">
@@ -93,17 +96,17 @@
                 <label>{{'planned-order' | transloco}}</label>
                 <input (input)="setAreArticlesValid()" type="text" formControlName="plannedOrder">
               </div>
-
-              <div class="form-group">
-                <label>{{'plant' | transloco}}</label>
-                <input (input)="setAreArticlesValid()" type="text" formControlName="plant">
-              </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
                 <label>{{'article-number' | transloco}}</label>
                 <input class="not-editable" readonly type="number" formControlName="articleNumber">
+              </div>
+
+              <div class="form-group">
+                <label>{{'required-pallet-amount' | transloco}}</label>
+                <input class="not-editable" readonly type="number" formControlName="palletAmount">
               </div>
 
               <div class="form-group">
@@ -115,6 +118,13 @@
                 <div class="checkbox-container">
                   <label class="checkbox-label">{{'inquiry-for-fixed-order' | transloco}}</label>
                   <input class="checkbox-input" type="checkbox" formControlName="inquiryForFixedOrder">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="checkbox-container">
+                  <label class="checkbox-label">{{'inquiry-for-non-fixed-order' | transloco}}</label>
+                  <input class="checkbox-input" type="checkbox" formControlName="inquiryForNonFixedOrder">
                 </div>
               </div>
 

@@ -12,7 +12,6 @@
 
 
 export interface AddCsinquiryDto { 
-    container: string;
     abnumber: number;
     bruttoWeightInKg: number;
     incoterm: string;
@@ -20,9 +19,10 @@ export interface AddCsinquiryDto {
     containersizeB: number;
     containersizeHc: number;
     freeDetention: number;
+    country: string;
     thctb: boolean;
+    thcc: boolean;
     readyToLoad: string;
-    loadingPlattform: string;
     isDirectLine: boolean;
     isFastLine: boolean;
 }

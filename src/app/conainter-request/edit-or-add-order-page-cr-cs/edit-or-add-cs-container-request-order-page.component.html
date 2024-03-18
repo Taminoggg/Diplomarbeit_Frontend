@@ -37,6 +37,20 @@
       <div class="form-group">
         <div class="header-container">
           <div>
+            <label>{{'country' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isCountryValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
+        <input type="text" [ngSignal]="country">
+      </div>
+
+      <div class="form-group">
+        <div class="header-container">
+          <div>
             <label>{{'ab-nr' | transloco}}</label>
           </div>
           <div>
@@ -47,32 +61,9 @@
         </div>
         <input [ngSignal]="abnumber" type="number">
       </div>
-
-      <div class="form-group">
-        <div class="header-container">
-          <div>
-            <label>{{'incoterm' | transloco}}</label>
-          </div>
-          <div>
-            @if(!isIncotermValid()){
-            <label class="error-message">{{'simple-error' | transloco}}</label>
-            }
-          </div>
-        </div>
-        <input [ngSignal]="incoterm" type="text">
-      </div>
     </div>
 
     <div class="form-row">
-      <div class="form-group">
-        <label>{{'checklist' | transloco}}</label>
-        <select #currChecklist (change)="editService.checklistId.set(+currChecklist.value)">
-          @for (currChecklist of allChecklists(); track $index) {
-          <option value="{{currChecklist.id}}">{{currChecklist.checklistname}}</option>
-          }
-        </select>
-      </div>
-
       <div class="form-group">
         <div class="header-container">
           <div>
@@ -90,15 +81,24 @@
       <div class="form-group">
         <div class="header-container">
           <div>
-            <label>{{'loading-plattform' | transloco}}</label>
+            <label>{{'incoterm' | transloco}}</label>
           </div>
           <div>
-            @if(!isLoadingPlattfromValid()){
+            @if(!isIncotermValid()){
             <label class="error-message">{{'simple-error' | transloco}}</label>
             }
           </div>
         </div>
-        <input [ngSignal]="loadingPlattform" type="text">
+        <input [ngSignal]="incoterm" type="text">
+      </div>
+
+      <div class="form-group">
+        <label>{{'checklist' | transloco}}</label>
+        <select #currChecklist (change)="editService.checklistId.set(+currChecklist.value)">
+          @for (currChecklist of allChecklists(); track $index) {
+          <option value="{{currChecklist.id}}">{{currChecklist.checklistname}}</option>
+          }
+        </select>
       </div>
 
       <div class="form-group">
@@ -108,6 +108,10 @@
     </div>
 
     <div class="form-row">
+      <div class="form-group">
+        {{'container-size' | transloco}}
+      </div>
+
       <div class="form-group">
         <div class="header-container">
           <div>
@@ -172,8 +176,13 @@
 
       @for (duration of durations; track $index) {
       <div class="simple-margin">
-        <label>{{ duration }} {{'days' | transloco}} <input type="radio" name="duration" [value]="duration"
-            [(ngModel)]="selectedFreeDetention"></label>
+        <label>
+          @if (duration === 0) {
+          {{'no-free-detention' | transloco}}
+          }@else {
+          {{ duration }} {{'days' | transloco}}
+          }
+          <input type="radio" name="duration" [value]="duration" [(ngModel)]="selectedFreeDetention"></label>
       </div>
       }
     </div>
@@ -184,12 +193,15 @@
       </div>
 
       <div class="simple-margin">
-        <label>{{'tb' | transloco}} <input type="radio" name="thc" [value]="true" [(ngModel)]="selectedThc"></label>
+        <label>{{'tb' | transloco}} <input type="radio" name="thc" [value]="0" [(ngModel)]="selectedThc"></label>
       </div>
 
       <div class="simple-margin">
-        <label>{{'customer' | transloco}} <input type="radio" name="thc" [value]="false"
-            [(ngModel)]="selectedThc"></label>
+        <label>{{'customer' | transloco}} <input type="radio" name="thc" [value]="1" [(ngModel)]="selectedThc"></label>
+      </div>
+
+      <div class="simple-margin">
+        <label>{{'nothing' | transloco}} <input type="radio" name="thc" [value]="2" [(ngModel)]="selectedThc"></label>
       </div>
     </div>
 
@@ -199,17 +211,17 @@
       </div>
 
       <div class="simple-margin-with-top">
-        <label>{{'none' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
+        <label>{{'fast-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
             [value]="0" [(ngModel)]="selectedLine"></label>
       </div>
 
       <div class="simple-margin-with-top">
-        <label>{{'fast-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
+        <label>{{'direct-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
             [value]="1" [(ngModel)]="selectedLine"></label>
       </div>
 
       <div class="simple-margin-with-top">
-        <label>{{'direct-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
+        <label>{{'nothing' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
             [value]="2" [(ngModel)]="selectedLine"></label>
       </div>
     </div>
@@ -233,7 +245,7 @@
               <input (change)="setAreArticleNumbersValid()" min="1" type="number" formControlName="articleNumber">
             </div>
 
-            @if (selectedLine === 1 || selectedLine === 2) {
+            @if (selectedLine === 0 || selectedLine === 1) {
             <div class="form-group">
               <div class="header-container">
                 <div>
@@ -271,11 +283,6 @@
         <div class="form-group">
           <label>{{'sped' | transloco}}</label>
           <input class="not-editable" readonly type="text" [ngSignal]="sped">
-        </div>
-
-        <div class="form-group">
-          <label>{{'country' | transloco}}</label>
-          <input class="not-editable" readonly type="text" [ngSignal]="country">
         </div>
 
         <div class="form-group"></div>
@@ -362,12 +369,22 @@
 
   <div class="form-row">
     <div class="form-group">
+      @if (actionType === 'new') {
+      <button class="save-button" [disabled]="!isAllValid()" (click)="saveNewOrder()">{{'save' | transloco}}</button>
+      }@else {
       <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
+      }
     </div>
     <div class="form-group">
+      @if (actionType === 'new') {
+        <button class="save-button" [disabled]="!isAllValid()" (click)="postAndPublish()">{{'save-and-publish' |
+          transloco}}</button>
+      }@else {
       <button class="save-button" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
         transloco}}</button>
+      }
     </div>
+    @if (actionType !== 'new') {
     <div class="form-group">
       <button
         [disabled]="!isApprovedByTl() || editService.currOrder().successfullyFinished || editService.currOrder().canceled"
@@ -379,4 +396,5 @@
         [disabled]="editService.currOrder().successfullyFinished || editService.currOrder().canceled"
         (click)="cancelOrder()">{{'cancel' | transloco}}</button>
     </div>
+    }
   </div>

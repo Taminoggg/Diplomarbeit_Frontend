@@ -85,7 +85,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   allChecklists = signal<ChecklistDto[]>([]);
   currCsInquiry = signal<CsinquiryDto>({
     id: 0,
-    container: '',
+    country: '',
     abnumber: 0,
     grossWeightInKg: 0,
     incoterm: '',
@@ -94,8 +94,8 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     containersizeHc: 0,
     freeDetention: 0,
     thctb: false,
+    thcc: false,
     readyToLoad: '',
-    loadingPlattform: '',
     approvedByCrCs: false,
     approvedByCrCsTime: "",
     isFastLine: false,
@@ -105,9 +105,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     {
       id: 1,
       sped: 'Loading',
-      country: 'Loading',
       acceptingPort: 'Loading',
-      expectedRetrieveWeek: '17.12.2023',
       invoiceOn: '17.12.2023',
       retrieveDate: '17.12.2023',
       retrieveLocation: 'Loading',
@@ -124,7 +122,6 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   isApprovedByCs = signal(false);
   isApprovedByTl = signal(false);
   currChecklistname = signal('');
-  container = signal('');
   abnumber = signal(0);
   grossWeightInKg = signal(0);
   incoterm = signal('');
@@ -133,14 +130,13 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   containersizeHc = signal(0);
   freeDetention = signal(0);
   thctb = signal(false);
+  thcc = signal(false);
   readyToLoad = signal('');
-  loadingPlattform = signal('');
   isFastLine = signal(false);
   isDirectLine = signal(false);
   sped = signal('');
   country = signal('');
   acceptingPort = signal('');
-  expectedRetrieveWeek = signal('');
   invoiceOn = signal('');
   retrieveDate = signal('');
   retrieveLocation = signal('');
@@ -154,9 +150,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   myForm!: FormGroup;
   isCreatedBySDValid = computed(() => this.validationService.isNameStringValid(this.editService.createdBySD()));
   isSpedValid = computed(() => this.validationService.isAnyInputValid(this.sped()));
-  isCountryValid = computed(() => this.validationService.isNameStringValid(this.country()));
   isAcceptingPortValid = computed(() => this.validationService.isAnyInputValid(this.acceptingPort()));
-  isExpectedRetrieveWeekValid = computed(() => this.validationService.isDateValid(this.expectedRetrieveWeek()));
   isInvoiceOnValid = computed(() => this.validationService.isDateValid(this.invoiceOn()));
   isRetrieveDateValid = computed(() => this.validationService.isDateValid(this.retrieveDate()));
   isRetrieveLocationValid = computed(() => this.validationService.isAnyInputValid(this.retrieveLocation()));
@@ -171,9 +165,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     return (
       this.isCreatedBySDValid() &&
       this.isSpedValid() &&
-      this.isCountryValid() &&
       this.isAcceptingPortValid() &&
-      this.isExpectedRetrieveWeekValid() &&
       this.isInvoiceOnValid() &&
       this.isRetrieveDateValid() &&
       this.isRetrieveLocationValid() &&
@@ -240,9 +232,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     {
       id: this.currTlInquiry().id,
       sped: this.sped(),
-      country: this.country(),
       acceptingPort: this.acceptingPort(),
-      expectedRetrieveWeek: this.expectedRetrieveWeek(),
       invoiceOn: this.invoiceOn(),
       retrieveDate: this.retrieveDate(),
       retrieveLocation: this.retrieveLocation(),
@@ -277,7 +267,6 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   setCsInquirySignals() {
     this.isFastLine.set(this.currCsInquiry().isFastLine);
     this.isDirectLine.set(this.currCsInquiry().isDirectLine);
-    this.container.set(this.currCsInquiry().container);
     this.abnumber.set(this.currCsInquiry().abnumber);
     this.grossWeightInKg.set(this.currCsInquiry().grossWeightInKg);
     this.incoterm.set(this.currCsInquiry().incoterm);
@@ -286,16 +275,14 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
     this.containersizeHc.set(this.currCsInquiry().containersizeHc);
     this.freeDetention.set(this.currCsInquiry().freeDetention);
     this.thctb.set(this.currCsInquiry().thctb);
+    this.thcc.set(this.currCsInquiry().thcc);
     this.readyToLoad.set(this.currCsInquiry().readyToLoad);
-    this.loadingPlattform.set(this.currCsInquiry().loadingPlattform);
   }
 
   setTlInquirySignals(): void {
     this.isApprovedByTl.set(this.currTlInquiry().approvedByCrTl);
     this.sped.set(this.currTlInquiry().sped);
-    this.country.set(this.currTlInquiry().country);
     this.acceptingPort.set(this.currTlInquiry().acceptingPort);
-    this.expectedRetrieveWeek.set(this.currTlInquiry().expectedRetrieveWeek);
     this.invoiceOn.set(this.currTlInquiry().invoiceOn);
     this.retrieveDate.set(this.currTlInquiry().retrieveDate);
     this.retrieveLocation.set(this.currTlInquiry().retrieveLocation);
