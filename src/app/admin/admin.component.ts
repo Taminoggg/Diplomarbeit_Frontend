@@ -60,18 +60,8 @@ export class AdminComponent implements OnInit {
 
     if (this.selectedFilter() === 'CR') {
       this.filteredOrders.set(this.filteredOrders().filter(x => x.csid > 0 && x.tlid > 0));
-      this.filteredOrders().forEach(order => {
-        this.tlinquiryService.tlinquiriesIdGet(order.tlid)
-          .subscribe(tlinquiry => this.csinquiryService.csinquiriesIdGet(order.csid)
-            .subscribe(csinquiry => this.timeToGetApprovedByTl.set(order.id, this.calculateDayDiff(csinquiry.approvedByCrCsTime, tlinquiry.approvedByCrTlTime)))
-          );
-      });
     } else if (this.selectedFilter() === 'PP') {
       this.filteredOrders.set(this.filteredOrders().filter(x => x.ppId > 0));
-      this.filteredOrders().forEach(order => {
-        this.productionPlanningService.productionPlanningsIdGet(order.ppId)
-          .subscribe(x => this.timeToGetApprovedByPpPp.set(order.id, this.calculateDayDiff(x.approvedByPpCsTime, x.approvedByPpPpTime)));
-      });
     }
 
     const fromParts = this.fromDate().split("-");
@@ -90,12 +80,24 @@ export class AdminComponent implements OnInit {
       }));
     }
 
+    this.messagesForOrder = new Map<number, number>();
+    this.filesForOrder = new Map<number, number>();
+    this.timeToGetApprovedByTl = new Map<number, string>();
+    this.timeToGetApprovedByPpPp = new Map<number, string>();
+    this.timeToFinish = new Map<number, string>();
     this.filteredOrders().forEach(order => {
-      this.messagesForOrder = new Map<number, number>();
-      this.filesForOrder = new Map<number, number>();
 
-      this.timeToFinish.set(order.id, this.calculateDayDiff(order.finishedOn, order.createdOn));
-      console.log(this.timeToFinish);
+      if (this.selectedFilter() === 'CR') {
+        this.tlinquiryService.tlinquiriesIdGet(order.tlid)
+          .subscribe(tlinquiry => this.csinquiryService.csinquiriesIdGet(order.csid)
+            .subscribe(csinquiry => this.timeToGetApprovedByTl.set(order.id, this.calculateDayDiff(csinquiry.approvedByCrCsTime, tlinquiry.approvedByCrTlTime)))
+          );
+      } else if (this.selectedFilter() === 'PP') {
+        this.productionPlanningService.productionPlanningsIdGet(order.ppId)
+          .subscribe(x => this.timeToGetApprovedByPpPp.set(order.id, this.calculateDayDiff(x.approvedByPpCsTime, x.approvedByPpPpTime)));
+      }
+
+      this.timeToFinish.set(order.id, this.calculateDayDiff(order.createdOn, order.finishedOn));
 
       this.messageConversationService.messageConversationsConversationIdGet(order.id)
         .subscribe(x => {
@@ -125,11 +127,11 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  getTimeForFinished(id: number):string{
+  getTimeForFinished(id: number): string {
     return this.timeToFinish.get(id) ?? 'No data.';
   }
 
-  setSelectedStep(id: number):void {
+  setSelectedStep(id: number): void {
     if (this.selectedChecklistId() === this.selectedStepId()) {
       this.selectedStepId.set(-1);
     } else {
@@ -178,14 +180,12 @@ export class AdminComponent implements OnInit {
 
   calculateDayDiff(time1: string, time2: string): string {
     if (time1.length > 0 && time2.length > 0) {
-      console.log('inside the if');
-      console.log('time1:' + time1 + ' time2: ' + time2);
       const [t1Year, t1Month, t1Day] = time1.split("-");
       const [t2Year, t2Month, t2Day] = time2.split("-");
       const newT1Date: Date = new Date(parseInt(t1Year), parseInt(t1Month) - 1, parseInt(t1Day));
       const newT2Date: Date = new Date(parseInt(t2Year), parseInt(t2Month) - 1, parseInt(t2Day));
       const timeDifferenceInMilliseconds = newT2Date.getTime() - newT1Date.getTime();
-      const timeDifferenceInDays = (timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24))+1;
+      const timeDifferenceInDays = (timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24)) + 1;
 
       return timeDifferenceInDays.toString();
     } else {
@@ -195,7 +195,7 @@ export class AdminComponent implements OnInit {
 
   getAbNumberForOrder(orderId: number): number {
     return this.dataService.abNumberForOrder.get(orderId)!;
-}
+  }
 
   getCountForOrder(id: number, mapString: string): number {
     if (mapString == "messages") {

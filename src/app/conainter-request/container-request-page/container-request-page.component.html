@@ -1,8 +1,8 @@
 <div class="overviewBox">
   <h1>{{
-    (htmlContent === "containerRequestCS" ? 'container-page-header-cs' :
-    (htmlContent === "containerRequestTL" ? 'container-page-header-tl' :
-    (htmlContent === "productionPlanningCS" ? 'shippment-page-header-cs' : 'shippment-page-header-tl')))
+    (htmlContent === "containerRequestCS" ? 'container-page-header' :
+    (htmlContent === "containerRequestTL" ? 'container-page-header' :
+    (htmlContent === "productionPlanningCS" ? 'shippment-page-header' : 'shippment-page-header')))
     | transloco }}
   </h1>
   @if (htmlContent === 'containerRequestCS') {
@@ -27,6 +27,8 @@
     }
     @if (htmlContent === 'containerRequestCS' || htmlContent === 'containerRequestTL') {
     <option value="approvedByTl">{{'approved-by-tl' | transloco}}</option>
+    <option value="country">{{'country' | transloco}}</option>
+    <option value="sped">{{'sped' | transloco}}</option>
     }
     @if (htmlContent === 'productionPlanningCS') {
     <option value="approvedByPpCs">{{'approved-by-cs' | transloco}}</option>
@@ -34,9 +36,7 @@
     @if (htmlContent === 'productionPlanningPP' || htmlContent === 'productionPlanningCS') {
     <option value="approvedByPp">{{'approved-by-pp' | transloco}}</option>
     }
-    <option value="amount">{{'amount' | transloco}}</option>
-    <option value="country">{{'country' | transloco}}</option>
-    <option value="sped">{{'sped' | transloco}}</option>
+
   </select>
   <div>
     @if (selectedFilter() === 'customername' || selectedFilter() === 'country' ||
@@ -156,5 +156,3 @@
     }
   </table>
 </div>
-
-<button (click)="test()">Test</button>

@@ -73,7 +73,7 @@ export class SettingsComponent implements OnInit {
 
     let propertiesToCheckPP: string[] = [];
     if (this.htmlContent === 'productionPlanningPP' || this.htmlContent === 'productionPlanningCS') {
-      propertiesToCheckPP = ['articleNumbers', 'factory', 'plant'];
+      propertiesToCheckPP = ['articleNumbers', 'factory', 'plant', 'ppId'];
       console.log('propertiesToCheck', propertiesToCheckPP);
     }
 
@@ -117,6 +117,7 @@ export class SettingsComponent implements OnInit {
     'status': 'status',
     'lastUpdated': 'last-updated',
     'sped': 'sped',
+    'ppId': 'pp-id',
     'amount': 'amount',
     'country': 'country',
     'finishedOn': 'finished-on',

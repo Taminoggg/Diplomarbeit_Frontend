@@ -15,8 +15,7 @@
     "last-updated": "Zuletzt aktualisiert",
     "checklist": "Checkliste",
     "edit": "Bearbeiten",
-    "container-page-header-cs": "Übersicht aktive Containeranfragen (CS)",
-    "container-page-header-tl": "Übersicht aktive Containeranfragen (TL)",
+    "container-page-header": "Übersicht aktive Containeranfragen",
     "search-placeholder": "Suchen...",
     "container": "Container",
     "direct-line": "DIRECT LINE",
@@ -34,8 +33,7 @@
     "save": "Speichern",
     "factory": "Werk",
     "plant": "Anlage",
-    "shippment-page-header-cs": "Übersicht aktive Lieferzeit und Lieferwerkanfragen (CS)",
-    "shippment-page-header-tl": "Übersicht aktive Lieferzeit und Lieferwerkanfragen (PP)",
+    "shippment-page-header": "Übersicht aktive Lieferzeit und Lieferwerkanfragen",
     "inquiry-number": "Anfrage Nummer",
     "accepting-port": "Empfangshafen",
     "expected-retrieve-week": "Erwartete Ankunftswoche",
@@ -138,5 +136,7 @@
     "nothing": "Nichts",
     "required-pallet-amount": "benötigte Menge (PAL)",
     "finished-on": "Fertiggestellt am", 
-    "created-on": "Erstellt am"
+    "created-on": "Erstellt am",
+    "time-to-finish": "Zeit zum Abschluss des Auftrags",
+    "pp-id": "Anfrage"
 }

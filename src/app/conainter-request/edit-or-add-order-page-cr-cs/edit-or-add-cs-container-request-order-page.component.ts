@@ -240,6 +240,14 @@ export class EditOrAddCsContainerRequestOrderPageComponent implements OnChanges,
     return order;
   }
 
+  saveNewOrderWithoutPublish(){
+    this.saveNewOrder().then(() => {
+      this.editService.navigateToPath();
+    }).catch(error => {
+      console.error('Error saving new order:', error);
+    });
+  }
+
   saveOrder(): void {
     let order = this.getEditOrderCSDto();
 
@@ -457,6 +465,7 @@ export class EditOrAddCsContainerRequestOrderPageComponent implements OnChanges,
       isDirectLine: isDirectLine,
       isFastLine: isFastLine
     }
+    console.log(editedCsInquery);
 
     this.csInquiryService.csinquiriesPut(editedCsInquery)
       .subscribe(x => console.log('RETURN VALUE OF CSINQUERY SAVE: ' + x.id + x.abnumber + x.freeDetention + x.readyToLoad));
@@ -467,12 +476,16 @@ export class EditOrAddCsContainerRequestOrderPageComponent implements OnChanges,
       this.selectedThc = 0;
     } else if (this.currCsInquiry().thcc === true) {
       this.selectedThc = 1;
+    }else {
+      this.selectedThc = 2;
     }
 
     if (this.currCsInquiry().isFastLine === true) {
       this.selectedLine = 0;
     } else if (this.currCsInquiry().isDirectLine === true) {
       this.selectedLine = 1;
+    } else{
+      this.selectedLine = 2;
     }
 
     this.abnumber.set(this.currCsInquiry().abnumber);

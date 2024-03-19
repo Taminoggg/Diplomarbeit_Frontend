@@ -218,31 +218,29 @@
   </div>
 
   <div class="form-row">
-    <div class="form-group">
-      @if (actionType === 'edit') {
-      <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
+    <div>
+      @if (actionType === 'new') {
+      <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrderWithoutPublish()">{{'save' | transloco}}</button>
       }@else {
       <button class="save-button" [disabled]="!isAllValid()" (click)="saveNewOrder()">{{'save' | transloco}}</button>
       }
-    </div>
-    <div class="form-group">
-      @if (actionType === 'edit') {
-      <button class="save-button" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
+
+      @if (actionType === 'new') {
+      <button class="save-button simple-margin" [disabled]="!isAllValid()" (click)="postAndPublish()">{{'save-and-publish' |
         transloco}}</button>
       }@else {
-      TODO
+        <button class="save-button simple-margin" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
+          transloco}}</button>
       }
-
     </div>
     @if (actionType !== 'new') {
-    <div class="form-group">
+    <div>
       <button class="save-button"
         [disabled]="!isApprovedByPpPp() || editService.currOrder().successfullyFinished || editService.currOrder().canceled"
         (click)="finishOrder()">{{'finish' |
         transloco}}</button>
-    </div>
-    <div class="form-group">
-      <button class="save-button"
+
+      <button class="save-button simple-margin"
         [disabled]="editService.currOrder().successfullyFinished || editService.currOrder().canceled"
         (click)="cancelOrder()">{{'cancel' |
         transloco}}</button>

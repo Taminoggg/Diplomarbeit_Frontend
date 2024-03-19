@@ -10,9 +10,13 @@
     @if (allOrders().length > 0) {
     <table>
         <tr>
-            <th>{{'ID'}}</th>
+            @if(selectedFilter() === 'CR'){
+                <td>{{'ab-nr' | transloco}}</td>
+            }@else {
+                <td>{{'pp-id' | transloco}}</td>
+            }  
             <th>{{'time-to-approve' | transloco}}</th>
-            <th>TimeForOrderToFinish</th>
+            <th>{{'time-to-finish' | transloco}}</th>
             <th>{{'messages-for-order' | transloco}}</th>
             <th>{{'files-for-order' | transloco}}</th>
         </tr>
@@ -22,7 +26,7 @@
             @if(selectedFilter() === 'CR'){
                 <td>{{getAbNumberForOrder(order.id)}}</td>
             }@else {
-                <td>{{order.id}}</td>
+                <td>{{order.ppId}}</td>
             }   
             <td>{{getTimeForApprovedBy(order.id, 'tl')}}</td>
             <td>{{getTimeForFinished(order.id)}}</td>

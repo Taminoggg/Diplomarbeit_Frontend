@@ -51,17 +51,16 @@ export class EditService {
     const data = document.getElementById('contentToConvert');
     if (data) {
       html2canvas(data).then((canvas) => {
-        const imgWidth = 208;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const imgWidth = canvas.width; 
+        const imgHeight = canvas.height;
 
         const contentDataURL = canvas.toDataURL('image/png');
-        const pdf = new jspdf('l', 'mm', 'a5');
+        const pdf = new jspdf('l', 'px', [imgWidth, imgHeight]);
 
-        pdf.addImage(contentDataURL, 'PNG', 1, 0, imgWidth, imgHeight);
-        pdf.save('myPDF.pdf');
+        pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
+        let date = new Date();
+        pdf.save('data_'+`${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`+'.pdf');
       });
-    } else {
-      console.error("Element with ID 'contentToConvert' not found.");
     }
   }
 
@@ -83,7 +82,7 @@ export class EditService {
     console.log(this.currOrder().id);
   }
 
-  createEditStatusDto(id:number, status:boolean): EditStatusDto {
+  createEditStatusDto(id: number, status: boolean): EditStatusDto {
     let editOrder: EditStatusDto = {
       id: id,
       status: status
@@ -91,7 +90,7 @@ export class EditService {
     return editOrder;
   }
 
-  createEditOrderStatusDto(status:string): EditOrderStatusDto {
+  createEditOrderStatusDto(status: string): EditOrderStatusDto {
     let editOrder: EditOrderStatusDto = {
       id: this.currOrder().id,
       status: status

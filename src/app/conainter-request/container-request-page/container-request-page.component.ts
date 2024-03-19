@@ -66,7 +66,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
       ];
     } else if (this.htmlContent === "productionPlanningCS") {
       this.dataService.tableHeaders = [
-        { label: 'order', value: 'id' },
+        { label: 'ppId', value: 'ppId' },
         { label: 'customer', value: 'customerName' },
         { label: 'created-by', value: 'createdByCS' },
         { label: 'article', value: 'articleNumbers' },
@@ -80,7 +80,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
       ];
     } else if (this.htmlContent === "productionPlanningPP") {
       this.dataService.tableHeaders = [
-        { label: 'order', value: 'id' },
+        { label: 'ppId', value: 'ppId' },
         { label: 'customer', value: 'customerName' },
         { label: 'created-by', value: 'createdByCS' },
         { label: 'article', value: 'articleNumbers' },
@@ -94,10 +94,6 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
       ];
     }
     localStorage.setItem(this.htmlContent + 'tableConfig', JSON.stringify(this.dataService.tableHeaders));
-  }
-
-  test(){
-    console.log(this.dataService.tableHeaders);
   }
 
   csinquiryService = inject(CsinquiriesService);
