@@ -16,9 +16,25 @@
   margin-bottom: 15px;
 }
 
+.form-row-edited-articles {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
 .form-group {
   flex: 1;
   margin-right: 5px;
+}
+
+.form-group-edited-articles {
+  margin-right: 30px;
+  flex: 0 0 auto;
+}
+
+.margin-top{
+  margin-top: 25px;
 }
 
 label {
@@ -136,4 +152,25 @@ select {
 
 .simple-margin{
   margin-left: 10px;
+}
+
+.kw{
+  display: flex;
+}
+
+.medium-number-field {
+  width: 120px;
+}
+
+.small-number-field {
+  width: 100px;
+}
+
+.additional-text {
+  height: 100px;
+}
+
+.simple-margin-with-margin-top{
+  margin-top: 8px;
+  margin-right: 5px;
 }

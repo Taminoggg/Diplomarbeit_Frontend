@@ -60,6 +60,7 @@ export class EditOrAddCsContainerRequestOrderPageComponent implements OnChanges,
             .subscribe(x => {
               this.currCsInquiry.set(x);
               this.setCsInquirySignals();
+              this.setRadioButtonsInputsValid();
             });
 
           this.tlInquiryService.tlinquiriesIdGet(this.editService.currOrder().tlid)
@@ -122,9 +123,9 @@ export class EditOrAddCsContainerRequestOrderPageComponent implements OnChanges,
   durations = [10, 14, 21, 0];
   thcs = [0, 1, 2];
   lines = [0, 1, 2];
-  selectedThc: number = this.thcs[2];
+  selectedThc: number = 3;
   selectedFreeDetention: number = this.durations[3];
-  selectedLine: number = this.lines[2];
+  selectedLine: number = 3;
   isApprovedByCs = signal(false);
   isApprovedByTl = signal(false);
   abnumber = signal(0);
@@ -149,18 +150,20 @@ export class EditOrAddCsContainerRequestOrderPageComponent implements OnChanges,
   eta = signal('');
   boat = signal('');
   areArticleNumbersValid = signal<boolean>(true);
+  areRadioButtonInputsValid = signal<boolean>(false);
   isCountryValid = computed(() => this.validationService.isNameStringValid(this.country()));
   isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
   isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.editService.customerName()));
   isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdByCS()));
   isAbNumberValid = computed(() => this.validationService.isNumberValid(this.abnumber()));
   isGrossWeightInKgValid = computed(() => this.validationService.isNumberValid(this.grossWeightInKg()));
-  isContainerSizeAValid = computed(() => this.containersizeA() >= 0);
-  isContainerSizeBValid = computed(() => this.containersizeB() >= 0);
-  isContainerSizeHcValid = computed(() => this.containersizeHc() >= 0);
+  isContainerSizeAValid = computed(() => this.validationService.isNumberValid(this.containersizeA()));
+  isContainerSizeBValid = computed(() => this.validationService.isNumberValid(this.containersizeB()));
+  isContainerSizeHcValid = computed(() => this.validationService.isNumberValid(this.containersizeHc()));
   isIncotermValid = computed(() => this.validationService.isAnyInputValid(this.incoterm()));
   isAllValid = computed(() => {
     return (
+      this.areRadioButtonInputsValid() &&
       this.isReadyToLoadValid() &&
       this.isCountryValid() &&
       this.isCustomerValid() &&
@@ -176,7 +179,9 @@ export class EditOrAddCsContainerRequestOrderPageComponent implements OnChanges,
     );
   });
 
-
+  setRadioButtonsInputsValid(){
+    this.areRadioButtonInputsValid.set(this.selectedLine !== 3 &&this.selectedThc !== 3);
+  }
 
   get articlesFormArray() {
     return this.myForm.get('articles') as FormArray;

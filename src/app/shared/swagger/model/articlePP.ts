@@ -16,8 +16,8 @@ export interface ArticlePP {
     id?: number;
     articleNumber?: number;
     minHeigthRequired?: number;
-    desiredDeliveryDate?: string | null;
-    deliveryDate?: string | null;
+    desiredDeliveryDate?: number;
+    deliveryDate?: number;
     shortText?: string | null;
     factory?: string | null;
     nozzle?: string | null;

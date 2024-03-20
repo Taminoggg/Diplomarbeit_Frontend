@@ -3,19 +3,25 @@
         <option value="CR">ContainerAnfrage</option>
         <option value="PP">ProduktionsPlanung</option>
     </select>
+    <br>
     <label>{{'from' | transloco}}</label>
-    <input (input)="updateOrders()" [ngSignal]="fromDate" format="dd.MM.yyyy" type="date">
+    <input (change)="updateOrders()" [ngSignal]="fromDate" format="dd.MM.yyyy" type="date">
+    <br>
     <label>{{'to' | transloco}}</label>
-    <input (input)="updateOrders()" [ngSignal]="toDate" format="dd.MM.yyyy" type="date">
+    <input (change)="updateOrders()" [ngSignal]="toDate" format="dd.MM.yyyy" type="date">
     @if (allOrders().length > 0) {
     <table>
         <tr>
             @if(selectedFilter() === 'CR'){
-                <td>{{'ab-nr' | transloco}}</td>
+            <th>{{'ab-nr' | transloco}}</th>
             }@else {
-                <td>{{'pp-id' | transloco}}</td>
-            }  
-            <th>{{'time-to-approve' | transloco}}</th>
+            <th>{{'pp-id' | transloco}}</th>
+            }
+            @if(selectedFilter() === 'CR'){
+            <th>{{'time-to-approve-tl' | transloco}}</th>
+            }@else {
+            <th>{{'time-to-approve-pp' | transloco}}</th>
+            }
             <th>{{'time-to-finish' | transloco}}</th>
             <th>{{'messages-for-order' | transloco}}</th>
             <th>{{'files-for-order' | transloco}}</th>
@@ -24,12 +30,28 @@
         @for (order of filteredOrders(); track $index) {
         <tr>
             @if(selectedFilter() === 'CR'){
-                <td>{{getAbNumberForOrder(order.id)}}</td>
+            <td>{{getAbNumberForOrder(order.id)}}</td>
             }@else {
-                <td>{{order.ppId}}</td>
-            }   
-            <td>{{getTimeForApprovedBy(order.id, 'tl')}}</td>
-            <td>{{getTimeForFinished(order.id)}}</td>
+            <td>{{order.ppId}}</td>
+            }
+            @if(selectedFilter() === 'CR'){
+            <td>{{getTimeForApprovedByTl(order.id)}}
+                @if (!getTimeForApprovedByTl(order.id).includes('data')) {
+                    {{'days' | transloco}}
+                }
+                </td>
+            }@else {
+            <td>{{getTimeForApprovedByPp(order.id)}} 
+                @if (!getTimeForApprovedByPp(order.id).includes('data')) {
+                    {{'days' | transloco}}
+                }
+            </td>
+            }
+            <td>{{getTimeForFinished(order.id)}}
+                @if (!getTimeForFinished(order.id).includes('data')) {
+                    {{'days' | transloco}}
+                }
+                </td>
             <td>{{getCountForOrder(order.id, 'messages')}}</td>
             <td>{{getCountForOrder(order.id, 'files')}}</td>
         </tr>
@@ -37,11 +59,16 @@
 
         <tr>
             <td>{{'avg' | transloco}}</td>
-            <td>{{getAvgTimeToGetApprovedBy()}}</td>
-            <td>{{getAvgTimeToFinsish()}}</td>
+            <td>
+                @if (selectedFilter() === 'CR') {
+                {{getAvgTimeToGetApprovedBy('tl')}}
+                }@else {
+                {{getAvgTimeToGetApprovedBy('pp')}}
+                }
+                {{'days' | transloco}}</td>
+            <td>{{getAvgTimeToFinsish()}} {{'days' | transloco}}</td>
             <td>{{getAvgForOrder('messages')}}</td>
             <td>{{getAvgForOrder('files')}}</td>
-            
         </tr>
     </table>
     }@else {

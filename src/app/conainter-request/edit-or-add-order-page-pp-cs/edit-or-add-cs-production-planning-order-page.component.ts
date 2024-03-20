@@ -25,8 +25,9 @@ export class EditOrAddCsProductionPlanningOrderPageComponent implements OnChange
     });
 
     if (this.actionType === 'new') {
-      this.addArticle(1, 1, 1, 1, '', '', '', '', '', '', '', '', 1);
+      this.addArticle(1, 1, 1, 1, 1, 1, '', '', '', '', '', '', 3);
     }
+    this.setAreArticlesValid();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -44,12 +45,14 @@ export class EditOrAddCsProductionPlanningOrderPageComponent implements OnChange
             this.articlesPPService.articlesPPProductionPlanningIdGet(this.editService.currOrder().ppId)
               .subscribe(x => x.forEach(x => {
                 if (x.minHeigthRequired !== 0 && x.desiredDeliveryDate !== null) {
-                  let selectedInquiry = 0;
+                  let selectedInquiry = 3;
                   if (x.inquiryForNonFixedOrder === true) {
                     selectedInquiry = 1;
                   } else if (x.inquiryForQuotation === true) {
                     selectedInquiry = 2;
-                  }
+                  } else if (x.inquiryForFixedOrder === true) {
+                    selectedInquiry = 0;
+                  } 
 
                   this.addArticle(x.articleNumber, x.pallets, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant, selectedInquiry);
                 }
@@ -94,7 +97,7 @@ export class EditOrAddCsProductionPlanningOrderPageComponent implements OnChange
   setAreArticlesValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
       console.log(this.getFormGroup(i).get('desiredDeliveryDate')!.value);
-      if (!(this.getFormGroup(i).get('palletAmount')!.value > 0) || !(this.getFormGroup(i).get('minHeigthRequired')!.value > 0) || !this.validationService.isDateValid(this.getFormGroup(i).get('desiredDeliveryDate')!.value)) {
+      if (!(this.getFormGroup(i).get('palletAmount')!.value > 0) || !(this.getFormGroup(i).get('selectedInquiry')!.value !== 3) || !(this.getFormGroup(i).get('minHeigthRequired')!.value > 0) || !this.validationService.isCalenderWeekValid(this.getFormGroup(i).get('desiredDeliveryDate')!.value)) {
         this.areArticlesValid.set(false);
         return;
       }
@@ -123,7 +126,7 @@ export class EditOrAddCsProductionPlanningOrderPageComponent implements OnChange
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, id: number, minHeigthRequired: number, desiredDeliveryDate: string, deliveryDate: string, shortText: string, factory: string, nozzle: string, productionOrder: string, plannedOrder: string, plant: string, selectedInquiry: number) {
+  addArticle(articleNumber: number, palletAmount: number, id: number, minHeigthRequired: number, desiredDeliveryDate: number, deliveryDate: number, shortText: string, factory: string, nozzle: string, productionOrder: string, plannedOrder: string, plant: string, selectedInquiry: number) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber, Validators.required],
       palletAmount: [palletAmount, Validators.required],
@@ -142,10 +145,6 @@ export class EditOrAddCsProductionPlanningOrderPageComponent implements OnChange
 
     this.articlesFormArray.push(articleGroup);
     this.setAreArticlesValid();
-  }
-
-  test() {
-    console.log(this.getFormGroup(0).get('selectedInquiry')!.value);
   }
 
   getFormGroup(index: number): FormGroup {
@@ -225,7 +224,7 @@ export class EditOrAddCsProductionPlanningOrderPageComponent implements OnChange
             this.articlesPPService.articlesPPPost(article).subscribe(postedArticle => {
 
               let editArticle: EditPpPpArticleDto = {
-                deliveryDate: this.getFormGroup(i).get('deliveryDate')?.value ?? '',
+                deliveryDate: this.getFormGroup(i).get('deliveryDate')?.value ?? 1,
                 id: postedArticle.id,
                 shortText: this.getFormGroup(i).get('shortText')?.value ?? '',
                 nozzle: this.getFormGroup(i).get('nozzle')?.value ?? '',
@@ -236,7 +235,7 @@ export class EditOrAddCsProductionPlanningOrderPageComponent implements OnChange
               }
 
               if (
-                editArticle.deliveryDate !== '' &&
+                editArticle.deliveryDate !== 0 &&
                 editArticle.shortText !== '' &&
                 editArticle.nozzle !== '' &&
                 editArticle.factory !== '' &&
@@ -265,7 +264,7 @@ export class EditOrAddCsProductionPlanningOrderPageComponent implements OnChange
               console.log(editArticle);
 
               if (
-                editArticle.deliveryDate !== '' &&
+                editArticle.deliveryDate !== 0 &&
                 editArticle.shortText !== '' &&
                 editArticle.nozzle !== '' &&
                 editArticle.factory !== '' &&

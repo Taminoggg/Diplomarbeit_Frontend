@@ -17,11 +17,11 @@ export interface ArticlePPDto {
     pallets: number;
     productionPlanningId: number;
     minHeigthRequired: number;
-    desiredDeliveryDate: string;
+    desiredDeliveryDate: number;
     inquiryForFixedOrder: boolean;
     inquiryForNonFixedOrder: boolean;
     inquiryForQuotation: boolean;
-    deliveryDate: string;
+    deliveryDate: number;
     shortText: string;
     factory: string;
     nozzle: string;

@@ -9,9 +9,16 @@
   margin-bottom: 20px
 }
 
-.form-row {
+.row-button {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 15px;
 }
@@ -22,8 +29,20 @@
 }
 
 .form-group {
-  flex: 1;
   margin-right: 10px;
+  flex: 0 0 auto;
+}
+
+.additional-text {
+  height: 100px;
+}
+
+.small-number-field {
+  width: 75px;
+}
+
+.medium-number-field {
+  width: 100px;
 }
 
 label {
@@ -61,6 +80,10 @@ select {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.margin-top{
+  margin-top: 25px;
 }
 
 .back-button {
@@ -165,10 +188,29 @@ select {
 }
 
 .simple-margin{
-  margin-left: 10px;
+  margin-left: 20px;
 }
 
 .simple-margin-with-top{
   margin-top: 1%;
   margin-left: 5%;
+}
+
+.custom-radio input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #555;
+  border-radius: 3px;
+  outline: none;
+}
+
+.custom-radio input[type="radio"]:checked::after {
+  content: '\2713';
+  display: block;
+  text-align: center;
+  line-height: 20px;
+  color: black;
 }

@@ -11,14 +11,38 @@
 
 .form-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 15px;
 }
 
 .form-group {
-  flex: 1;
   margin-right: 10px;
+  flex: 0 0 auto;
+}
+
+.row-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.additional-text {
+  height: 100px;
+}
+
+.margin-top{
+  margin-top: 25px;
+}
+
+
+.medium-number-field {
+  width: 100px;
+}
+
+.small-number-field {
+  width: 75px;
 }
 
 label {

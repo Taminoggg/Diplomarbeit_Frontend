@@ -5,12 +5,12 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { EditStepDto } from '../shared/swagger/model/editStepDto';
 import { DataService } from '../shared/data.service';
 import { MatIconModule } from '@angular/material/icon';
-import { BehaviorSubject, from } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [NgSignalDirective, TranslocoModule, MatIconModule],
+  imports: [NgSignalDirective, TranslocoModule, MatIconModule, FormsModule],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
 })
@@ -53,6 +53,8 @@ export class AdminComponent implements OnInit {
         this.allOrders.set(x);
         this.updateOrders();
       });
+
+      this.dataService.refreshPage('', '', 'containerRequestCS', '', true, true);
   }
 
   updateOrders() {
@@ -185,7 +187,7 @@ export class AdminComponent implements OnInit {
       const newT1Date: Date = new Date(parseInt(t1Year), parseInt(t1Month) - 1, parseInt(t1Day));
       const newT2Date: Date = new Date(parseInt(t2Year), parseInt(t2Month) - 1, parseInt(t2Day));
       const timeDifferenceInMilliseconds = newT2Date.getTime() - newT1Date.getTime();
-      const timeDifferenceInDays = (timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24)) + 1;
+      const timeDifferenceInDays = (timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24));
 
       return timeDifferenceInDays.toString();
     } else {
@@ -206,8 +208,12 @@ export class AdminComponent implements OnInit {
     return 0;
   }
 
-  getTimeForApprovedBy(id: number, mapString: string): string {
-    return this.timeToGetApprovedByTl.get(id) ?? this.timeToGetApprovedByPpPp.get(id) ?? 'No data';
+  getTimeForApprovedByTl(id: number): string {
+    return this.timeToGetApprovedByTl.get(id) ?? 'No data';
+  }
+
+  getTimeForApprovedByPp(id: number): string {
+    return this.timeToGetApprovedByPpPp.get(id) ?? 'No data';
   }
 
   getAvgForOrder(mapString: string): number {
@@ -229,12 +235,15 @@ export class AdminComponent implements OnInit {
     return Number(avg.toFixed(2));
   }
 
-  getAvgTimeToGetApprovedBy(): number {
+  getAvgTimeToGetApprovedBy(mapString:string): number {
     let totalDays = 0;
     let totalOrders = 0;
-    let tlMap = this.timeToGetApprovedByTl;
-    let ppMap = this.timeToGetApprovedByPpPp
-    let map = new Map<number, string>([...tlMap, ...ppMap]);
+    let map = new Map<number, string>();
+    if(mapString === 'tl'){
+      map = this.timeToGetApprovedByTl;
+    }else{
+      map = this.timeToGetApprovedByPpPp;
+    }    
 
     for (const value of map.values()) {
       if (value !== 'No data yet.') {

@@ -1,5 +1,5 @@
 <div class="form-container">
-  <div class="form-row">
+  <div class="row-button">
     <button class="back-button" (click)="editService.navigateToPath()">{{'back' | transloco}}</button>
     <button class="save-button" (click)="editService.generatePDFFromContent()">{{'generatePDF' | transloco}}</button>
   </div>
@@ -48,7 +48,7 @@
         <input type="text" [ngSignal]="country">
       </div>
 
-      <div class="form-group">
+      <div class="form-group medium-number-field">
         <div class="header-container">
           <div>
             <label>{{'ab-nr' | transloco}}</label>
@@ -101,9 +101,9 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div class="form-group additional-text">
         <label>{{'additional-text' | transloco}}</label>
-        <input [ngSignal]="editService.additonalInformation" type="text">
+        <textarea style="resize: none;" [ngSignal]="editService.additonalInformation" type="text"></textarea>
       </div>
     </div>
 
@@ -112,7 +112,7 @@
         {{'container-size' | transloco}}
       </div>
 
-      <div class="form-group">
+      <div class="form-group small-number-field">
         <div class="header-container">
           <div>
             <label>{{'container-size-a' | transloco}}</label>
@@ -126,7 +126,7 @@
         <input min="1" [ngSignal]="containersizeA" type="number">
       </div>
 
-      <div class="form-group">
+      <div class="form-group small-number-field">
         <div class="header-container">
           <div>
             <label>{{'container-size-b' | transloco}}</label>
@@ -140,7 +140,7 @@
         <input min="1" [ngSignal]="containersizeB" type="number">
       </div>
 
-      <div class="form-group">
+      <div class="form-group small-number-field">
         <div class="header-container">
           <div>
             <label>{{'container-size-hc' | transloco}}</label>
@@ -176,13 +176,13 @@
 
       @for (duration of durations; track $index) {
       <div class="simple-margin">
-        <label>
+        <label class="custom-radio">
           @if (duration === 0) {
           {{'no-free-detention' | transloco}}
           }@else {
           {{ duration }} {{'days' | transloco}}
           }
-          <input type="radio" name="duration" [value]="duration" [(ngModel)]="selectedFreeDetention"></label>
+          <input type="radio" name="duration" (change)="setRadioButtonsInputsValid()" [value]="duration" [(ngModel)]="selectedFreeDetention"></label>
       </div>
       }
     </div>
@@ -193,15 +193,15 @@
       </div>
 
       <div class="simple-margin">
-        <label>{{'tb' | transloco}} <input type="radio" name="thc" [value]="0" [(ngModel)]="selectedThc"></label>
+        <label class="custom-radio">{{'tb' | transloco}} <input type="radio" (change)="setRadioButtonsInputsValid()" name="thc" [value]="0" [(ngModel)]="selectedThc"></label>
       </div>
 
       <div class="simple-margin">
-        <label>{{'customer' | transloco}} <input type="radio" name="thc" [value]="1" [(ngModel)]="selectedThc"></label>
+        <label class="custom-radio">{{'customer' | transloco}} <input type="radio" (change)="setRadioButtonsInputsValid()" name="thc" [value]="1" [(ngModel)]="selectedThc"></label>
       </div>
 
       <div class="simple-margin">
-        <label>{{'nothing' | transloco}} <input type="radio" name="thc" [value]="2" [(ngModel)]="selectedThc"></label>
+        <label class="custom-radio">{{'thc-default' | transloco}} <input type="radio" (change)="setRadioButtonsInputsValid()" name="thc" [value]="2" [(ngModel)]="selectedThc"></label>
       </div>
     </div>
 
@@ -211,17 +211,17 @@
       </div>
 
       <div class="simple-margin-with-top">
-        <label>{{'fast-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
+        <label class="custom-radio">{{'fast-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" (change)="setRadioButtonsInputsValid()" name="lines"
             [value]="0" [(ngModel)]="selectedLine"></label>
       </div>
 
       <div class="simple-margin-with-top">
-        <label>{{'direct-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
+        <label class="custom-radio">{{'direct-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" (change)="setRadioButtonsInputsValid()" name="lines"
             [value]="1" [(ngModel)]="selectedLine"></label>
       </div>
 
       <div class="simple-margin-with-top">
-        <label>{{'nothing' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" name="lines"
+        <label class="custom-radio">{{'line-default' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" (change)="setRadioButtonsInputsValid()" name="lines"
             [value]="2" [(ngModel)]="selectedLine"></label>
       </div>
     </div>
@@ -231,7 +231,7 @@
         @for (articleGroup of articlesFormArray.controls; track $index) {
         <div [formGroup]="getFormGroup($index)">
           <div class="form-row">
-            <div class="form-group">
+            <div class="form-group margin-top medium-number-field">
               <div class="header-container">
                 <div>
                   <label>{{'article-number' | transloco}}</label>
@@ -246,7 +246,7 @@
             </div>
 
             @if (selectedLine === 0 || selectedLine === 1) {
-            <div class="form-group">
+            <div class="form-group small-number-field">
               <div class="header-container">
                 <div>
                   <label>{{'pallet-amount' | transloco}}</label>
@@ -291,11 +291,6 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label>{{'excepted-retrieve-week' | transloco}}</label>
-          <input class="not-editable" readonly type="date" [ngSignal]="expectedRetrieveWeek" format="dd.MM.yyyy">
-        </div>
-
-        <div class="form-group">
           <label>{{'invoice-on' | transloco}}</label>
           <input class="not-editable" readonly type="date" [ngSignal]="invoiceOn" format="dd.MM.yyyy">
         </div>
@@ -309,6 +304,8 @@
           <label>{{'retrieve-location' | transloco}}</label>
           <input class="not-editable" readonly type="text" [ngSignal]="retrieveLocation">
         </div>
+
+        <div class="form-group"></div>
       </div>
 
       <div class="form-row">
@@ -367,7 +364,7 @@
     }
   </div>
 
-  <div class="form-row">
+  <div class="row-button">
     <div>
       @if (actionType === 'new') {
       <button class="save-button" [disabled]="!isAllValid()" (click)="saveNewOrderWithoutPublish()">{{'save' | transloco}}</button>

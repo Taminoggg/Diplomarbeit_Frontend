@@ -70,7 +70,7 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
 
   setAreArticlesValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
-      if (!this.validationService.isDateValid(this.getFormGroup(i).get('deliveryDate')!.value)) {
+      if (!this.validationService.isCalenderWeekValid(this.getFormGroup(i).get('deliveryDate')!.value)) {
         this.areArticlesValid.set(false);
         return;
       }
@@ -82,7 +82,7 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
     return this.myForm.get('articles') as FormArray;
   }
 
-  addArticle(articleNumber: number, palletAmount: number, id: number, minHeigthRequired: number, desiredDeliveryDate: string, inquiryForFixedOrder: boolean, inquiryForNonFixedOrder: boolean,  inquiryForQuotation: boolean, deliveryDate: string, shortText: string, factory: string, nozzle: string, productionOrder: string, plannedOrder: string, plant: string) {
+  addArticle(articleNumber: number, palletAmount: number, id: number, minHeigthRequired: number, desiredDeliveryDate: number, inquiryForFixedOrder: boolean, inquiryForNonFixedOrder: boolean,  inquiryForQuotation: boolean, deliveryDate: number, shortText: string, factory: string, nozzle: string, productionOrder: string, plannedOrder: string, plant: string) {
     const articleGroup = this.fb.group({
       articleNumber: [articleNumber],
       palletAmount: [palletAmount],

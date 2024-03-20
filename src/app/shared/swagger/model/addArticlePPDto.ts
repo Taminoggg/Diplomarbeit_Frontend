@@ -16,7 +16,7 @@ export interface AddArticlePPDto {
     pallets: number;
     productionPlanningId: number;
     minHeigthRequired: number;
-    desiredDeliveryDate: string;
+    desiredDeliveryDate: number;
     inquiryForFixedOrder: boolean;
     inquiryForNonFixedOrder: boolean;
     inquiryForQuotation: boolean;

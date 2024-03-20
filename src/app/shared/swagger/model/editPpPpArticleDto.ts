@@ -13,9 +13,9 @@
 
 export interface EditPpPpArticleDto { 
     id: number;
-    shortText?: string | null;
-    deliveryDate: string;
+    deliveryDate: number;
     nozzle?: string | null;
+    shortText?: string | null;
     factory?: string | null;
     productionOrder?: string | null;
     plannedOrder?: string | null;

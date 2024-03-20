@@ -163,7 +163,7 @@ export class DataService {
   refreshPage(selectedFilter: string, value: string, filteredBy: string, filterByName: string, showFinished: boolean, showCanceled: boolean): void {
     this.dataLoading.set(true);
     console.log("GETTING ORDERS: selectedFilter: " + selectedFilter + " value: " + value);
-    if (value === "") {
+    if (value === '') {
       selectedFilter = 'none';
     }
 

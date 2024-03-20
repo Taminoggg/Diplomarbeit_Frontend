@@ -19,8 +19,6 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   @Input({ transform: numberAttribute }) id = 0;
 
   ngOnInit(): void {
-    console.log(),
-
       this.myForm = this.fb.group({
         articles: this.fb.array([])
       });
@@ -154,9 +152,9 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
   isInvoiceOnValid = computed(() => this.validationService.isDateValid(this.invoiceOn()));
   isRetrieveDateValid = computed(() => this.validationService.isDateValid(this.retrieveDate()));
   isRetrieveLocationValid = computed(() => this.validationService.isAnyInputValid(this.retrieveLocation()));
-  isSCGeneralValid = computed(() => this.validationService.isNumberValid(this.scGeneral()));
-  isSCMainValid = computed(() => this.validationService.isNumberValid(this.scMain()));
-  isSCTraiValid = computed(() => this.validationService.isNumberValid(this.scTrail()));
+  isSCGeneralValid = computed(() => this.validationService.isNumberWithCommaValid(this.scGeneral()));
+  isSCMainValid = computed(() => this.validationService.isNumberWithCommaValid(this.scMain()));
+  isSCTraiValid = computed(() => this.validationService.isNumberWithCommaValid(this.scTrail()));
   isPortOfDepartureValid = computed(() => this.validationService.isAnyInputValid(this.portOfDeparture()));
   isEtsValid = computed(() => this.validationService.isDateValid(this.ets()));
   isEtaValid = computed(() => this.validationService.isDateValid(this.eta()));
@@ -266,6 +264,7 @@ export class EditTlContainerRequestOrderPageComponent implements OnChanges, OnIn
 
   setCsInquirySignals() {
     this.isFastLine.set(this.currCsInquiry().isFastLine);
+    this.country.set(this.currCsInquiry().country);
     this.isDirectLine.set(this.currCsInquiry().isDirectLine);
     this.abnumber.set(this.currCsInquiry().abnumber);
     this.grossWeightInKg.set(this.currCsInquiry().grossWeightInKg);

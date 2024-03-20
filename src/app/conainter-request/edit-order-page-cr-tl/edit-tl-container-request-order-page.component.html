@@ -1,10 +1,155 @@
 <div class="form-container">
-  <div class="form-row">
+  <div class="row-button">
     <button class="back-button" (click)="editService.navigateToPath()">{{'back' | transloco}}</button>
     <button class="save-button" (click)="editService.generatePDFFromContent()">{{'generatePDF' | transloco}}</button>
   </div>
 
   <div id="contentToConvert" class="form-content">
+    <div class="csData">
+      <div class="form-row">
+        <div class="form-group">
+          <label>{{'created-by' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="editService.createdByCS" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>{{'customer' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="editService.customerName" type="text">
+        </div>
+
+        <div class="form-group">
+          <label>{{'country' | transloco}}</label>
+          <input class="not-editable" readonly type="text" [ngSignal]="country">
+        </div>
+
+        <div class="form-group">
+          <label>{{'ab-nr' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="abnumber" type="number">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>{{'ready-to-load' | transloco}}</label>
+          <input class="not-editable" format="dd.MM.yyyy" readonly [ngSignal]="readyToLoad" type="date">
+        </div>
+
+        <div class="form-group">
+          <label>{{'incoterm' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="incoterm" type="text">
+        </div>
+
+        <div class="form-group"></div>
+        <div class="form-group"></div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          {{'container-size' | transloco}}
+        </div>
+
+        <div class="form-group small-number-field">
+          <label>{{'container-size-a' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="containersizeA" type="number">
+        </div>
+
+        <div class="form-group small-number-field">
+          <label>{{'container-size-b' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="containersizeB" type="number">
+        </div>
+
+        <div class="form-group small-number-field">
+          <label>{{'container-size-hc' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="containersizeHc" type="number">
+        </div>
+
+        <div class="form-group">
+          <label>{{'gross-weight-in-kg' | transloco}}</label>
+          <input class="not-editable" readonly [ngSignal]="grossWeightInKg" type="number">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <div class="checkbox-container">
+            <label>{{'free-detention' | transloco}}:
+              @if(freeDetention() === 0){
+              {{'no-free-detention' | transloco}}
+              }@else {
+              {{freeDetention()}} {{'days' | transloco}}
+              }
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-container">
+            <label class="checkbox-label">{{'direct-line' | transloco}}</label>
+            <input [disabled]="true" [ngSignal]="isDirectLine" class="checkbox-input" type="checkbox">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-container">
+            <label class="checkbox-label">{{'fast-line' | transloco}}</label>
+            <input [disabled]="true" [ngSignal]="isFastLine" class="checkbox-input" type="checkbox">
+          </div>
+        </div>
+
+        <div class="form-group"></div>
+        <div class="form-group"></div>
+      </div>
+
+      <div class="form-row">
+        <label>{{'thc' | transloco}}</label>
+        <div class="form-group">
+          <div class="checkbox-container">
+            <label class="checkbox-label">{{'tb' | transloco}}</label>
+            <input [disabled]="true" [ngSignal]="thctb" class="checkbox-input" type="checkbox">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-container">
+            <label class="checkbox-label">{{'customer' | transloco}}</label>
+            <input [disabled]="true" [ngSignal]="thcc" class="checkbox-input" type="checkbox">
+          </div>
+        </div>
+
+        <div class="form-group"></div>
+        <div class="form-group"></div>
+        <div class="form-group"></div>
+      </div>
+
+      <form [formGroup]="myForm">
+        <div formArrayName="articles">
+          @for (articleGroup of articlesFormArray.controls; track $index) {
+          <div [formGroup]="getFormGroup($index)">
+            <div class="form-row">
+              <div class="form-group margin-top medium-number-field">
+                <label>{{'article-number' | transloco}}</label>
+                <input class="not-editable" readonly type="number" formControlName="articleNumber">
+              </div>
+
+              @if (isDirectLine() || isFastLine()) {
+              <div class="form-group small-number-field">
+                <label>{{'pallet-amount' | transloco}}</label>
+                <input class="not-editable" readonly type="number" formControlName="palletAmount">
+              </div>
+              }
+              @else {
+              <div class="form-group"></div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+      </form>
+    </div>
+
+    <br>
+    <br>
+
     <div class="form-row">
       <div class="form-group">
         <div class="header-container">
@@ -206,155 +351,14 @@
         <input type="text" [ngSignal]="boat">
       </div>
 
-      <div class="form-group">
+      <div class="form-group additional-text">
         <label>{{'additional-text' | transloco}}</label>
-        <input [ngSignal]="editService.additonalInformation" type="text">
+        <textarea style="resize: none;" [ngSignal]="editService.additonalInformation" type="text"></textarea>
       </div>
-    </div>
-
-    <br>
-    <br>
-
-    <div class="csData">
-      <div class="form-row">
-        <div class="form-group">
-          <label>{{'created-by' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="editService.createdByCS" type="text">
-        </div>
-
-        <div class="form-group">
-          <label>{{'customer' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="editService.customerName" type="text">
-        </div>
-
-        <div class="form-group">
-          <label>{{'country' | transloco}}</label>
-          <input class="not-editable" readonly type="text" [ngSignal]="country">
-        </div>
-
-        <div class="form-group">
-          <label>{{'ab-nr' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="abnumber" type="number">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>{{'ready-to-load' | transloco}}</label>
-          <input class="not-editable" format="dd.MM.yyyy" readonly [ngSignal]="readyToLoad" type="date">
-        </div>
-
-        <div class="form-group">
-          <label>{{'incoterm' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="incoterm" type="text">
-        </div>
-
-        <div class="form-group"></div>
-        <div class="form-group"></div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>{{'container-size-a' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="containersizeA" type="number">
-        </div>
-
-        <div class="form-group">
-          <label>{{'container-size-b' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="containersizeB" type="number">
-        </div>
-
-        <div class="form-group">
-          <label>{{'container-size-hc' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="containersizeHc" type="number">
-        </div>
-
-        <div class="form-group">
-          <label>{{'gross-weight-in-kg' | transloco}}</label>
-          <input class="not-editable" readonly [ngSignal]="grossWeightInKg" type="number">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <div class="checkbox-container">
-            <label>{{'free-detention' | transloco}}:
-              @if(freeDetention() === 0){
-              {{'no-free-detention' | transloco}}
-              }@else {
-              {{freeDetention()}} {{'days' | transloco}}
-              }
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox-container">
-            <label class="checkbox-label">{{'direct-line' | transloco}}</label>
-            <input [disabled]="true" [ngSignal]="isDirectLine" class="checkbox-input" type="checkbox">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox-container">
-            <label class="checkbox-label">{{'fast-line' | transloco}}</label>
-            <input [disabled]="true" [ngSignal]="isFastLine" class="checkbox-input" type="checkbox">
-          </div>
-        </div>
-
-        <div class="form-group"></div>
-        <div class="form-group"></div>
-      </div>
-
-      <div class="form-row">
-        <label>{{'thc' | transloco}}</label>
-        <div class="form-group">
-          <div class="checkbox-container">
-            <label class="checkbox-label">{{'tb' | transloco}}</label>
-            <input [disabled]="true" [ngSignal]="thctb" class="checkbox-input" type="checkbox">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox-container">
-            <label class="checkbox-label">{{'customer' | transloco}}</label>
-            <input [disabled]="true" [ngSignal]="thcc" class="checkbox-input" type="checkbox">
-          </div>
-        </div>
-
-        <div class="form-group"></div>
-        <div class="form-group"></div>
-        <div class="form-group"></div>
-      </div>
-
-      <form [formGroup]="myForm">
-        <div formArrayName="articles">
-          @for (articleGroup of articlesFormArray.controls; track $index) {
-          <div [formGroup]="getFormGroup($index)">
-            <div class="form-row">
-              <div class="form-group">
-                <label>{{'article-number' | transloco}}</label>
-                <input class="not-editable" readonly type="number" formControlName="articleNumber">
-              </div>
-
-              @if (isDirectLine() || isFastLine()) {
-              <div class="form-group">
-                <label>{{'pallet-amount' | transloco}}</label>
-                <input class="not-editable" readonly type="number" formControlName="palletAmount">
-              </div>
-              }
-              @else {
-              <div class="form-group"></div>
-              }
-            </div>
-          </div>
-          }
-        </div>
-      </form>
     </div>
   </div>
 
-  <div class="form-row">
+  <div class="row-button">
     <div>
       <button class="save-button simple-margin" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
 

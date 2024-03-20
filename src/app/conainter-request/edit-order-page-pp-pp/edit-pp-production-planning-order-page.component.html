@@ -40,9 +40,9 @@
         <input [ngSignal]="editService.createdBySD" type="text">
       </div>
 
-      <div class="form-group">
+      <div class="form-group additional-text">
         <label>{{'additional-text' | transloco}}</label>
-        <input [ngSignal]="editService.additonalInformation" type="text">
+        <textarea style="resize: none;" [ngSignal]="editService.additonalInformation" type="text"></textarea>
       </div>
     </div>
 
@@ -58,13 +58,18 @@
                     <label>{{'delivery-date' | transloco}}</label>
                   </div>
                   <div>
-                    @if (!validationService.isDateValid(getFormGroup($index).get('deliveryDate')!.value)) { <label
-                      class="error-message">
+                    @if (!validationService.isCalenderWeekValid(getFormGroup($index).get('deliveryDate')!.value)) {
+                    <label class="error-message">
                       {{'simple-error' | transloco}}</label>
                     }
                   </div>
                 </div>
-                <input (input)="setAreArticlesValid()" type="date" formControlName="deliveryDate" format="dd.MM.yyyy">
+                <div>
+                  <div class="kw">
+                    <div class="simple-margin-with-margin-top">{{ 'kw' | transloco }}</div> <input
+                      (input)="setAreArticlesValid()" type="number" formControlName="deliveryDate">
+                  </div>
+                </div>
               </div>
 
               <div class="form-group">
@@ -98,47 +103,49 @@
               </div>
             </div>
 
-            <div class="form-row">
-              <div class="form-group">
+            <div class="form-row-edited-articles">
+              <div class="form-group-edited-articles medium-number-field margin-top">
                 <label>{{'article-number' | transloco}}</label>
                 <input class="not-editable" readonly type="number" formControlName="articleNumber">
               </div>
 
-              <div class="form-group">
+              <div class="form-group-edited-articles small-number-field">
                 <label>{{'required-pallet-amount' | transloco}}</label>
                 <input class="not-editable" readonly type="number" formControlName="palletAmount">
               </div>
 
-              <div class="form-group">
+              <div class="form-group-edited-articles small-number-field">
                 <label>{{'min-heigth-required' | transloco}}</label>
                 <input class="not-editable" readonly type="number" formControlName="minHeigthRequired">
               </div>
 
-              <div class="form-group">
+              <div class="form-group-edited-articles">
                 <div class="checkbox-container">
                   <label class="checkbox-label">{{'inquiry-for-fixed-order' | transloco}}</label>
                   <input class="checkbox-input" type="checkbox" formControlName="inquiryForFixedOrder">
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group-edited-articles">
                 <div class="checkbox-container">
                   <label class="checkbox-label">{{'inquiry-for-non-fixed-order' | transloco}}</label>
                   <input class="checkbox-input" type="checkbox" formControlName="inquiryForNonFixedOrder">
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group-edited-articles">
                 <div class="checkbox-container">
                   <label class="checkbox-label">{{'inquiry-for-quotation' | transloco}}</label>
                   <input class="checkbox-input" type="checkbox" formControlName="inquiryForQuotation"><!-- -->
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group-edited-articles small-number-field margin-top">
                 <label>{{'desired-delivery-date' | transloco}}</label>
-                <input class="not-editable" readonly format="dd.MM.yyyy" type="date"
-                  formControlName="desiredDeliveryDate">
+                <div class="kw">
+                  <div class="simple-margin-with-margin-top">{{ 'kw' | transloco }}</div> <input class="not-editable"
+                    readonly type="number" formControlName="desiredDeliveryDate">
+                </div>
               </div>
             </div>
           </div>
@@ -152,7 +159,7 @@
   <div class="form-row">
     <div>
       <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
-    
+
       <button class="save-button simple-margin" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
         transloco}}</button>
     </div>

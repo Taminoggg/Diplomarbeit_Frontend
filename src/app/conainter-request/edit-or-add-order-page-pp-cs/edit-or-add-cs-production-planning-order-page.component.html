@@ -1,5 +1,5 @@
 <div class="form-container">
-  <div class="form-row">
+  <div class="row-button">
     <button class="back-button" (click)="editService.navigateToPath()">{{'back' | transloco}}</button>
     <button class="save-button" (click)="editService.generatePDFFromContent()">{{'generatePDF' | transloco}}</button>
   </div>
@@ -63,14 +63,14 @@
           <input [ngSignal]="recievingCountry" type="text">
         </div>
 
-        <div class="form-group">
+        <div class="form-group additional-text">
           <label>{{'additional-text' | transloco}}</label>
-          <input [ngSignal]="editService.additonalInformation" type="text">
+          <textarea style="resize: none;" [ngSignal]="editService.additonalInformation" type="text"></textarea>
         </div>
       </div>
 
       <button class="add-article-button"
-        (click)="addArticle(1, 1,  1, 1, '', '', '', '', '', '', '', '', 1)">{{'add-article' |
+        (click)="addArticle(1, 1,  1, 1, 1, 1, '', '', '', '', '', '', 3)">{{'add-article' |
         transloco}}</button>
       <form [formGroup]="myForm">
         <div formArrayName="articles">
@@ -78,7 +78,7 @@
           <div [formGroup]="getFormGroup($index)">
             <div class="border">
               <div class="form-row">
-                <div class="form-group">
+                <div class="form-group medium-number-field margin-top">
                   <div class="header-container">
                     <div>
                       <label>{{'article-number' | transloco}}</label>
@@ -93,7 +93,7 @@
                   <input type="number" formControlName="articleNumber">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group small-number-field">
                   <div class="header-container">
                     <div>
                       <label>{{'required-pallet-amount' | transloco}}</label>
@@ -108,7 +108,7 @@
                   <input type="number" formControlName="palletAmount">
                 </div>
 
-                <div class="form-group">
+                <div class="form-group small-number-field">
                   <div class="header-container">
                     <div>
                       <label>{{'min-heigth-required' | transloco}}</label>
@@ -123,38 +123,42 @@
                   <input (input)="setAreArticlesValid()" type="number" formControlName="minHeigthRequired">
                 </div>
 
-                <div class="form-group">
-                  <label>{{ 'inquiry-for-fixed-order' | transloco }}
-                    <input type="radio" [value]="0" formControlName="selectedInquiry">
-                  </label>
+                <div class="form-group radio-group">
+                  <label>{{ 'inquiry-for-fixed-order' | transloco }}</label>
+                  <input class="custom-radio" type="radio" (change)="setAreArticlesValid()" [value]="0"
+                    formControlName="selectedInquiry">
                 </div>
 
-                <div class="form-group">
-                  <label>{{ 'inquiry-for-non-fixed-order' | transloco }}
-                    <input type="radio" [value]="1" formControlName="selectedInquiry">
-                  </label>
+                <div class="form-group radio-group">
+                  <label>{{ 'inquiry-for-non-fixed-order' | transloco }}</label>
+                  <input class="custom-radio" type="radio" (change)="setAreArticlesValid()" [value]="1"
+                    formControlName="selectedInquiry">
                 </div>
 
-                <div class="form-group">
-                  <label>{{ 'inquiry-for-quotation' | transloco }}
-                    <input type="radio" [value]="2" formControlName="selectedInquiry">
-                  </label>
+                <div class="form-group radio-group">
+                  <label>{{ 'inquiry-for-quotation' | transloco }}</label>
+                  <input class="custom-radio" type="radio" (change)="setAreArticlesValid()" [value]="2"
+                    formControlName="selectedInquiry">
                 </div>
 
-                <div class="form-group">
+
+                <div class="form-group margin-top">
                   <div class="header-container">
                     <div>
                       <label>{{'desired-delivery-date' | transloco}}</label>
                     </div>
                     <div>
-                      @if (!validationService.isDateValid(getFormGroup($index).get('desiredDeliveryDate')!.value)) {
+                      @if(!validationService.isCalenderWeekValid(getFormGroup($index).get('desiredDeliveryDate')!.value))
+                      {
                       <label class="error-message">
                         {{'simple-error' | transloco}}</label>
                       }
                     </div>
                   </div>
-                  <input format="dd.MM.yyyy" (input)="setAreArticlesValid()" type="date"
-                    formControlName="desiredDeliveryDate" format="dd.MM.yyyy">
+                  <div class="kw small-number-field">
+                    <div class="simple-margin-with-margin-top">{{ 'kw' | transloco }}</div> <input
+                      (input)="setAreArticlesValid()" type="number" formControlName="desiredDeliveryDate">
+                  </div>
                 </div>
               </div>
 
@@ -163,12 +167,14 @@
                 transloco}}</button>
               }
 
-              @if (getFormGroup($index).get('deliveryDate')?.value) {
+              @if (isApprovedByPpPp()) {
               <div class="form-row">
-                <div class="form-group">
+                <div class="form-group small-number-field">
                   <label>{{'delivery-date' | transloco}}</label>
-                  <input class="not-editable" readonly (input)="setAreArticlesValid()" type="date"
-                    formControlName="deliveryDate" format="dd.MM.yyyy">
+                  <div class="kw small-number-field">
+                    <div class="simple-margin-with-margin-top">{{ 'kw' | transloco }}</div> <input readonly class="not-editable"
+                      (input)="setAreArticlesValid()" type="number" formControlName="deliveryDate">
+                  </div>
                 </div>
 
                 <div class="form-group">
@@ -217,20 +223,22 @@
     </div>
   </div>
 
-  <div class="form-row">
+  <div class="row-button">
     <div>
       @if (actionType === 'new') {
-      <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrderWithoutPublish()">{{'save' | transloco}}</button>
+      <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrderWithoutPublish()">{{'save' |
+        transloco}}</button>
       }@else {
-      <button class="save-button" [disabled]="!isAllValid()" (click)="saveNewOrder()">{{'save' | transloco}}</button>
+      <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
       }
 
       @if (actionType === 'new') {
-      <button class="save-button simple-margin" [disabled]="!isAllValid()" (click)="postAndPublish()">{{'save-and-publish' |
+      <button class="save-button simple-margin" [disabled]="!isAllValid()"
+        (click)="postAndPublish()">{{'save-and-publish' |
         transloco}}</button>
       }@else {
-        <button class="save-button simple-margin" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
-          transloco}}</button>
+      <button class="save-button simple-margin" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
+        transloco}}</button>
       }
     </div>
     @if (actionType !== 'new') {
