@@ -66,7 +66,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
       ];
     } else if (this.htmlContent === "productionPlanningCS") {
       this.dataService.tableHeaders = [
-        { label: 'ppId', value: 'ppId' },
+        { label: 'created-on', value: 'createdOn' },
         { label: 'customer', value: 'customerName' },
         { label: 'created-by', value: 'createdByCS' },
         { label: 'article', value: 'articleNumbers' },
@@ -80,7 +80,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
       ];
     } else if (this.htmlContent === "productionPlanningPP") {
       this.dataService.tableHeaders = [
-        { label: 'ppId', value: 'ppId' },
+        { label: 'created-on', value: 'createdOn' },
         { label: 'customer', value: 'customerName' },
         { label: 'created-by', value: 'createdByCS' },
         { label: 'article', value: 'articleNumbers' },

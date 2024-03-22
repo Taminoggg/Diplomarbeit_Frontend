@@ -5,7 +5,7 @@ import { NgSignalDirective } from '../../shared/ngSignal.directive';
 import { TranslocoModule } from '@ngneat/transloco';
 import { ValidationService } from '../../shared/validation.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { EditService } from '../../edit.service';
+import { EditService } from '../../shared/edit.service';
 
 @Component({
   selector: 'app-edit-order-page',
@@ -35,7 +35,11 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
           this.articlesPPService.articlesPPProductionPlanningIdGet(this.editService.currOrder().ppId)
             .subscribe(x => {
               x.forEach(x => {
-                this.addArticle(x.articleNumber, x.pallets, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForNonFixedOrder, x.inquiryForQuotation, x.deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
+                let deliveryDate = x.deliveryDate;
+                if(deliveryDate === -1){
+                  deliveryDate = 0;
+                }
+                this.addArticle(x.articleNumber, x.pallets, x.id, x.minHeigthRequired, x.desiredDeliveryDate, x.inquiryForFixedOrder, x.inquiryForNonFixedOrder, x.inquiryForQuotation, deliveryDate, x.shortText, x.factory, x.nozzle, x.productionOrder, x.plannedOrder, x.plant);
                 this.setAreArticlesValid();
               });
             });
@@ -70,7 +74,7 @@ export class EditPPProductionPlanningOrderPageComponent implements OnChanges, On
 
   setAreArticlesValid() {
     for (let i = 0; i < this.articlesFormArray.length; i++) {
-      if (!this.validationService.isCalenderWeekValid(this.getFormGroup(i).get('deliveryDate')!.value)) {
+      if (!this.validationService.isCalenderWeekValid(this.getFormGroup(i).get('deliveryDate')!.value) || !this.validationService.isStringLengthOkay(this.getFormGroup(i).get('shortText')!.value) || !this.validationService.isStringLengthOkay(this.getFormGroup(i).get('factory')!.value) || !this.validationService.isStringLengthOkay(this.getFormGroup(i).get('plant')!.value) || !this.validationService.isStringLengthOkay(this.getFormGroup(i).get('nozzle')!.value) || !this.validationService.isStringLengthOkay(this.getFormGroup(i).get('productionOrder')!.value) || !this.validationService.isStringLengthOkay(this.getFormGroup(i).get('plannedOrder')!.value)) {
         this.areArticlesValid.set(false);
         return;
       }

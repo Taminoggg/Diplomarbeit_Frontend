@@ -70,7 +70,7 @@
       </div>
 
       <button class="add-article-button"
-        (click)="addArticle(1, 1,  1, 1, 1, 1, '', '', '', '', '', '', 3)">{{'add-article' |
+        (click)="addArticle(1, 1,  1, 1, 1, -1, '', '', '', '', '', '', 3)">{{'add-article' |
         transloco}}</button>
       <form [formGroup]="myForm">
         <div formArrayName="articles">
@@ -162,18 +162,13 @@
                 </div>
               </div>
 
-              @if (articlesFormArray.controls.length > 1) {
-              <button class="remove-article-button" (click)="removeArticle($index)">{{'remove-article' |
-                transloco}}</button>
-              }
-
-              @if (isApprovedByPpPp()) {
+              @if (this.getFormGroup($index).get('deliveryDate')!.value !== -1) {
               <div class="form-row">
                 <div class="form-group small-number-field">
                   <label>{{'delivery-date' | transloco}}</label>
                   <div class="kw small-number-field">
-                    <div class="simple-margin-with-margin-top">{{ 'kw' | transloco }}</div> <input readonly class="not-editable"
-                      (input)="setAreArticlesValid()" type="number" formControlName="deliveryDate">
+                    <div class="simple-margin-with-margin-top">{{ 'kw' | transloco }}</div> <input readonly
+                      class="not-editable" (input)="setAreArticlesValid()" type="number" formControlName="deliveryDate">
                   </div>
                 </div>
 
@@ -214,6 +209,10 @@
                 </div>
               </div>
               }
+              @if (articlesFormArray.controls.length > 1) {
+                <button class="remove-article-button" (click)="removeArticle($index)">{{'remove-article' |
+                  transloco}}</button>
+                }
             </div>
           </div>
           <br>

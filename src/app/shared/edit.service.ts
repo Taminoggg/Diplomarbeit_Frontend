@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import html2canvas from 'html2canvas';
 import jspdf from 'jspdf';
 import { Router } from '@angular/router';
-import { OrderDto, ChecklistsService, OrdersService, EditStatusDto, EditOrderStatusDto } from './shared/swagger';
+import { OrderDto, ChecklistsService, OrdersService, EditStatusDto, EditOrderStatusDto } from './swagger';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +59,7 @@ export class EditService {
 
         pdf.addImage(contentDataURL, 'PNG', 0, 0, imgWidth, imgHeight);
         let date = new Date();
-        pdf.save('data_'+`${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`+'.pdf');
+        pdf.save(`data_${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}.pdf`);
       });
     }
   }

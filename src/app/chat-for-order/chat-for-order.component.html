@@ -45,7 +45,7 @@
           @if (fileToUpload) {
           <div class="selected-file">
             <label>{{'selected-file' | transloco}}:&nbsp;</label>
-            <label>{{shortendName(fileToUpload.name)}}</label>
+            <label>{{shortendName(fileToUpload.name)}}:&nbsp;</label>
             <label>{{'file-size' | transloco}}:&nbsp;</label>
             <label>{{fileToUpload.size / 1024 | number: '1.2-2'}} KB</label>
             <button (click)="removeFile()">{{'remove-file' | transloco}}</button>

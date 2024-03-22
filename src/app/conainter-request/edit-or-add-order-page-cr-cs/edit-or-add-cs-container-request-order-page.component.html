@@ -93,7 +93,16 @@
       </div>
 
       <div class="form-group">
-        <label>{{'checklist' | transloco}}</label>
+        <div class="header-container">
+          <div>
+            <label>{{'checklist' | transloco}}</label>
+          </div>
+          <div>
+            @if(!isChecklistValid()){
+            <label class="error-message">{{'simple-error' | transloco}}</label>
+            }
+          </div>
+        </div>
         <select #currChecklist (change)="editService.checklistId.set(+currChecklist.value)">
           @for (currChecklist of allChecklists(); track $index) {
           <option value="{{currChecklist.id}}">{{currChecklist.checklistname}}</option>
@@ -182,7 +191,8 @@
           }@else {
           {{ duration }} {{'days' | transloco}}
           }
-          <input type="radio" name="duration" (change)="setRadioButtonsInputsValid()" [value]="duration" [(ngModel)]="selectedFreeDetention"></label>
+          <input type="radio" name="duration" (change)="setRadioButtonsInputsValid()" [value]="duration"
+            [(ngModel)]="selectedFreeDetention"></label>
       </div>
       }
     </div>
@@ -193,15 +203,18 @@
       </div>
 
       <div class="simple-margin">
-        <label class="custom-radio">{{'tb' | transloco}} <input type="radio" (change)="setRadioButtonsInputsValid()" name="thc" [value]="0" [(ngModel)]="selectedThc"></label>
+        <label class="custom-radio">{{'tb' | transloco}} <input type="radio" (change)="setRadioButtonsInputsValid()"
+            name="thc" [value]="0" [(ngModel)]="selectedThc"></label>
       </div>
 
       <div class="simple-margin">
-        <label class="custom-radio">{{'customer' | transloco}} <input type="radio" (change)="setRadioButtonsInputsValid()" name="thc" [value]="1" [(ngModel)]="selectedThc"></label>
+        <label class="custom-radio">{{'customer' | transloco}} <input type="radio"
+            (change)="setRadioButtonsInputsValid()" name="thc" [value]="1" [(ngModel)]="selectedThc"></label>
       </div>
 
       <div class="simple-margin">
-        <label class="custom-radio">{{'thc-default' | transloco}} <input type="radio" (change)="setRadioButtonsInputsValid()" name="thc" [value]="2" [(ngModel)]="selectedThc"></label>
+        <label class="custom-radio">{{'thc-default' | transloco}} <input type="radio"
+            (change)="setRadioButtonsInputsValid()" name="thc" [value]="2" [(ngModel)]="selectedThc"></label>
       </div>
     </div>
 
@@ -211,18 +224,21 @@
       </div>
 
       <div class="simple-margin-with-top">
-        <label class="custom-radio">{{'fast-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" (change)="setRadioButtonsInputsValid()" name="lines"
-            [value]="0" [(ngModel)]="selectedLine"></label>
+        <label class="custom-radio">{{'fast-line' | transloco}} <input (change)="setAreArticleNumbersValid()"
+            type="radio" (change)="setRadioButtonsInputsValid()" name="lines" [value]="0"
+            [(ngModel)]="selectedLine"></label>
       </div>
 
       <div class="simple-margin-with-top">
-        <label class="custom-radio">{{'direct-line' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" (change)="setRadioButtonsInputsValid()" name="lines"
-            [value]="1" [(ngModel)]="selectedLine"></label>
+        <label class="custom-radio">{{'direct-line' | transloco}} <input (change)="setAreArticleNumbersValid()"
+            type="radio" (change)="setRadioButtonsInputsValid()" name="lines" [value]="1"
+            [(ngModel)]="selectedLine"></label>
       </div>
 
       <div class="simple-margin-with-top">
-        <label class="custom-radio">{{'line-default' | transloco}} <input (change)="setAreArticleNumbersValid()" type="radio" (change)="setRadioButtonsInputsValid()" name="lines"
-            [value]="2" [(ngModel)]="selectedLine"></label>
+        <label class="custom-radio">{{'line-default' | transloco}} <input (change)="setAreArticleNumbersValid()"
+            type="radio" (change)="setRadioButtonsInputsValid()" name="lines" [value]="2"
+            [(ngModel)]="selectedLine"></label>
       </div>
     </div>
 
@@ -367,14 +383,16 @@
   <div class="row-button">
     <div>
       @if (actionType === 'new') {
-      <button class="save-button" [disabled]="!isAllValid()" (click)="saveNewOrderWithoutPublish()">{{'save' | transloco}}</button>
+      <button class="save-button" [disabled]="!isAllValid()" (click)="saveNewOrderWithoutPublish()">{{'save' |
+        transloco}}</button>
       }@else {
       <button class="save-button" [disabled]="!isAllValid()" (click)="saveOrder()">{{'save' | transloco}}</button>
       }
 
       @if (actionType === 'new') {
-        <button class="save-button simple-margin" [disabled]="!isAllValid()" (click)="postAndPublish()">{{'save-and-publish' |
-          transloco}}</button>
+      <button class="save-button simple-margin" [disabled]="!isAllValid()"
+        (click)="postAndPublish()">{{'save-and-publish' |
+        transloco}}</button>
       }@else {
       <button class="save-button simple-margin" [disabled]="!isAllValid()" (click)="publish()">{{'save-and-publish' |
         transloco}}</button>
@@ -386,7 +404,7 @@
         [disabled]="!isApprovedByTl() || editService.currOrder().successfullyFinished || editService.currOrder().canceled"
         class="save-button" (click)="finishOrder()">{{'finish' |
         transloco}}</button>
-    
+
       <button class="save-button simple-margin"
         [disabled]="editService.currOrder().successfullyFinished || editService.currOrder().canceled"
         (click)="cancelOrder()">{{'cancel' | transloco}}</button>

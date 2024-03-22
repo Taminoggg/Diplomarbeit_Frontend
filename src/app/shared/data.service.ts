@@ -156,7 +156,6 @@ export class DataService {
         }
         this.orderService.ordersOrderedByAbnumberPut(orderOrdersAbnumberDto).subscribe(x => this.allOrders.set(x));
         break;
-        //add for artilcenumbers, factory...
     }
   }
 
@@ -360,7 +359,6 @@ export class DataService {
   }
 
   filterForApprovedByCrCs() {
-    console.log("🚀 ~ DataService ~ filterForTlinquiry ~ filterForTlinquiry:")
     let filteredOrdersTl = signal<OrderDto[]>([]);
     let totalOrders = this.allOrders().length;
     let processedOrders = 0;

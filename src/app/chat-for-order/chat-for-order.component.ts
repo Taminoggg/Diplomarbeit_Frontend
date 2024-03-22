@@ -39,34 +39,32 @@ export class ChatForOrderComponent implements OnInit {
       .subscribe(x => {
         this.messagesForConversation.set(x);
         this.messagesForConversation().forEach((message: MessageDto) => {
-          if (message.attachmentId !== 1) {
-            this.filesService.filesIdGet(message.attachmentId)
-              .subscribe(x => {
-                if (x !== null) {
-                  const fileDto: FileByteDto = {
-                    fileName: x.fileName,
-                    fileContent: x.fileContent,
-                    fileType: x.fileType
-                  };
+          this.filesService.filesIdGet(message.attachmentId)
+            .subscribe(x => {
+              if (x !== null) {
+                const fileDto: FileByteDto = {
+                  fileName: x.fileName,
+                  fileContent: x.fileContent,
+                  fileType: x.fileType
+                };
 
-                  const binaryData = atob(fileDto.fileContent);
+                console.log(fileDto.fileContent);
+                const binaryData = atob(fileDto.fileContent);
+                console.log(binaryData);
+                const arrayBuffer = new ArrayBuffer(binaryData.length);
+                const view = new Uint8Array(arrayBuffer);
 
-                  const arrayBuffer = new ArrayBuffer(binaryData.length);
-                  const view = new Uint8Array(arrayBuffer);
-                  for (let i = 0; i < binaryData.length; i++) {
-                    view[i] = binaryData.charCodeAt(i);
-                  }
-
-                  const mimeType = this.getMimeType(fileDto.fileType);
-
-                  const blob = new Blob([arrayBuffer], { type: mimeType });
-
-                  const file = new File([blob], fileDto.fileName);
-
-                  this.fileForMessage.set(message.id, file);
+                for (let i = 0; i < binaryData.length; i++) {
+                  view[i] = binaryData.charCodeAt(i);
                 }
-              });
-          };
+
+                const mimeType = this.getMimeType(fileDto.fileType);
+                const blob = new Blob([arrayBuffer], { type: mimeType });
+                const file = new File([blob], fileDto.fileName);
+
+                this.fileForMessage.set(message.id, file);
+              }
+            });
         })
       });
   }

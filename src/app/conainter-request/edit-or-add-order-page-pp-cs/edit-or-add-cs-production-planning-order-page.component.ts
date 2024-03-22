@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import { ValidationService } from '../../shared/validation.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { EditService } from '../../edit.service';
+import { EditService } from '../../shared/edit.service';
 
 @Component({
   selector: 'app-edit-order-page',
@@ -300,12 +300,9 @@ export class EditOrAddCsProductionPlanningOrderPageComponent implements OnChange
         customerPriority: this.customerPriority(),
         recievingCountry: this.recievingCountry()
       }
-      console.log("🚀 ~ EditCsProductionPlanningOrderPageComponent ~ saveNewOrder ~ prodcutionPlanningDto:", prodcutionPlanningDto)
 
       this.productionPlanningService.productionPlanningsPost(prodcutionPlanningDto)
         .subscribe(productionPlanningObj => {
-          console.log("🚀 ~ EditCsProductionPlanningOrderPageComponent ~ saveNewOrder ~ productionPlanningObj:", productionPlanningObj)
-
           for (let i = 0; i < this.articlesFormArray.length; i++) {
             let inquiryForFixedOrder = false;
             let inquiryForNonFixedOrder = false;
@@ -328,34 +325,19 @@ export class EditOrAddCsProductionPlanningOrderPageComponent implements OnChange
               inquiryForQuotation: inquiryForQuotation,
               desiredDeliveryDate: this.getFormGroup(i).get('desiredDeliveryDate')!.value
             };
-            console.log('all articles: ');
-            console.log(article);
 
-            this.articlesPPService.articlesPPPost(article).subscribe(x => {
-              console.log('article posted: ' + x.id);
-              console.log(x);
-            }
-            );
+            this.articlesPPService.articlesPPPost(article).subscribe(x => console.log(x));
           }
-          let order: AddOrderDto;
-
-          if (this.editService.additonalInformation() === '') {
-            order = {
-              customerName: this.editService.customerName(),
-              createdBy: this.editService.createdByCS(),
-              ppId: productionPlanningObj.id,
-            };
-          } else {
-            order = {
-              customerName: this.editService.customerName(),
-              createdBy: this.editService.createdByCS(),
-              ppId: productionPlanningObj.id,
-              additionalInformation: this.editService.additonalInformation()
-            };
+          let order: AddOrderDto = {
+            customerName: this.editService.customerName(),
+            createdBy: this.editService.createdByCS(),
+            ppId: productionPlanningObj.id,
+          };
+          
+          const additionalInformation = this.editService.additonalInformation();
+          if (additionalInformation !== '') {
+            order.additionalInformation = additionalInformation;
           }
-
-          console.log('order');
-          console.log(order);
 
           this.orderService.ordersPost(order)
             .subscribe(x => {

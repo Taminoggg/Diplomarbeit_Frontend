@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import { ValidationService } from '../../shared/validation.service';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { EditService } from '../../edit.service';
+import { EditService } from '../../shared/edit.service';
 
 @Component({
   selector: 'app-edit-order-page',

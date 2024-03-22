@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidationService } from '../../shared/validation.service';
-import { EditService } from '../../edit.service';
+import { EditService } from '../../shared/edit.service';
 
 @Component({
   selector: 'app-edit-order-page',
@@ -155,17 +155,21 @@ export class EditOrAddCsContainerRequestOrderPageComponent implements OnChanges,
   isReadyToLoadValid = computed(() => this.validationService.isDateValid(this.readyToLoad()));
   isCustomerValid = computed(() => this.validationService.isAnyInputValid(this.editService.customerName()));
   isCreatedByValid = computed(() => this.validationService.isNameStringValid(this.editService.createdByCS()));
-  isAbNumberValid = computed(() => this.validationService.isNumberValid(this.abnumber()));
+  isAbNumberValid = computed(() => this.validationService.isNumberGreaterZeroValid(this.abnumber()));
   isGrossWeightInKgValid = computed(() => this.validationService.isNumberValid(this.grossWeightInKg()));
   isContainerSizeAValid = computed(() => this.validationService.isNumberValid(this.containersizeA()));
   isContainerSizeBValid = computed(() => this.validationService.isNumberValid(this.containersizeB()));
   isContainerSizeHcValid = computed(() => this.validationService.isNumberValid(this.containersizeHc()));
   isIncotermValid = computed(() => this.validationService.isAnyInputValid(this.incoterm()));
+  isChecklistValid = computed(() => this.allChecklists().length > 0);
   isAllValid = computed(() => {
+    console.log(this.allChecklists().length);
     return (
+      this.isChecklistValid() &&
       this.areRadioButtonInputsValid() &&
       this.isReadyToLoadValid() &&
       this.isCountryValid() &&
+      this.isIncotermValid() &&
       this.isCustomerValid() &&
       this.isCreatedByValid() &&
       this.isAbNumberValid() &&
