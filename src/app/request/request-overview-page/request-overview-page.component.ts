@@ -14,8 +14,8 @@ import { NgSignalDirective } from '../../shared/ngSignal.directive';
   selector: 'app-container-request-page',
   standalone: true,
   imports: [CommonModule, MatIconModule, MatDialogModule, TranslocoModule, NgSignalDirective],
-  templateUrl: './container-request-page.component.html',
-  styleUrls: ['./container-request-page.component.scss']
+  templateUrl: './request-overview-page.component.html',
+  styleUrls: ['./request-overview-page.component.scss']
 })
 export class ContainerRequestPageComponent implements OnInit, OnChanges {
   @Input() htmlContent = 'containerRequestTL'
