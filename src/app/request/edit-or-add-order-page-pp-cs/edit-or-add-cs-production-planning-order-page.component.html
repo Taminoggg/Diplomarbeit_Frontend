@@ -162,7 +162,7 @@
                 </div>
               </div>
 
-              @if (this.getFormGroup($index).get('deliveryDate')!.value !== -1) {
+              @if (this.getFormGroup($index).get('deliveryDate')!.value !== -1 && isApprovedByPpPp()) {
               <div class="form-row">
                 <div class="form-group small-number-field">
                   <label>{{'delivery-date' | transloco}}</label>
