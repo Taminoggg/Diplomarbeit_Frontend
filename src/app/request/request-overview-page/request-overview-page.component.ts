@@ -115,7 +115,7 @@ export class ContainerRequestPageComponent implements OnInit, OnChanges {
     this.dataService.refreshPage(this.selectedFilter(), this.filterValue(), this.htmlContent, this.filterByName(), this.showFinished(), this.showCanceled());
 
     this.selectedFilter.set(value);
-    if (this.selectedFilter() === 'approvedByPp' || this.selectedFilter() === 'approvedByCs' || this.selectedFilter() === 'approvedByTl' || this.selectedFilter() === 'approvedByPpCs') {
+    if (this.selectedFilter() === 'approvedByPp' || this.selectedFilter() === 'approvedByCsFilter' || this.selectedFilter() === 'approvedByTlFilter' || this.selectedFilter() === 'approvedByPpCs') {
       this.dataService.refreshPage(this.selectedFilter(), 'false', this.htmlContent, this.filterByName(), this.showFinished(), this.showCanceled());
     }
   }

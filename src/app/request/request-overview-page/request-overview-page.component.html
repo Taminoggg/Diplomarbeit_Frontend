@@ -20,13 +20,12 @@
   <label>Filter:&nbsp;</label>
   <select #currFilter (change)="setSelectedFilter(currFilter.value)">
     <option value="customername">{{'customer' | transloco}}</option>
-    <option value="status">{{'status' | transloco}}</option>
     <option value="lastUpdated">{{'last-updated' | transloco}}</option>
     @if (htmlContent === 'containerRequestCS') {
-    <option value="approvedByCs">{{'approved-by-cs' | transloco}}</option>
+    <option value="approvedByCsFilter">{{'approved-by-cs' | transloco}}</option>
     }
     @if (htmlContent === 'containerRequestCS' || htmlContent === 'containerRequestTL') {
-    <option value="approvedByTl">{{'approved-by-tl' | transloco}}</option>
+    <option value="approvedByTlFilter">{{'approved-by-tl' | transloco}}</option>
     <option value="country">{{'country' | transloco}}</option>
     <option value="sped">{{'sped' | transloco}}</option>
     }
@@ -52,8 +51,8 @@
         type="{{selectedFilter() === 'amount' ? 'number' : 'text'}}">
     </div>
     }
-    @if (selectedFilter() === 'approvedByCs' || selectedFilter() ===
-    'approvedByTl' || selectedFilter() === 'approvedByPp' || selectedFilter() === 'approvedByPpCs') {
+    @if (selectedFilter() === 'approvedByCsFilter' || selectedFilter() ===
+    'approvedByTlFilter' || selectedFilter() === 'approvedByPp' || selectedFilter() === 'approvedByPpCs') {
     <div>
       <input (change)="filterOrders()" [ngSignal]="filterValue" type="checkbox">
     </div>

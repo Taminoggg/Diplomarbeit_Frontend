@@ -63,7 +63,7 @@ export class DataService {
         }
         break;
 
-        case "createdBySD":
+      case "createdBySD":
         if (this.lastSortedBy() === "createdBySD") {
           this.lastSortedBy.set('');
           this.allOrders().orderByDescending(x => x.createdBySD);
@@ -190,6 +190,8 @@ export class DataService {
         console.log('case status');
         this.orderService.ordersStatusGet(value)
           .subscribe(x => {
+            console.log('status:');
+            console.log(x);
             this.getDetailsForOrder(x);
           });
         break;
@@ -255,6 +257,23 @@ export class DataService {
             });
           });
         break;
+        
+      case "approvedByCsFilter":
+        console.log('case approvedByCs ' + JSON.parse(value));
+        this.orderService.ordersApprovedByCsGet(JSON.parse(value))
+          .subscribe(x => {
+            this.getDetailsForOrder(x);
+          });
+        break;
+
+      case "approvedByTlFilter":
+        console.log('case approvedByTl ' + JSON.parse(value));
+        this.orderService.ordersApprovedByTlGet(JSON.parse(value))
+          .subscribe(x => {
+            this.getDetailsForOrder(x);
+          });
+        break;
+
       case "approvedByPp":
         console.log('case approvedByPp ' + JSON.parse(value));
         this.orderService.ordersApprovedByPpGet(JSON.parse(value))
@@ -262,6 +281,7 @@ export class DataService {
             this.getDetailsForOrder(x);
           });
         break;
+
       case "approvedByPpCs":
         console.log('case approvedByPpCs ' + JSON.parse(value));
         this.orderService.ordersApprovedByPpCsGet(JSON.parse(value))
@@ -269,6 +289,7 @@ export class DataService {
             this.getDetailsForOrder(x);
           });
         break;
+
       case "lastUpdated":
         console.log('case last udpated');
         this.orderService.ordersLastUpdatedGet(value)
